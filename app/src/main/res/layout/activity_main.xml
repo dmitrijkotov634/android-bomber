@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="23dp"
+            android:text="@string/title"
+            android:textColor="?android:textColor"
+            android:textSize="35sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/country_select"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/country_code_pick"
+                android:paddingLeft="@dimen/paddings"
+                android:paddingTop="@dimen/paddings"
+                android:paddingRight="@dimen/paddings"
+                android:paddingBottom="@dimen/paddings" />
+
+            <EditText
+                android:id="@+id/phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/phone_input"
+                android:inputType="phone"
+                android:maxLength="15"
+                android:paddingLeft="@dimen/paddings"
+                android:paddingTop="@dimen/paddings"
+                android:paddingRight="@dimen/paddings"
+                android:paddingBottom="@dimen/paddings"
+                android:textSize="@dimen/text_size" />
+
+            <EditText
+                android:id="@+id/cycles_count"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/cycles_count"
+                android:hint="@string/number_of_cycles"
+                android:inputType="numberSigned"
+                android:maxLength="3"
+                android:paddingLeft="@dimen/paddings"
+                android:paddingTop="@dimen/paddings"
+                android:paddingRight="@dimen/paddings"
+                android:paddingBottom="@dimen/paddings"
+                android:textSize="@dimen/text_size" />
+        </LinearLayout>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/start_attack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_attack" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/dark_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?colorPrimary"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/attack_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:indicatorColor="?colorSecondary"
+            app:indicatorSize="60dp"
+            app:trackColor="?colorPrimary" />
+    </LinearLayout>
+</FrameLayout>
