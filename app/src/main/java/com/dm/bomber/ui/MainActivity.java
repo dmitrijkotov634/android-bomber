@@ -18,46 +18,45 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 public class MainActivity extends AppCompatActivity {
-    private Spinner phoneCode;
-    private EditText phoneNumber;
-    private EditText numberOfCycles;
-    private CircularProgressIndicator attackProgress;
-    private Chip startAttack;
+    private Spinner phoneCodeView;
+    private EditText phoneNumberView;
+    private EditText numberOfCyclesView;
+    private CircularProgressIndicator attackProgressView;
+    private Chip startAttackButton;
 
-    private LinearLayout main;
     private FrameLayout darkLayout;
-    private LinearLayout attackScreen;
+    private LinearLayout attackScreenView;
+
     private AttackManager attackManager;
 
-    private String[] phoneCodes = {"7", "380", "375", ""};
+    private final String[] phoneCodes = {"7", "380", "375", ""};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        phoneCode = findViewById(R.id.country_select);
-        phoneNumber = findViewById(R.id.phone_number);
-        numberOfCycles = findViewById(R.id.cycles_count);
-        attackProgress = findViewById(R.id.progress);
-        startAttack = findViewById(R.id.start_attack);
+        phoneCodeView = findViewById(R.id.country_select);
+        phoneNumberView = findViewById(R.id.phone_number);
+        numberOfCyclesView = findViewById(R.id.cycles_count);
+        attackProgressView = findViewById(R.id.progress);
+        startAttackButton = findViewById(R.id.start_attack);
 
-        main = findViewById(R.id.main);
         darkLayout = findViewById(R.id.dark_layout);
-        attackScreen = findViewById(R.id.attack_screen);
+        attackScreenView = findViewById(R.id.attack_screen);
 
         CountryCodeAdapter adapter = new CountryCodeAdapter(this,
                 new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_by, R.drawable.ic_all},
                 phoneCodes);
 
         String[] hints = getResources().getStringArray(R.array.hints);
-        phoneNumber.setHint(hints[0]);
+        phoneNumberView.setHint(hints[0]);
 
-        phoneCode.setAdapter(adapter);
-        phoneCode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        phoneCodeView.setAdapter(adapter);
+        phoneCodeView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
-                phoneNumber.setHint(hints[index]);
+                phoneNumberView.setHint(hints[index]);
             }
 
             @Override
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        attackScreen.setVisibility(View.GONE);
+                        attackScreenView.setVisibility(View.GONE);
 
                         darkLayout.setAlpha(0.7f);
                         darkLayout.animate()
@@ -92,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        attackProgress.setMax(serviceCount * numberOfCycles);
-                        attackProgress.setProgress(0);
+                        attackProgressView.setMax(serviceCount * numberOfCycles);
+                        attackProgressView.setProgress(0);
 
                         darkLayout.setVisibility(View.VISIBLE);
-                        attackScreen.setVisibility(View.VISIBLE);
+                        attackScreenView.setVisibility(View.VISIBLE);
 
                         darkLayout.setAlpha(0f);
                         darkLayout.animate()
@@ -114,41 +113,40 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        attackProgress.setProgress(progress);
+                        attackProgressView.setProgress(progress);
                     }
                 });
             }
         });
 
-        startAttack.setOnClickListener(new View.OnClickListener() {
+        startAttackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int inumberOfCycles;
+                String phoneNumber = phoneNumberView.getText().toString();
+                String numberOfCycles = numberOfCyclesView.getText().toString();
 
-                if (phoneNumber.getText().toString().length() < 7) {
-                    phoneNumber.setError(getString(R.string.length_error));
+                if (phoneNumber.length() < 7) {
+                    phoneNumberView.setError(getString(R.string.length_error));
                     return;
                 }
 
-                if (numberOfCycles.getText().toString().isEmpty() ||
-                        numberOfCycles.getText().toString().equals("-") ||
-                        (inumberOfCycles = Integer.parseInt(numberOfCycles.getText().toString())) < 0) {
-
-                    numberOfCycles.setError(getString(R.string.cycles_error));
+                int numberOfCyclesNum;
+                if (numberOfCycles.isEmpty() || numberOfCycles.equals("-") ||
+                        (numberOfCyclesNum = Integer.parseInt(numberOfCycles)) < 0) {
+                    numberOfCyclesView.setError(getString(R.string.cycles_error));
                     return;
                 }
 
-                attackManager.performAttack(phoneCodes[phoneCode.getSelectedItemPosition()],
-                        phoneNumber.getText().toString(), inumberOfCycles);
+                attackManager.performAttack(phoneCodes[phoneCodeView.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
             }
         });
     }
 
     public void setEnabledMain(boolean enabled) {
-        phoneNumber.setEnabled(enabled);
-        phoneCode.setEnabled(enabled);
-        startAttack.setEnabled(enabled);
-        numberOfCycles.setEnabled(enabled);
+        phoneNumberView.setEnabled(enabled);
+        phoneCodeView.setEnabled(enabled);
+        startAttackButton.setEnabled(enabled);
+        numberOfCyclesView.setEnabled(enabled);
     }
 
     @Override
