@@ -1,7 +1,6 @@
 package com.dm.bomber.ui;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +11,12 @@ import android.widget.TextView;
 import com.dm.bomber.R;
 
 public class CountryCodeAdapter extends BaseAdapter {
-    private Context context;
-    private int flags[];
-    private String[] countryCodes;
+    private final int[] flags;
+    private final String[] countryCodes;
 
-    private LayoutInflater inflter;
+    private final LayoutInflater inflter;
 
     public CountryCodeAdapter(Activity context, int[] flags, String[] countryCodes) {
-        this.context = context;
         this.flags = flags;
         this.countryCodes = countryCodes;
 
@@ -45,8 +42,8 @@ public class CountryCodeAdapter extends BaseAdapter {
     public View getView(int index, View view, ViewGroup viewGroup) {
         view = inflter.inflate(R.layout.country_code_row, null);
 
-        ImageView icon = (ImageView) view.findViewById(R.id.icon_flag);
-        TextView names = (TextView) view.findViewById(R.id.country_code);
+        ImageView icon = view.findViewById(R.id.icon_flag);
+        TextView names = view.findViewById(R.id.country_code);
 
         icon.setImageResource(flags[index]);
         names.setText("+" + countryCodes[index]);

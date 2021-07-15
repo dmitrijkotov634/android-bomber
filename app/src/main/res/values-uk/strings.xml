@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_attack">Почати атаку</string>
+    <string name="number_of_cycles">Кількість повторів</string>
+    <string name="length_error">Невірний формат номера</string>
+    <string name="cycles_error">Кількість повторів повинно бути позитивним числом</string>
+</resources>

