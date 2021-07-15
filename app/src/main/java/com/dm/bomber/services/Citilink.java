@@ -5,7 +5,8 @@ import okhttp3.HttpUrl;
 public class Citilink extends ParamsService {
 
     public Citilink() {
-        super("https://www.citilink.ru/registration/confirm/phone/", POST);
+        setUrl("https://www.citilink.ru/registration/confirm/phone/");
+        setMethod(POST);
     }
 
     @Override

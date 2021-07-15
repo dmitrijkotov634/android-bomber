@@ -115,10 +115,13 @@ public class AttackManager {
                 tasks = new CountDownLatch(usableServices.size());
 
                 for (Service service : usableServices) {
-                    service.setData(phoneCode, phone);
+                    service.prepare(phoneCode, phone);
                     service.call(client, new Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                            progress++;
+                            tasks.countDown();
+
                             e.printStackTrace();
                         }
 

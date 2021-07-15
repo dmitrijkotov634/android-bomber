@@ -12,7 +12,11 @@ public abstract class Service {
 
     public String requireCode;
 
-    public void setData(String phoneCode, String phone) {
+    public void setPhoneCode(String phoneCode) {
+        this.requireCode = phoneCode;
+    }
+
+    public void prepare(String phoneCode, String phone) {
         this.phoneCode = phoneCode;
         this.phone = phone;
     }

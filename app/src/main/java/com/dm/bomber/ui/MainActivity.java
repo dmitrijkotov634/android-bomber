@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
 
-
             @Override
             public void onProgressChange(int progress) {
                 runOnUiThread(new Runnable() {

@@ -6,7 +6,8 @@ import org.json.JSONObject;
 public class GloriaJeans extends JsonService {
 
     public GloriaJeans() {
-        super("https://www.gloria-jeans.ru/phone-verification/send-code/registration", POST);
+        setUrl("https://www.gloria-jeans.ru/phone-verification/send-code/registration\"");
+        setMethod(POST);
     }
 
     @Override

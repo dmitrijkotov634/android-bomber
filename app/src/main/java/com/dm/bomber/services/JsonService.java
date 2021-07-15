@@ -6,14 +6,6 @@ import okhttp3.RequestBody;
 
 public abstract class JsonService extends SimpleBaseService {
 
-    public JsonService(String url, String method) {
-        super(url, method);
-    }
-
-    public JsonService(String url, String method, String requireCode) {
-        super(url, method, requireCode);
-    }
-
     public Request run() {
         RequestBody body = RequestBody.create(
                 buildJson(), MediaType.parse("application/json"));

@@ -6,7 +6,8 @@ import org.json.JSONObject;
 public class CarSmile extends JsonService {
 
     public CarSmile() {
-        super("https://api.carsmile.com/", POST);
+        setUrl("https://api.carsmile.com/");
+        setMethod(POST);
     }
 
     @Override

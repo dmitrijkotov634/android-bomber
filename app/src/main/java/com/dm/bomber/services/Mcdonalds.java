@@ -6,7 +6,8 @@ import org.json.JSONObject;
 public class Mcdonalds extends JsonService {
 
     public Mcdonalds() {
-        super("https://site-api.mcdonalds.ru/api/v1/user/login/phone", POST);
+        setUrl("https://site-api.mcdonalds.ru/api/v1/user/login/phone");
+        setMethod(POST);
     }
 
     @Override
