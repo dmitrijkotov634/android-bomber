@@ -6,7 +6,8 @@ import org.json.JSONObject;
 public class YandexEda extends JsonService {
 
     public YandexEda() {
-        super("https://eda.yandex/api/v1/user/request_authentication_code", POST);
+        setUrl("https://eda.yandex/api/v1/user/request_authentication_code");
+        setMethod(POST);
     }
 
     @Override

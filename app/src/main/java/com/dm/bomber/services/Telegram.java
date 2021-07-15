@@ -5,7 +5,8 @@ import okhttp3.HttpUrl;
 public class Telegram extends ParamsService {
 
     public Telegram() {
-        super("https://my.telegram.org/auth/send_password", POST);
+        setUrl("https://my.telegram.org/auth/send_password");
+        setMethod(POST);
     }
 
     @Override

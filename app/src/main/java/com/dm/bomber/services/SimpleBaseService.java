@@ -9,19 +9,12 @@ public abstract class SimpleBaseService extends Service {
     public String url;
     public String method;
 
-    public SimpleBaseService(String url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 
-    public SimpleBaseService(String url, String method) {
-        this.url = url;
+    public void setMethod(String method) {
         this.method = method;
-    }
-
-    public SimpleBaseService(String url, String method, String requireCode) {
-        this.url = url;
-        this.method = method;
-        this.requireCode = requireCode;
     }
 
     public Request buildRequest(Request.Builder builder) {

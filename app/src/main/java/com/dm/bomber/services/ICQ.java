@@ -3,8 +3,9 @@ package com.dm.bomber.services;
 import okhttp3.HttpUrl;
 
 public class ICQ extends ParamsService {
+
     public ICQ() {
-        super("https://www.icq.com/smsreg/requestPhoneValidation.php");
+        setUrl("https://www.icq.com/smsreg/requestPhoneValidation.php");
     }
 
     @Override

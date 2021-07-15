@@ -4,8 +4,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Modulebank extends JsonService {
+
     public Modulebank() {
-        super("https://my.modulbank.ru/api/v2/registration/nameAndPhone", POST);
+        setUrl("https://my.modulbank.ru/api/v2/registration/nameAndPhone");
+        setMethod(POST);
     }
 
     @Override

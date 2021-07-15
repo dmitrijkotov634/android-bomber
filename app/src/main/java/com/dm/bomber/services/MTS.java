@@ -5,7 +5,8 @@ import okhttp3.HttpUrl;
 public class MTS extends ParamsService {
 
     public MTS() {
-        super("https://prod.tvh.mts.ru/tvh-public-api-gateway/public/rest/general/send-code", POST);
+        setUrl("https://prod.tvh.mts.ru/tvh-public-api-gateway/public/rest/general/send-code");
+        setMethod(POST);
     }
 
     @Override
