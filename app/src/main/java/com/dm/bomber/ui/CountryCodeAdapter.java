@@ -5,12 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.dm.bomber.R;
+import com.dm.bomber.databinding.CountryCodeRowBinding;
 
 public class CountryCodeAdapter extends BaseAdapter {
+    private CountryCodeRowBinding binding;
+
     private final int[] flags;
     private final String[] countryCodes;
 
@@ -39,15 +39,12 @@ public class CountryCodeAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int index, View view, ViewGroup viewGroup) {
-        view = inflter.inflate(R.layout.country_code_row, null);
+    public View getView(int index, View view, ViewGroup parent) {
+        binding = CountryCodeRowBinding.inflate(inflter);
 
-        ImageView icon = view.findViewById(R.id.icon_flag);
-        TextView names = view.findViewById(R.id.country_code);
+        binding.icon.setImageResource(flags[index]);
+        binding.code.setText("+" + countryCodes[index]);
 
-        icon.setImageResource(flags[index]);
-        names.setText("+" + countryCodes[index]);
-
-        return view;
+        return binding.getRoot();
     }
 }
