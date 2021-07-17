@@ -7,16 +7,15 @@
     android:padding="5dp">
 
     <ImageView
-        android:id="@+id/icon_flag"
+        android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_launcher_foreground" />
+        android:scaleType="fitCenter" />
 
     <TextView
-        android:id="@+id/country_code"
+        android:id="@+id/code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size" />
