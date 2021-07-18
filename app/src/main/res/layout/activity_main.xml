@@ -42,7 +42,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/phone_input"
-                android:inputType="phone"
+                android:inputType="numberSigned"
                 android:maxLength="15"
                 android:paddingLeft="@dimen/paddings"
                 android:paddingTop="@dimen/paddings"
@@ -57,7 +57,7 @@
                 android:background="@drawable/cycles_count"
                 android:hint="@string/number_of_cycles"
                 android:inputType="numberSigned"
-                android:maxLength="3"
+                android:maxLength="5"
                 android:paddingLeft="@dimen/paddings"
                 android:paddingTop="@dimen/paddings"
                 android:paddingRight="@dimen/paddings"
@@ -73,16 +73,14 @@
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/fogging"
+    <ImageView
+        android:id="@+id/blur"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?colorPrimary"
-        android:gravity="center"
         android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/attack_screen"
+        android:id="@+id/attack"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

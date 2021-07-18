@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dm.bomber.AttackManager;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
+
+import jp.wasabeef.blurry.Blurry;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -50,16 +53,16 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        binding.attackScreen.setVisibility(View.GONE);
+                        binding.main.setVisibility(View.VISIBLE);
+                        binding.attack.setVisibility(View.GONE);
 
-                        binding.fogging.setAlpha(0.7f);
-                        binding.fogging.animate()
+                        binding.blur.animate()
                                 .alpha(0f)
                                 .setListener(new AnimatorListenerAdapter() {
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
-                                        binding.fogging.setVisibility(View.GONE);
-                                        setEnabledMain(true);
+                                        binding.blur.setAlpha(1f);
+                                        binding.blur.setVisibility(View.GONE);
                                     }
                                 });
                     }
@@ -71,18 +74,22 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                        input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
+
+                        binding.blur.setImageBitmap(Blurry.with(getApplicationContext())
+                                .sampling(1)
+                                .radius(20)
+                                .capture(binding.main)
+                                .get());
+
                         binding.progress.setMax(serviceCount * numberOfCycles);
                         binding.progress.setProgress(0);
 
-                        binding.fogging.setVisibility(View.VISIBLE);
-                        binding.attackScreen.setVisibility(View.VISIBLE);
+                        binding.blur.setVisibility(View.VISIBLE);
+                        binding.attack.setVisibility(View.VISIBLE);
 
-                        binding.fogging.setAlpha(0f);
-                        binding.fogging.animate()
-                                .alpha(0.7f)
-                                .setListener(null);
-
-                        setEnabledMain(false);
+                        binding.main.setVisibility(View.GONE);
                     }
                 });
             }
@@ -119,13 +126,6 @@ public class MainActivity extends AppCompatActivity {
                 attackManager.performAttack(phoneCodes[binding.countrySelect.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
             }
         });
-    }
-
-    public void setEnabledMain(boolean enabled) {
-        binding.phoneNumber.setEnabled(enabled);
-        binding.cyclesCount.setEnabled(enabled);
-        binding.countrySelect.setEnabled(enabled);
-        binding.startAttack.setEnabled(enabled);
     }
 
     @Override
