@@ -42,9 +42,11 @@ public class AttackManager {
     public AttackManager(AttackCallback callback) {
         this.client = new OkHttpClient();
         this.callback = callback;
-        this.services = new Service[]{new Kari(), new Modulebank(), new YandexEda(),
-                new ICQ(), new Citilink(), new GloriaJeans(), new Alltime(), new Mcdonalds(),
-                new Telegram(), new AtPrime(), new MTS(), new CarSmile(), new Sravni(), new OK()};
+        this.services = new Service[]{
+            new Kari(), new Modulebank(), new YandexEda(),
+            new ICQ(), new Citilink(), new GloriaJeans(), new Alltime(), new Mcdonalds(),
+            new Telegram(), new AtPrime(), new MTS(), new CarSmile(), new Sravni(), new OK()
+        };
     }
 
     public void performAttack(String phoneCode, String phone, int cycles) {
