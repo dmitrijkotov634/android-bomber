@@ -2,6 +2,7 @@ package com.dm.bomber.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -35,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
         String[] hints = getResources().getStringArray(R.array.hints);
         binding.phoneNumber.setHint(hints[0]);
 
-        binding.countrySelect.setAdapter(adapter);
-        binding.countrySelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.phoneCode.setAdapter(adapter);
+        binding.phoneCode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
                 binding.phoneNumber.setHint(hints[index]);
@@ -123,9 +124,35 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                attackManager.performAttack(phoneCodes[binding.countrySelect.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
+                attackManager.performAttack(phoneCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
             }
         });
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (attackManager.hasAttack())
+            return;
+
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+
+        if (!clipboard.hasPrimaryClip())
+            return;
+
+        String text = clipboard.getPrimaryClip().getItemAt(0).coerceToText(this).toString();
+
+        if (text.matches("\\+(7|380|375)([0-9\\(\\)\\-\\s])*")) {
+            text = text.substring(1);
+
+            for (int i = 0; i < phoneCodes.length; i++) {
+                if (text.startsWith(phoneCodes[i])) {
+                    binding.phoneCode.setSelection(i);
+                    binding.phoneNumber.setText(text.substring(phoneCodes[i].length()));
+
+                    return;
+                }
+            }
+        }
     }
 
     @Override
