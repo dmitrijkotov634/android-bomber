@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         CountryCodeAdapter adapter = new CountryCodeAdapter(this,
-                new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_by, R.drawable.ic_all},
-                phoneCodes);
+            new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_by, R.drawable.ic_all},
+            phoneCodes);
 
         String[] hints = getResources().getStringArray(R.array.hints);
         binding.phoneNumber.setHint(hints[0]);
@@ -44,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
         attackManager = new AttackManager(new AttackManager.AttackCallback() {
@@ -58,14 +57,14 @@ public class MainActivity extends AppCompatActivity {
                         binding.attack.setVisibility(View.GONE);
 
                         binding.blur.animate()
-                                .alpha(0f)
-                                .setListener(new AnimatorListenerAdapter() {
-                                    @Override
-                                    public void onAnimationEnd(Animator animation) {
-                                        binding.blur.setAlpha(1f);
-                                        binding.blur.setVisibility(View.GONE);
-                                    }
-                                });
+                            .alpha(0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    binding.blur.setAlpha(1f);
+                                    binding.blur.setVisibility(View.GONE);
+                                }
+                            });
                     }
                 });
             }
@@ -79,10 +78,10 @@ public class MainActivity extends AppCompatActivity {
                         input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
 
                         binding.blur.setImageBitmap(Blurry.with(getApplicationContext())
-                                .sampling(1)
-                                .radius(20)
-                                .capture(binding.main)
-                                .get());
+                            .sampling(1)
+                            .radius(20)
+                            .capture(binding.main)
+                            .get());
 
                         binding.progress.setMax(serviceCount * numberOfCycles);
                         binding.progress.setProgress(0);
