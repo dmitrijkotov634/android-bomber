@@ -14,7 +14,7 @@ public abstract class FormService extends SimpleBaseService {
         requestBuilder.url(url);
         requestBuilder.method(method, formBuilder.build());
 
-        return buildRequest(requestBuilder);
+        return extendRequest(requestBuilder);
     }
 
     public abstract void buildBody(FormBody.Builder builder);

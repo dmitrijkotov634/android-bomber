@@ -14,7 +14,7 @@ public abstract class JsonService extends SimpleBaseService {
         requestBuilder.url(url);
         requestBuilder.method(method, body);
 
-        return buildRequest(requestBuilder);
+        return extendRequest(requestBuilder);
     }
 
     public abstract String buildJson();

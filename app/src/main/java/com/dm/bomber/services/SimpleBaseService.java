@@ -17,7 +17,7 @@ public abstract class SimpleBaseService extends Service {
         this.method = method;
     }
 
-    public Request buildRequest(Request.Builder builder) {
+    public Request extendRequest(Request.Builder builder) {
         return builder.build();
     }
 }
