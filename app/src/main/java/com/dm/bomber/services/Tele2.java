@@ -15,14 +15,14 @@ public class Tele2 extends ParamsService {
     }
 
     @Override
-    public Request extendRequest(Request.Builder builder) {
+    public Request buildRequest(Request.Builder builder) {
         JSONObject json = new JSONObject();
 
         RequestBody body = RequestBody.create(
                 "{\"sender\": \"Tele2\"}", MediaType.parse("application/json"));
 
         builder.method(method, body);
-        return super.extendRequest(builder);
+        return super.buildRequest(builder);
     }
 
     @Override

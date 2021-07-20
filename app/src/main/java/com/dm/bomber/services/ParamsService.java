@@ -16,7 +16,7 @@ public abstract class ParamsService extends SimpleBaseService {
         if (method != null)
             requestBuilder.method(method, RequestBody.create("", null));
 
-        return extendRequest(requestBuilder);
+        return buildRequest(requestBuilder);
     }
 
     public abstract void buildParams(HttpUrl.Builder builder);
