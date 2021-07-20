@@ -15,6 +15,7 @@ import com.dm.bomber.services.Modulebank;
 import com.dm.bomber.services.OK;
 import com.dm.bomber.services.Service;
 import com.dm.bomber.services.Sravni;
+import com.dm.bomber.services.SushiWok;
 import com.dm.bomber.services.Telegram;
 import com.dm.bomber.services.YandexEda;
 
@@ -48,9 +49,11 @@ public class AttackManager {
 
         this.callback = callback;
         this.services = new Service[]{
-            new Kari(), new Modulebank(), new YandexEda(),
-            new ICQ(), new Citilink(), new GloriaJeans(), new Alltime(), new Mcdonalds(),
-            new Telegram(), new AtPrime(), new MTS(), new CarSmile(), new Sravni(), new OK()
+                new Kari(), new Modulebank(), new YandexEda(),
+                new ICQ(), new Citilink(), new GloriaJeans(),
+                new Alltime(), new Mcdonalds(), new Telegram(),
+                new AtPrime(), new MTS(), new CarSmile(),
+                new Sravni(), new OK(), new SushiWok()
         };
     }
 
