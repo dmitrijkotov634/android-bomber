@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dm.bomber.AttackManager;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 import jp.wasabeef.blurry.Blurry;
 
@@ -47,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
         });
 
         attackManager = new AttackManager(new AttackManager.AttackCallback() {
@@ -115,14 +117,15 @@ public class MainActivity extends AppCompatActivity {
                 String numberOfCycles = binding.cyclesCount.getText().toString();
 
                 if (phoneNumber.length() < 7) {
-                    binding.phoneNumber.setError(getString(R.string.length_error));
+                    Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
                     return;
                 }
 
                 int numberOfCyclesNum;
                 if (numberOfCycles.isEmpty() || numberOfCycles.equals("-") ||
                         (numberOfCyclesNum = Integer.parseInt(numberOfCycles)) < 0) {
-                    binding.cyclesCount.setError(getString(R.string.cycles_error));
+
+                    Snackbar.make(view, R.string.cycles_error, Snackbar.LENGTH_LONG).show();
                     return;
                 }
 
