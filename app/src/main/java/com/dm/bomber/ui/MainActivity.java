@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        if (attackManager.hasAttack() && binding.phoneNumber.getText().toString().isEmpty())
+        if (attackManager.hasAttack() || !binding.phoneNumber.getText().toString().isEmpty())
             return;
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
