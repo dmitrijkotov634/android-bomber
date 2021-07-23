@@ -129,7 +129,8 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                attackManager.performAttack(phoneCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
+                if (!attackManager.hasAttack())
+                    attackManager.performAttack(phoneCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
             }
         });
 

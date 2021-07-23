@@ -2,8 +2,6 @@ package com.dm.bomber.services;
 
 import java.util.Random;
 
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public abstract class Service {
@@ -62,10 +60,6 @@ public abstract class Service {
         }
 
         return formattedPhone.toString();
-    }
-
-    public void call(OkHttpClient client, Callback callback) {
-        client.newCall(run()).enqueue(callback);
     }
 
     public abstract Request run();
