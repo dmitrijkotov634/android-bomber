@@ -141,6 +141,6 @@
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+            app:srcCompat="@drawable/ic_close" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
