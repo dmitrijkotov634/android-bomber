@@ -3,6 +3,8 @@ package com.dm.bomber.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.ClipboardManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -21,6 +23,7 @@ import jp.wasabeef.blurry.Blurry;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private AttackManager attackManager;
+    private boolean isFirst = true;
 
     private final String[] phoneCodes = {"7", "380", "375", ""};
 
@@ -145,6 +148,29 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
+        Intent intent = getIntent();
+
+        if (isFirst && intent.getAction().equals(Intent.ACTION_VIEW)) {
+            Uri action = intent.getData();
+
+            if (action.getEncodedPath().equals("/run")) {
+                String phone = action.getQueryParameter("phone");
+                String phoneCode = action.getQueryParameter("phoneCode");
+
+                int cycles;
+                try {
+                    cycles = Integer.parseInt(action.getQueryParameter("cycles"));
+                } catch (Exception e) {
+                    cycles = 1;
+                }
+
+                if (!attackManager.hasAttack())
+                    attackManager.performAttack(phoneCode, phone, cycles);
+            }
+
+            isFirst = false;
+        }
+
         if (attackManager.hasAttack() || !binding.phoneNumber.getText().toString().isEmpty())
             return;
 

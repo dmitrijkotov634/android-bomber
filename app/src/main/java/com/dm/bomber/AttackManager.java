@@ -12,6 +12,7 @@ import com.dm.bomber.services.ICQ;
 import com.dm.bomber.services.Kari;
 import com.dm.bomber.services.MTS;
 import com.dm.bomber.services.Mcdonalds;
+import com.dm.bomber.services.MegafonTV;
 import com.dm.bomber.services.Modulebank;
 import com.dm.bomber.services.OK;
 import com.dm.bomber.services.Service;
@@ -57,7 +58,8 @@ public class AttackManager {
                 new Alltime(), new Mcdonalds(), new Telegram(),
                 new AtPrime(), new MTS(), new CarSmile(),
                 new Sravni(), new OK(), new SushiWok(),
-                new Tele2(), new Eldorado(), new Tele2TV()
+                new Tele2(), new Eldorado(), new Tele2TV(),
+                new MegafonTV()
         };
     }
 
