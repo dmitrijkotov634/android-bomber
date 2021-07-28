@@ -22,6 +22,7 @@ import com.dm.bomber.services.Tele2;
 import com.dm.bomber.services.Tele2TV;
 import com.dm.bomber.services.Telegram;
 import com.dm.bomber.services.YandexEda;
+import com.dm.bomber.services.YotaTV;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -59,7 +60,7 @@ public class AttackManager {
                 new AtPrime(), new MTS(), new CarSmile(),
                 new Sravni(), new OK(), new SushiWok(),
                 new Tele2(), new Eldorado(), new Tele2TV(),
-                new MegafonTV()
+                new MegafonTV(), new YotaTV()
         };
     }
 
