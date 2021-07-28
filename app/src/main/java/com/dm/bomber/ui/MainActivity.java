@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < phoneCodes.length; i++) {
                 if (text.startsWith(phoneCodes[i])) {
                     binding.phoneCode.setSelection(i);
-                    binding.phoneNumber.setText(text.substring(phoneCodes[i].length()));
+                    binding.phoneNumber.setText(text.substring(phoneCodes[i].length()).replaceAll("[^\\d.]", ""));
 
                     return;
                 }
