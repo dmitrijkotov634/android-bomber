@@ -33,7 +33,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
@@ -44,9 +43,9 @@ public class AttackManager {
     private final Service[] services;
 
     private Attack attack;
-    private final AttackCallback callback;
+    private final Callback callback;
 
-    public AttackManager(AttackCallback callback) {
+    public AttackManager(Callback callback) {
         this.client = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -74,7 +73,8 @@ public class AttackManager {
     }
 
     public void stopAttack() {
-        attack._stop();
+        attack.interrupt();
+        client.dispatcher().cancelAll();
     }
 
     public List<Service> getUsableServices(String phoneCode) {
@@ -88,7 +88,7 @@ public class AttackManager {
         return usableServices;
     }
 
-    public interface AttackCallback {
+    public interface Callback {
         void onAttackEnd();
 
         void onAttackStart(int serviceCount, int numberOfCycles);
@@ -113,14 +113,6 @@ public class AttackManager {
             this.numberOfCycles = cycles;
         }
 
-        public void _stop() {
-            interrupt();
-
-            for (Call call : client.dispatcher().runningCalls()) {
-                call.cancel();
-            }
-        }
-
         @Override
         public void run() {
             List<Service> usableServices = getUsableServices(phoneCode);
@@ -133,7 +125,7 @@ public class AttackManager {
                 for (Service service : usableServices) {
                     service.prepare(phoneCode, phone);
 
-                    client.newCall(service.run()).enqueue(new Callback() {
+                    client.newCall(service.run()).enqueue(new okhttp3.Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
                             progress++;
