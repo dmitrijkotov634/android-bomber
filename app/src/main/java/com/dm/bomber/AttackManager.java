@@ -3,10 +3,13 @@ package com.dm.bomber;
 import android.util.Log;
 
 import com.dm.bomber.services.Alltime;
+import com.dm.bomber.services.Askona;
 import com.dm.bomber.services.AtPrime;
 import com.dm.bomber.services.CarSmile;
 import com.dm.bomber.services.Citilink;
 import com.dm.bomber.services.Eldorado;
+import com.dm.bomber.services.Farfor;
+import com.dm.bomber.services.Fivepost;
 import com.dm.bomber.services.GloriaJeans;
 import com.dm.bomber.services.ICQ;
 import com.dm.bomber.services.Kari;
@@ -15,6 +18,8 @@ import com.dm.bomber.services.Mcdonalds;
 import com.dm.bomber.services.MegafonTV;
 import com.dm.bomber.services.Modulebank;
 import com.dm.bomber.services.OK;
+import com.dm.bomber.services.Pyaterochka;
+import com.dm.bomber.services.Sephora;
 import com.dm.bomber.services.Service;
 import com.dm.bomber.services.Sravni;
 import com.dm.bomber.services.SushiWok;
@@ -59,7 +64,9 @@ public class AttackManager {
                 new AtPrime(), new MTS(), new CarSmile(),
                 new Sravni(), new OK(), new SushiWok(),
                 new Tele2(), new Eldorado(), new Tele2TV(),
-                new MegafonTV(), new YotaTV()
+                new MegafonTV(), new YotaTV(), new Pyaterochka(),
+                new Fivepost(), new Askona(), new Farfor(),
+                new Sephora()
         };
     }
 
