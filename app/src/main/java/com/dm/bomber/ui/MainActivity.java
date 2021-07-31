@@ -3,6 +3,7 @@ package com.dm.bomber.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.ClipboardManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -10,7 +11,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
+import com.dm.bomber.AppPreferences;
 import com.dm.bomber.AttackManager;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
@@ -20,12 +23,19 @@ import jp.wasabeef.blurry.Blurry;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+
     private AttackManager attackManager;
+    private AppPreferences preferences;
 
     private final String[] phoneCodes = {"7", "380", "375", ""};
 
+    private boolean menuFlag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        preferences = new AppPreferences(this);
+        AppCompatDelegate.setDefaultNightMode(preferences.getTheme());
+
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -58,18 +68,10 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        binding.main.setVisibility(View.VISIBLE);
                         binding.attack.setVisibility(View.GONE);
+                        binding.navButton.setImageResource(R.drawable.ic_more);
 
-                        binding.blur.animate()
-                                .alpha(0f)
-                                .setListener(new AnimatorListenerAdapter() {
-                                    @Override
-                                    public void onAnimationEnd(Animator animation) {
-                                        binding.blur.setAlpha(1f);
-                                        binding.blur.setVisibility(View.GONE);
-                                    }
-                                });
+                        blurMain(false);
                     }
                 });
             }
@@ -82,19 +84,12 @@ public class MainActivity extends AppCompatActivity {
                         InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                         input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
 
-                        binding.blur.setImageBitmap(Blurry.with(getApplicationContext())
-                                .sampling(1)
-                                .radius(20)
-                                .capture(binding.main)
-                                .get());
-
                         binding.progress.setMax(serviceCount * numberOfCycles);
                         binding.progress.setProgress(0);
 
-                        binding.blur.setVisibility(View.VISIBLE);
                         binding.attack.setVisibility(View.VISIBLE);
-
-                        binding.main.setVisibility(View.GONE);
+                        binding.navButton.setImageResource(R.drawable.ic_close);
+                        blurMain(true);
                     }
                 });
             }
@@ -134,18 +129,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        binding.stopAttack.setOnClickListener(new View.OnClickListener() {
+        binding.navButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (attackManager.hasAttack())
                     attackManager.stopAttack();
+                else
+                    openMenu(!menuFlag);
             }
         });
+
+        binding.appThemeTile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int mode = binding.appThemeTile.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
+
+                preferences.setTheme(mode);
+                AppCompatDelegate.setDefaultNightMode(mode);
+            }
+        });
+
+        binding.appThemeTile.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                preferences.setTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+
+                return true;
+            }
+        });
+
+        binding.appThemeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-
         if (attackManager.hasAttack() || !binding.phoneNumber.getText().toString().isEmpty())
             return;
 
@@ -170,11 +188,51 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void blurMain(boolean visible) {
+        if (visible) {
+            binding.blur.setImageBitmap(Blurry.with(this)
+                    .sampling(1)
+                    .radius(20)
+                    .capture(binding.main)
+                    .get());
+
+            binding.blur.setVisibility(View.VISIBLE);
+            binding.main.setVisibility(View.GONE);
+        } else {
+            binding.main.setVisibility(View.VISIBLE);
+
+            binding.blur.animate()
+                    .alpha(0f)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            binding.blur.setAlpha(1f);
+                            binding.blur.setVisibility(View.GONE);
+                        }
+                    });
+        }
+    }
+
+    public void openMenu(boolean visible) {
+        if (visible) {
+            binding.menu.setVisibility(View.VISIBLE);
+            binding.navButton.setImageResource(R.drawable.ic_close);
+        } else {
+            binding.menu.setVisibility(View.GONE);
+            binding.navButton.setImageResource(R.drawable.ic_more);
+        }
+
+        blurMain(visible);
+        menuFlag = visible;
+    }
+
     @Override
     public void onBackPressed() {
         if (attackManager.hasAttack())
             attackManager.stopAttack();
-        else
+        else if (menuFlag) {
+            openMenu(false);
+        } else
             super.onBackPressed();
     }
 }
