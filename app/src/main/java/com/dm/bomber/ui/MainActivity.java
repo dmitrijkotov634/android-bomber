@@ -29,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
     private final String[] phoneCodes = {"7", "380", "375", ""};
 
-    private boolean menuFlag;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         preferences = new AppPreferences(this);
@@ -69,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         binding.attack.setVisibility(View.GONE);
-                        binding.navButton.setImageResource(R.drawable.ic_more);
 
                         blurMain(false);
                     }
@@ -88,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
                         binding.progress.setProgress(0);
 
                         binding.attack.setVisibility(View.VISIBLE);
-                        binding.navButton.setImageResource(R.drawable.ic_close);
                         blurMain(true);
                     }
                 });
@@ -129,13 +125,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        binding.navButton.setOnClickListener(new View.OnClickListener() {
+        binding.openMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (attackManager.hasAttack())
-                    attackManager.stopAttack();
-                else
-                    openMenu(!menuFlag);
+                binding.menu.setVisibility(View.VISIBLE);
+                blurMain(true);
             }
         });
 
@@ -174,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
         String text = clipboard.getPrimaryClip().getItemAt(0).coerceToText(this).toString();
 
-        if (text.matches("\\+(7|380|375)([0-9\\(\\)\\-\\s])*")) {
+        if (text.matches("\\+(7|380|375)([0-9()\\-\\s])*")) {
             text = text.substring(1);
 
             for (int i = 0; i < phoneCodes.length; i++) {
@@ -213,25 +207,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void openMenu(boolean visible) {
-        if (visible) {
-            binding.menu.setVisibility(View.VISIBLE);
-            binding.navButton.setImageResource(R.drawable.ic_close);
-        } else {
-            binding.menu.setVisibility(View.GONE);
-            binding.navButton.setImageResource(R.drawable.ic_more);
-        }
-
-        blurMain(visible);
-        menuFlag = visible;
-    }
-
     @Override
     public void onBackPressed() {
         if (attackManager.hasAttack())
             attackManager.stopAttack();
-        else if (menuFlag) {
-            openMenu(false);
+        else if (binding.menu.getVisibility() == View.VISIBLE) {
+            binding.menu.setVisibility(View.GONE);
+            blurMain(false);
         } else
             super.onBackPressed();
     }

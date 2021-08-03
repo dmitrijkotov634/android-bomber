@@ -18,6 +18,7 @@ import com.dm.bomber.services.Mcdonalds;
 import com.dm.bomber.services.MegafonTV;
 import com.dm.bomber.services.Modulebank;
 import com.dm.bomber.services.OK;
+import com.dm.bomber.services.Olltv;
 import com.dm.bomber.services.Pyaterochka;
 import com.dm.bomber.services.Sephora;
 import com.dm.bomber.services.Service;
@@ -26,6 +27,7 @@ import com.dm.bomber.services.SushiWok;
 import com.dm.bomber.services.Tele2;
 import com.dm.bomber.services.Tele2TV;
 import com.dm.bomber.services.Telegram;
+import com.dm.bomber.services.Ukrzoloto;
 import com.dm.bomber.services.YandexEda;
 import com.dm.bomber.services.YotaTV;
 
@@ -66,7 +68,7 @@ public class AttackManager {
                 new Tele2(), new Eldorado(), new Tele2TV(),
                 new MegafonTV(), new YotaTV(), new Pyaterochka(),
                 new Fivepost(), new Askona(), new Farfor(),
-                new Sephora()
+                new Sephora(), new Ukrzoloto(), new Olltv()
         };
     }
 
