@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         binding.attack.setVisibility(View.GONE);
-
                         blurMain(false);
                     }
                 });
