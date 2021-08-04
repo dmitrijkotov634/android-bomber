@@ -13,6 +13,7 @@ import com.dm.bomber.services.Fivepost;
 import com.dm.bomber.services.GloriaJeans;
 import com.dm.bomber.services.ICQ;
 import com.dm.bomber.services.Kari;
+import com.dm.bomber.services.Lenta;
 import com.dm.bomber.services.MTS;
 import com.dm.bomber.services.Mcdonalds;
 import com.dm.bomber.services.MegafonTV;
@@ -28,6 +29,7 @@ import com.dm.bomber.services.Tele2;
 import com.dm.bomber.services.Tele2TV;
 import com.dm.bomber.services.Telegram;
 import com.dm.bomber.services.Ukrzoloto;
+import com.dm.bomber.services.Wink;
 import com.dm.bomber.services.YandexEda;
 import com.dm.bomber.services.YotaTV;
 
@@ -68,7 +70,8 @@ public class AttackManager {
                 new Tele2(), new Eldorado(), new Tele2TV(),
                 new MegafonTV(), new YotaTV(), new Pyaterochka(),
                 new Fivepost(), new Askona(), new Farfor(),
-                new Sephora(), new Ukrzoloto(), new Olltv()
+                new Sephora(), new Ukrzoloto(), new Olltv(),
+                new Wink(), new Lenta()
         };
     }
 
