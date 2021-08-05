@@ -5,4 +5,5 @@
     <string name="phone_error">Невірний формат номера</string>
     <string name="cycles_error">Кількість повторів повинно бути позитивним числом</string>
     <string name="darktheme">Темна тема</string>
+    <string name="donate">Пожертвування</string>
 </resources>

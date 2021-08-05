@@ -20,7 +20,6 @@ import com.dm.bomber.services.MegafonTV;
 import com.dm.bomber.services.Modulebank;
 import com.dm.bomber.services.OK;
 import com.dm.bomber.services.Olltv;
-import com.dm.bomber.services.Pyaterochka;
 import com.dm.bomber.services.Sephora;
 import com.dm.bomber.services.Service;
 import com.dm.bomber.services.Sravni;
@@ -68,7 +67,7 @@ public class AttackManager {
                 new AtPrime(), new MTS(), new CarSmile(),
                 new Sravni(), new OK(), new SushiWok(),
                 new Tele2(), new Eldorado(), new Tele2TV(),
-                new MegafonTV(), new YotaTV(), new Pyaterochka(),
+                new MegafonTV(), new YotaTV(), // TODO: new Pyaterochka(),
                 new Fivepost(), new Askona(), new Farfor(),
                 new Sephora(), new Ukrzoloto(), new Olltv(),
                 new Wink(), new Lenta()
