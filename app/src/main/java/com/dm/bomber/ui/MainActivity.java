@@ -3,7 +3,9 @@ package com.dm.bomber.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -149,6 +151,13 @@ public class MainActivity extends AppCompatActivity {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 
                 return true;
+            }
+        });
+
+        binding.donateTile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://qiwi.com/n/PHOSS105")));
             }
         });
 

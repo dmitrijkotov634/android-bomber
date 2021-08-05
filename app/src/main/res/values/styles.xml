@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="ToggleTile" parent="android:Widget">
+    <style name="Tile" parent="android:Widget">
         <item name="android:background">@drawable/toggle_tile</item>
+        <item name="android:layout_height">90dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="ToggleTile" parent="Tile">
         <item name="android:backgroundTint">@color/tile_color</item>
         <item name="android:layout_height">90dp</item>
         <item name="android:layout_width">0dp</item>
@@ -10,6 +16,10 @@
         <item name="android:textOff">@null</item>
         <item name="android:textColor">@color/tile_content_color</item>
         <item name="drawableTint">@color/tile_content_color</item>
-        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="ActionTile" parent="Tile">
+        <item name="android:textColor">?colorOnPrimary</item>
+        <item name="drawableTint">?colorOnPrimary</item>
     </style>
 </resources>

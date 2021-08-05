@@ -66,7 +66,7 @@
             android:background="@drawable/cycles_count"
             android:hint="@string/number_of_cycles"
             android:inputType="numberSigned"
-            android:maxLength="2"
+            android:maxLength="3"
             android:paddingLeft="@dimen/paddings"
             android:paddingTop="@dimen/paddings"
             android:paddingRight="@dimen/paddings"
@@ -155,9 +155,13 @@
             android:id="@+id/app_theme_tile"
             style="@style/ToggleTile"
             android:drawableStart="@drawable/ic_night_theme"
-            android:text="@string/darktheme"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:text="@string/darktheme" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/donate_tile"
+            style="@style/ActionTile"
+            android:drawableStart="@drawable/ic_donate"
+            android:text="@string/donate" />
 
         <androidx.constraintlayout.helper.widget.Flow
             android:id="@+id/flow"
@@ -165,7 +169,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            app:constraint_referenced_ids="app_theme_tile"
+            app:constraint_referenced_ids="app_theme_tile,donate_tile"
             app:flow_horizontalGap="8dp"
             app:flow_maxElementsWrap="2"
             app:flow_verticalGap="8dp"

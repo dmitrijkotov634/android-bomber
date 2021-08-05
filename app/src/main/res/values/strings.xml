@@ -7,6 +7,7 @@
     <string name="phone_error">Invalid number format</string>
     <string name="cycles_error">The number of repetitions must be a positive number</string>
     <string name="darktheme">Dark theme</string>
+    <string name="donate">Donate</string>
 
     <string-array name="hints">
         <item>912 345-67-89</item>
