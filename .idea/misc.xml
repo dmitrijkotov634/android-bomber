@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.19074074074074074" />
+        <entry key="app/src/main/res/drawable/ic_more.xml" value="0.19166666666666668" />
         <entry key="app/src/main/res/drawable/ic_night_theme.xml" value="0.19074074074074074" />
         <entry key="app/src/main/res/drawable/toggle_tile.xml" value="0.19074074074074074" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />

@@ -18,8 +18,11 @@ import com.dm.bomber.services.MTS;
 import com.dm.bomber.services.Mcdonalds;
 import com.dm.bomber.services.MegafonTV;
 import com.dm.bomber.services.Modulebank;
+import com.dm.bomber.services.Multiplex;
 import com.dm.bomber.services.OK;
 import com.dm.bomber.services.Olltv;
+import com.dm.bomber.services.ProstoTV;
+import com.dm.bomber.services.Pyaterochka;
 import com.dm.bomber.services.Sephora;
 import com.dm.bomber.services.Service;
 import com.dm.bomber.services.Sravni;
@@ -61,16 +64,14 @@ public class AttackManager {
 
         this.callback = callback;
         this.services = new Service[]{
-                new Kari(), new Modulebank(), new YandexEda(),
-                new ICQ(), new Citilink(), new GloriaJeans(),
-                new Alltime(), new Mcdonalds(), new Telegram(),
-                new AtPrime(), new MTS(), new CarSmile(),
-                new Sravni(), new OK(), new SushiWok(),
-                new Tele2(), new Eldorado(), new Tele2TV(),
-                new MegafonTV(), new YotaTV(), // TODO: new Pyaterochka(),
-                new Fivepost(), new Askona(), new Farfor(),
-                new Sephora(), new Ukrzoloto(), new Olltv(),
-                new Wink(), new Lenta()
+                new Kari(), new Modulebank(), new YandexEda(), new ICQ(),
+                new Citilink(), new GloriaJeans(), new Alltime(), new Mcdonalds(),
+                new Telegram(), new AtPrime(), new MTS(), new CarSmile(),
+                new Sravni(), new OK(), new SushiWok(), new Tele2(),
+                new Eldorado(), new Tele2TV(), new MegafonTV(), new YotaTV(),
+                new Fivepost(), new Askona(), new Farfor(), new Sephora(),
+                new Ukrzoloto(), new Olltv(), new Wink(), new Lenta(),
+                new Pyaterochka(), new ProstoTV(), new Multiplex()
         };
     }
 
