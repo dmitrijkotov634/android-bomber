@@ -23,6 +23,8 @@ import com.dm.bomber.services.OK;
 import com.dm.bomber.services.Olltv;
 import com.dm.bomber.services.ProstoTV;
 import com.dm.bomber.services.Pyaterochka;
+import com.dm.bomber.services.RendezVous;
+import com.dm.bomber.services.Robocredit;
 import com.dm.bomber.services.Sephora;
 import com.dm.bomber.services.Service;
 import com.dm.bomber.services.Sravni;
@@ -34,6 +36,7 @@ import com.dm.bomber.services.Ukrzoloto;
 import com.dm.bomber.services.Wink;
 import com.dm.bomber.services.YandexEda;
 import com.dm.bomber.services.YotaTV;
+import com.dm.bomber.services.Zdravcity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -71,7 +74,8 @@ public class AttackManager {
                 new Eldorado(), new Tele2TV(), new MegafonTV(), new YotaTV(),
                 new Fivepost(), new Askona(), new Farfor(), new Sephora(),
                 new Ukrzoloto(), new Olltv(), new Wink(), new Lenta(),
-                new Pyaterochka(), new ProstoTV(), new Multiplex()
+                new Pyaterochka(), new ProstoTV(), new Multiplex(), new RendezVous(),
+                new Zdravcity(), new Robocredit()
         };
     }
 
