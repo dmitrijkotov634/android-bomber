@@ -37,6 +37,7 @@ import com.dm.bomber.services.Wink;
 import com.dm.bomber.services.YandexEda;
 import com.dm.bomber.services.YotaTV;
 import com.dm.bomber.services.Zdravcity;
+import com.dm.bomber.services.Yandex;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -75,7 +76,7 @@ public class AttackManager {
                 new Fivepost(), new Askona(), new Farfor(), new Sephora(),
                 new Ukrzoloto(), new Olltv(), new Wink(), new Lenta(),
                 new Pyaterochka(), new ProstoTV(), new Multiplex(), new RendezVous(),
-                new Zdravcity(), new Robocredit()
+                new Zdravcity(), new Robocredit(), new Yandex()
         };
     }
 
