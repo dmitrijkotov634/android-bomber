@@ -4,7 +4,7 @@ import okhttp3.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Sephora extends FormService {
+public class Sephora extends JsonService {
 
     public Sephora() {
         setUrl("https://api.sephora.ru/sms/code/send");
