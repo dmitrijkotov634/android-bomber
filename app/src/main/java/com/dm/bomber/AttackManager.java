@@ -41,6 +41,7 @@ import com.dm.bomber.services.Yandex;
 import com.dm.bomber.services.MegafonBank;
 import com.dm.bomber.services.VoprosRU;
 import com.dm.bomber.services.inDriver;
+import com.dm.bomber.services.Tinder;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -80,7 +81,7 @@ public class AttackManager {
                 new Ukrzoloto(), new Olltv(), new Wink(), new Lenta(),
                 new Pyaterochka(), new ProstoTV(), new Multiplex(), new RendezVous(),
                 new Zdravcity(), new Robocredit(), new Yandex(), new MegafonBank(),
-                new VoprosRU(), new inDriver()
+                new VoprosRU(), new inDriver(), new Tinder()
         };
     }
 
