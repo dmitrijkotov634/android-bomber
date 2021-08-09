@@ -15,7 +15,7 @@ public class BudZdorov extends JsonService {
     
     @Override
     public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("User-Agent", "RiglaMobileClient(android Android-Q-build-20210804020623 2.10.2 (stable) (Tue Oct 13 15:50:27 2020 +0200) on "android_arm64")");
+        builder.addHeader("User-Agent", "RiglaMobileClient(android Android-Q-build-20210804020623 2.10.2 (stable) (Tue Oct 13 15:50:27 2020 +0200) on 'android_arm64')");
         builder.addHeader("platform", "android");
 
         return super.buildRequest(builder);
