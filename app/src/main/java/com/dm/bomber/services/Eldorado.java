@@ -11,13 +11,6 @@ public class Eldorado extends JsonService {
         setMethod(POST);
         setPhoneCode("7");
     }
-    
-    @Override
-    public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("Authorization", "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7IlNJRCI6ImRicXVsZDd0a2M3NDZ0OTNhYmdjdWdmdXJqIn0sImV4cCI6MTYyODQxMzUwNH0.Sc2PhcxAW2f8HLkeEJnEeKhAB4Q5O1TZvPJjbeH3ITbAZHfuRIZedNPv1m8g7oQ4l8VMKJMogjF0wf51kbrhXQ");
-
-        return super.buildRequest(builder);
-    }
 
     @Override
     public String buildJson() {
