@@ -10,6 +10,7 @@ public class MegafonTV extends JsonService {
     public MegafonTV() {
         setUrl("https://bmp.megafon.tv/api/v10/auth/register/msisdn");
         setMethod(POST);
+        setPhoneCode("7");
     }
 
     @Override
