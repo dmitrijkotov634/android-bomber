@@ -30,6 +30,8 @@ public class BudZdorov extends JsonService {
             json.put("type", "telephone");
             json.put("template", "email_reset");
             json.put("websiteId", "0");
+            json.put("fieldName", "Абоба");
+            json.put("fieldValue", "Бебра");
         } catch (JSONException e) {
             e.printStackTrace();
         }
