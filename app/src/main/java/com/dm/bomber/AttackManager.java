@@ -52,6 +52,7 @@ import com.dm.bomber.services.YotaTV;
 import com.dm.bomber.services.Zdravcity;
 import com.dm.bomber.services.inDriver;
 import com.dm.bomber.services.MegaDisk;
+import com.dm.bomber.services.KazanExpress;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -93,7 +94,7 @@ public class AttackManager {
                 new VoprosRU(), new inDriver(), new Tinder(), new Gosuslugi(),
                 new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
                 new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
-                new MegaDisk()
+                new MegaDisk(), new KazanExpress()
         };
     }
 
