@@ -23,16 +23,17 @@ public class Eldorado extends JsonService {
     @Override
     public String buildJson() {
         JSONObject json = new JSONObject();
-        JSONObject body_ = new JSONObject();
-        JSONObject head_ = new JSONObject();
+        JSONObject body = new JSONObject();
+        JSONObject head = new JSONObject();
 
         try {
-            body_.put("userLogin", "+" + getFormattedPhone());
-            head_.put("uid", "unknown");
-            head_.put("os", "unknown");
-            head_.put("v", "unknown");
-            head_.put("FbToken", "unknown");
-            json.put("requestBody", body_);
+            body.put("userLogin", "+" + getFormattedPhone());
+            head.put("uid", "unknown");
+            head.put("os", "unknown");
+            head.put("v", "unknown");
+            head.put("FbToken", "unknown");
+            json.put("requestBody", body);
+            json.put("requestHeader", head);
         } catch (JSONException e) {
             e.printStackTrace();
         }
