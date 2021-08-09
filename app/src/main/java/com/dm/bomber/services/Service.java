@@ -2,9 +2,12 @@ package com.dm.bomber.services;
 
 import java.util.Random;
 
-import okhttp3.Request;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
 
 public abstract class Service {
+    public static OkHttpClient client;
+
     public String phoneCode;
     public String phone;
 
@@ -62,5 +65,5 @@ public abstract class Service {
         return this.phoneCode + this.phone;
     }
 
-    public abstract Request run();
+    public abstract void run(Callback callback);
 }

