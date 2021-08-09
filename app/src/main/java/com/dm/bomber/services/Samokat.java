@@ -2,6 +2,7 @@ package com.dm.bomber.services;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import okhttp3.Request;
 
 public class Samokat extends JsonService {
@@ -11,7 +12,7 @@ public class Samokat extends JsonService {
         setMethod(POST);
         setPhoneCode("7");
     }
-    
+
     @Override
     public Request buildRequest(Request.Builder builder) {
         builder.addHeader("User-Agent", "okhttp/4.9.1");

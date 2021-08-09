@@ -2,6 +2,7 @@ package com.dm.bomber.services;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import okhttp3.Request;
 
 public class Tinder extends JsonService {
@@ -10,7 +11,7 @@ public class Tinder extends JsonService {
         setUrl("https://api.gotinder.com/v2/auth/sms/send?auth_type=sms");
         setMethod(POST);
     }
-    
+
     @Override
     public Request buildRequest(Request.Builder builder) {
         builder.addHeader("os-version", "29");

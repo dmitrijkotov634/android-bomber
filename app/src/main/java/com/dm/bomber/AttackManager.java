@@ -47,7 +47,7 @@ import com.dm.bomber.services.N1RU;
 import com.dm.bomber.services.Hoff;
 import com.dm.bomber.services.Samokat;
 import com.dm.bomber.services.GreenBee;
-import com.dm.bomber.services.toGO;
+import com.dm.bomber.services.ToGO;
 import com.dm.bomber.services.Premier;
 import com.dm.bomber.services.Gorparkovka;
 
@@ -91,7 +91,7 @@ public class AttackManager {
                 new Zdravcity(), new Robocredit(), new Yandex(), new MegafonBank(),
                 new VoprosRU(), new inDriver(), new Tinder(), new Gosuslugi(),
                 new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
-                new toGO(), new Premier(), new Gorparkovka()
+                new ToGO(), new Premier(), new Gorparkovka()
         };
     }
 

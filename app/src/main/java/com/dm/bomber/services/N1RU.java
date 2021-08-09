@@ -2,6 +2,7 @@ package com.dm.bomber.services;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import okhttp3.Request;
 
 public class N1RU extends JsonService {
@@ -11,7 +12,7 @@ public class N1RU extends JsonService {
         setMethod(POST);
         setPhoneCode("7");
     }
-    
+
     @Override
     public Request buildRequest(Request.Builder builder) {
         builder.addHeader("User-Agent", "N1Realty/1.38.8(Android; Android 30; Build/5011; Device/fJEzTsacyQw; PushVersion/1)");
