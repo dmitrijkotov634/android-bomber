@@ -8,7 +8,7 @@ import okhttp3.Request;
 public class MegafonTV extends JsonService {
 
     public MegafonTV() {
-        setUrl("https://bmp.megafon.tv/api/v10/auth/register/msisdn");
+        setUrl("https://bmp.megafon.tv/api/v10/auth/password_reset");
         setMethod(POST);
         setPhoneCode("7");
     }
@@ -24,7 +24,7 @@ public class MegafonTV extends JsonService {
         JSONObject json = new JSONObject();
 
         try {
-            json.put("msisdn", getFormattedPhone());
+            json.put("msisdn", "+" + getFormattedPhone());
             json.put("password", "1234657");
         } catch (JSONException e) {
             e.printStackTrace();
