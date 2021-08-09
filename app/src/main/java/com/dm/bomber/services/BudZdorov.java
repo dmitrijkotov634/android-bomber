@@ -62,7 +62,7 @@ public class BudZdorov extends Service {
                             .url("https://www.budzdorov.ru/rest/V1/customers/smsAccount/password")
                             .header("User-Agent", "RiglaMobileClient(android Android-Q-build-20210804020623 2.10.2 (stable) (Tue Oct 13 15:50:27 2020 +0200) on 'android_arm64')")
                             .header("platform", "android")
-                            .post(RequestBody.create(data.toString(), MediaType.parse("application/json")))
+                            .put(RequestBody.create(data.toString(), MediaType.parse("application/json")))
                             .build()).enqueue(callback);
                 } catch (JSONException e) {
                     e.printStackTrace();
