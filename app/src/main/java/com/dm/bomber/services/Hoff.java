@@ -9,7 +9,7 @@ public class Hoff extends ParamsService {
         setMethod(POST);
         setPhoneCode("7");
     }
-    
+
     @Override
     public void buildParams(HttpUrl.Builder builder) {
         builder.addQueryParameter("type", "confirm_phone");

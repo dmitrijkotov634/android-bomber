@@ -10,15 +10,6 @@ public abstract class Service {
 
     public String requireCode;
 
-    public void setPhoneCode(String phoneCode) {
-        this.requireCode = phoneCode;
-    }
-
-    public void prepare(String phoneCode, String phone) {
-        this.phoneCode = phoneCode;
-        this.phone = phone;
-    }
-
     private static String randomString(char min, char max, int length) {
         StringBuilder result = new StringBuilder();
         Random random = new Random();
@@ -42,10 +33,6 @@ public abstract class Service {
         return getUserName() + "@" + new String[]{"gmail.com", "mail.ru", "yandex.ru"}[random.nextInt(3)];
     }
 
-    public String getFormattedPhone() {
-        return this.phoneCode + this.phone;
-    }
-
     public static String format(String phone, String mask) {
         StringBuilder formattedPhone = new StringBuilder();
 
@@ -60,6 +47,19 @@ public abstract class Service {
         }
 
         return formattedPhone.toString();
+    }
+
+    public void setPhoneCode(String phoneCode) {
+        this.requireCode = phoneCode;
+    }
+
+    public void prepare(String phoneCode, String phone) {
+        this.phoneCode = phoneCode;
+        this.phone = phone;
+    }
+
+    public String getFormattedPhone() {
+        return this.phoneCode + this.phone;
     }
 
     public abstract Request run();

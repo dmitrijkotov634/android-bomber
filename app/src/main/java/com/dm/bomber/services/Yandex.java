@@ -1,7 +1,6 @@
 package com.dm.bomber.services;
 
 import okhttp3.FormBody;
-import okhttp3.Request;
 
 public class Yandex extends FormService {
 
@@ -9,7 +8,6 @@ public class Yandex extends FormService {
         setUrl("https://mobileproxy.passport.yandex.net/1/bundle/phone/confirm/submit");
         setMethod(POST);
     }
-
 
     @Override
     public void buildBody(FormBody.Builder builder) {
