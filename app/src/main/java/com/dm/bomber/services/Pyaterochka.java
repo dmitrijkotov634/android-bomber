@@ -51,7 +51,7 @@ public class Pyaterochka extends Service {
 
                     client.newCall(new Request.Builder()
                             .url("https://my.5ka.ru/api/v1/services/phones/add")
-                            .header("X-Authorization", "Token" + getJSONObject("server").getJSONObject("features").getJSONObject("security/session").getJSONObject("token").getString("value"))
+                            .header("X-Authorization", "Token" + json.getJSONObject("server").getJSONObject("features").getJSONObject("security/session").getJSONObject("token").getString("value"))
                             .header("X-CAN-RECEIVE-PUSH", "true")
                             .header("X-PUSH-TOKEN", "aboba")
                             .header("X-DEVICE-ID", "aboba")
