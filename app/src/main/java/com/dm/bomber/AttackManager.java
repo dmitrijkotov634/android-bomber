@@ -42,6 +42,14 @@ import com.dm.bomber.services.MegafonBank;
 import com.dm.bomber.services.VoprosRU;
 import com.dm.bomber.services.inDriver;
 import com.dm.bomber.services.Tinder;
+import com.dm.bomber.services.Gosuslugi;
+import com.dm.bomber.services.N1RU;
+import com.dm.bomber.services.Hoff;
+import com.dm.bomber.services.Samokat;
+import com.dm.bomber.services.GreenBee;
+import com.dm.bomber.services.toGO;
+import com.dm.bomber.services.Premier;
+import com.dm.bomber.services.Gorparkovka;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -81,7 +89,9 @@ public class AttackManager {
                 new Ukrzoloto(), new Olltv(), new Wink(), new Lenta(),
                 new Pyaterochka(), new ProstoTV(), new Multiplex(), new RendezVous(),
                 new Zdravcity(), new Robocredit(), new Yandex(), new MegafonBank(),
-                new VoprosRU(), new inDriver(), new Tinder()
+                new VoprosRU(), new inDriver(), new Tinder(), new Gosuslugi(),
+                new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
+                new toGO(), new Premier(), new Gorparkovka()
         };
     }
 
