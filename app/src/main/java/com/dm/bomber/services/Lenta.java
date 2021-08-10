@@ -24,7 +24,7 @@ public class Lenta extends JsonService {
         JSONObject json = new JSONObject();
 
         try {
-            json.put("phone", this.phone);
+            json.put("phone", phone);
         } catch (JSONException e) {
             e.printStackTrace();
         }
