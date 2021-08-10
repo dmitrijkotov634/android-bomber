@@ -8,7 +8,7 @@ import okhttp3.Request;
 public class YotaTV extends JsonService {
 
     public YotaTV() {
-        setUrl("https://bmp.tv.yota.ru/api/v10/auth/register/msisdn");
+        setUrl("https://bmp.tv.yota.ru/api/v10/auth/password_reset");
         setMethod(POST);
     }
 
@@ -23,7 +23,7 @@ public class YotaTV extends JsonService {
         JSONObject json = new JSONObject();
 
         try {
-            json.put("msisdn", getFormattedPhone());
+            json.put("msisdn", "+" + getFormattedPhone());
             json.put("password", "1234657");
         } catch (JSONException e) {
             e.printStackTrace();
