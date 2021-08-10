@@ -12,7 +12,7 @@ public class Eldorado extends JsonService {
         setMethod(POST);
         setPhoneCode("7");
     }
-    
+
     @Override
     public Request buildRequest(Request.Builder builder) {
         builder.addHeader("User-Agent", "Dalvik/2.1.0 (Linux; U; Android 10; Redmi Note 3 Build/QQ3A.200905.001)");

@@ -10,8 +10,8 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class BudZdorov extends Service {
@@ -28,6 +28,7 @@ public class BudZdorov extends Service {
             extension.put("via_sms_notify", "true");
             extension.put("favorite_store_point", "0");
             extension.put("device_uu_id", "2652f89e-97e4-49dd-9ccf-c94c3226de59");
+
             customer.put("email", getEmail());
             customer.put("firstname", "Иван");
             customer.put("middlename", "Иванович");

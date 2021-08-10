@@ -62,7 +62,7 @@ public abstract class Service {
     }
 
     public String getFormattedPhone() {
-        return this.phoneCode + this.phone;
+        return phoneCode + phone;
     }
 
     public abstract void run(Callback callback);
