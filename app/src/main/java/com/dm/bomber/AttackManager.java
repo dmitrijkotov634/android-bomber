@@ -51,6 +51,11 @@ import com.dm.bomber.services.YandexEda;
 import com.dm.bomber.services.YotaTV;
 import com.dm.bomber.services.Zdravcity;
 import com.dm.bomber.services.inDriver;
+import com.dm.bomber.services.MegaDisk;
+import com.dm.bomber.services.KazanExpress;
+import com.dm.bomber.services.BudZdorov;
+import com.dm.bomber.services.FoodBand;
+import com.dm.bomber.services.Benzuber;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -91,7 +96,9 @@ public class AttackManager {
                 new Zdravcity(), new Robocredit(), new Yandex(), new MegafonBank(),
                 new VoprosRU(), new inDriver(), new Tinder(), new Gosuslugi(),
                 new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
-                new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff()
+                new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
+                new MegaDisk(), new KazanExpress(), new BudZdorov(), new FoodBand(),
+                new Benzuber()
         };
     }
 
@@ -163,6 +170,7 @@ public class AttackManager {
                             progress++;
                             tasks.countDown();
 
+                            Log.e(TAG, service.getClass().getName());
                             e.printStackTrace();
                         }
 
