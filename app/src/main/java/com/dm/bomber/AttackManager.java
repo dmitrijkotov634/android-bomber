@@ -56,6 +56,10 @@ import com.dm.bomber.services.YandexEda;
 import com.dm.bomber.services.YotaTV;
 import com.dm.bomber.services.Zdravcity;
 import com.dm.bomber.services.inDriver;
+import com.dm.bomber.services.Verniy;
+import com.dm.bomber.services.Citimobil;
+import com.dm.bomber.services.HHru;
+import com.dm.bomber.services.Ozon;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -98,7 +102,7 @@ public class AttackManager {
                 new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
                 new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
                 new MegaDisk(), new KazanExpress(), new BudZdorov(), new FoodBand(),
-                new Benzuber()
+                new Benzuber(), new Verniy(), new Citimobil(), new HHru(), new Ozon()
         };
     }
 

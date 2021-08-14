@@ -6,6 +6,7 @@ public class FoodBand extends ParamsService {
 
     public FoodBand() {
         setUrl("https://is.foodband.ru/api/rest/public/v2/customers/sendVerificationCode");
+        setPhoneCode("7");
     }
 
     @Override

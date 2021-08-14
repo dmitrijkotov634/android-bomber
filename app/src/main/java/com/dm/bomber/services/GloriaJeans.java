@@ -10,6 +10,7 @@ public class GloriaJeans extends JsonService {
     public GloriaJeans() {
         setUrl("https://www.gloria-jeans.ru/phone-verification/send-code/registration");
         setMethod(POST);
+        setPhoneCode("7");
     }
     
     @Override
