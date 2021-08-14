@@ -40,7 +40,7 @@ public class Aushan extends Service {
                             .get()
                             .build()).enqueue(callback);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    callback.onResponse(call, response);
                 }
             }
         });

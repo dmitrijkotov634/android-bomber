@@ -30,6 +30,7 @@ import com.dm.bomber.services.Mcdonalds;
 import com.dm.bomber.services.MegaDisk;
 import com.dm.bomber.services.MegafonBank;
 import com.dm.bomber.services.MegafonTV;
+import com.dm.bomber.services.MFC;
 import com.dm.bomber.services.Modulebank;
 import com.dm.bomber.services.Multiplex;
 import com.dm.bomber.services.N1RU;
@@ -104,7 +105,7 @@ public class AttackManager {
                 new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
                 new MegaDisk(), new KazanExpress(), new BudZdorov(), new FoodBand(),
                 new Benzuber(), new Verniy(), new Citimobil(), new HHru(),
-                new Ozon(), new Aushan(), new Uber()
+                new Ozon(), new Aushan(), new Uber(), new MFC()
         };
     }
 
