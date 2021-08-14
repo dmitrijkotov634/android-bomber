@@ -8,6 +8,7 @@ public class VoprosRU extends JsonService {
     public VoprosRU() {
         setUrl("https://vopros.ru/api/users/identity_by_msisdn");
         setMethod(POST);
+        setPhoneCode("7");
     }
 
     @Override

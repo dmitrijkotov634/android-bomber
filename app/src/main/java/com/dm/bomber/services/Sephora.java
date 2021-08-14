@@ -10,6 +10,7 @@ public class Sephora extends JsonService {
     public Sephora() {
         setUrl("https://api.sephora.ru/sms/code/send");
         setMethod(POST);
+        setPhoneCode("7");
     }
 
     @Override

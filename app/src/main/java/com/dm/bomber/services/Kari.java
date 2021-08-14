@@ -6,6 +6,7 @@ public class Kari extends ParamsService {
 
     public Kari() {
         setUrl("https://i.api.kari.com/ecommerce/client/registration/verify/phone/code");
+        setPhoneCode("7");
     }
 
     @Override

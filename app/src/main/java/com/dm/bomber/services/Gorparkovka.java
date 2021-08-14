@@ -8,6 +8,7 @@ public class Gorparkovka extends JsonService {
     public Gorparkovka() {
         setUrl("https://belparking.ru/auth/api/1.0/pincodes");
         setMethod(POST);
+        setPhoneCode("7");
     }
 
     @Override

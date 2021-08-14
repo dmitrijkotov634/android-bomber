@@ -10,6 +10,7 @@ public class YotaTV extends JsonService {
     public YotaTV() {
         setUrl("https://bmp.tv.yota.ru/api/v10/auth/password_reset");
         setMethod(POST);
+        setPhoneCode("7");
     }
 
     @Override
