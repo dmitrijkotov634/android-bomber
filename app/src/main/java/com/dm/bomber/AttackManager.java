@@ -106,7 +106,8 @@ public class AttackManager {
                 new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
                 new MegaDisk(), new KazanExpress(), new BudZdorov(), new FoodBand(),
                 new Benzuber(), new Verniy(), new Citimobil(), new HHru(),
-                new Ozon(), new Aushan(), new Uber(), new MFC()
+                new Ozon(), new Aushan(), new Uber(), new MFC(),
+                new Ostin()
         };
     }
 
