@@ -52,6 +52,7 @@ import com.dm.bomber.services.Telegram;
 import com.dm.bomber.services.Tinder;
 import com.dm.bomber.services.Tinkoff;
 import com.dm.bomber.services.ToGO;
+import com.dm.bomber.services.Uber;
 import com.dm.bomber.services.Ukrzoloto;
 import com.dm.bomber.services.Verniy;
 import com.dm.bomber.services.VoprosRU;
@@ -103,7 +104,7 @@ public class AttackManager {
                 new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
                 new MegaDisk(), new KazanExpress(), new BudZdorov(), new FoodBand(),
                 new Benzuber(), new Verniy(), new Citimobil(), new HHru(),
-                new Ozon(), new Aushan()
+                new Ozon(), new Aushan(), new Uber()
         };
     }
 
