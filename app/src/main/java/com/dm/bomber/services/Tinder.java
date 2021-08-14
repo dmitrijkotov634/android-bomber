@@ -10,6 +10,7 @@ public class Tinder extends JsonService {
     public Tinder() {
         setUrl("https://api.gotinder.com/v2/auth/sms/send?auth_type=sms");
         setMethod(POST);
+        setPhoneCode("7");
     }
 
     @Override

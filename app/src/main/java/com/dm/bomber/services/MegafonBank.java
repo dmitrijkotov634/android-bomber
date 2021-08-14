@@ -8,6 +8,7 @@ public class MegafonBank extends JsonService {
     public MegafonBank() {
         setUrl("https://bank.megafon.ru/mobileapi/api/v31/user/register/");
         setMethod(POST);
+        setPhoneCode("7");
     }
 
     @Override
