@@ -102,8 +102,7 @@ public class AttackManager {
                 new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
                 new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
                 new MegaDisk(), new KazanExpress(), new BudZdorov(), new FoodBand(),
-                new Benzuber(), new Verniy(), new Citimobil(), new KrasnoBeloe(),
-                new HHru(), new Ozon()
+                new Benzuber(), new Verniy(), new Citimobil(), new HHru(), new Ozon()
         };
     }
 
