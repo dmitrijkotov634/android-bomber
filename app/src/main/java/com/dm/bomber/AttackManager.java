@@ -5,6 +5,7 @@ import android.util.Log;
 import com.dm.bomber.services.Alltime;
 import com.dm.bomber.services.Askona;
 import com.dm.bomber.services.AtPrime;
+import com.dm.bomber.services.Aushan;
 import com.dm.bomber.services.Benzuber;
 import com.dm.bomber.services.BudZdorov;
 import com.dm.bomber.services.CarSmile;
@@ -102,7 +103,7 @@ public class AttackManager {
                 new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
                 new MegaDisk(), new KazanExpress(), new BudZdorov(), new FoodBand(),
                 new Benzuber(), new Verniy(), new Citimobil(), new HHru(),
-                new Ozon()
+                new Ozon(), new Aushan()
         };
     }
 
