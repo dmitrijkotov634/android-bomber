@@ -1,7 +1,7 @@
 package com.dm.bomber.services;
 
-import okhttp3.Request;
 import okhttp3.HttpUrl;
+import okhttp3.Request;
 
 public class HHru extends ParamsService {
 
@@ -10,7 +10,7 @@ public class HHru extends ParamsService {
         setMethod(POST);
         setPhoneCode("7");
     }
-    
+
     @Override
     public Request buildRequest(Request.Builder builder) {
         builder.addHeader("User-Agent", "ru.hh.android/6.36.11083, Device: M2010J19SY, Android OS: 11 (UUID: b9b32fc8-2088-42cf-a87a-1c99aa980bfe)");
