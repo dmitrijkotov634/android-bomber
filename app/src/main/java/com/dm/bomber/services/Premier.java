@@ -1,37 +1,55 @@
 package com.dm.bomber.services;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
-public class Premier extends JsonService {
-
-    public Premier() {
-        setUrl("https://premier.one/app/v1.1.3/user/register/send-otp-password");
-        setMethod(POST);
-    }
+public class Premier extends Service {
 
     @Override
-    public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("x-device-type", "mobile");
-        builder.addHeader("x-device-id", "bruh");
-        builder.addHeader("x-auth-token", "");
-        builder.addHeader("User-Agent", "premier-one-Android-2.19.0");
-
-        return super.buildRequest(builder);
-    }
-
-    @Override
-    public String buildJson() {
-        JSONObject json = new JSONObject();
-
+    public void run(Callback callback) {
         try {
-            json.put("phone", "+" + getFormattedPhone());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            client.newCall(new Request.Builder()
+                    .url("https://premier.one/app/v1.1.3/user/register/check-phone")
+                    .header("x-device-type", "mobile")
+                    .header("x-device-id", "bruh")
+                    .header("x-auth-token", "")
+                    .header("User-Agent", "premier-one-Android-2.19.0")
+                    .post(RequestBody.create(new JSONObject().put("phone", "+" + getFormattedPhone()).toString(), MediaType.parse("application/json")))
+                    .build()).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    callback.onFailure(call, e);
+                }
 
-        return json.toString();
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    try {
+                        client.newCall(new Request.Builder()
+                                .url("https://premier.one/app/v1.1.3/user/register/send-otp-password")
+                                .header("x-device-type", "mobile")
+                                .header("x-device-id", "bruh")
+                                .header("x-auth-token", "")
+                                .header("User-Agent", "premier-one-Android-2.19.0")
+                                .post(RequestBody.create(new JSONObject().put("phone", "+" + getFormattedPhone()).toString(), MediaType.parse("application/json")))
+                                .build()).enqueue(callback);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+           });
+       } catch (JSONException e) {
+           e.printStackTrace();
+       }
     }
 }

@@ -10,6 +10,7 @@ public class Farfor extends JsonService {
     public Farfor() {
         setUrl("https://api.farfor.ru/v3/842b03f5-7db9-4850-9cb1-407f894abf5e/ufa/auth/request_code/");
         setMethod(POST);
+        setPhoneCode("7");
     }
 
     @Override

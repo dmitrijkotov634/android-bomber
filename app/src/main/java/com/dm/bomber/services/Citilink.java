@@ -7,6 +7,7 @@ public class Citilink extends ParamsService {
     public Citilink() {
         setUrl("https://www.citilink.ru/registration/confirm/phone/");
         setMethod(POST);
+        setPhoneCode("7");
     }
 
     @Override

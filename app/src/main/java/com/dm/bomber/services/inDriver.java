@@ -8,6 +8,7 @@ public class inDriver extends FormService {
     public inDriver() {
         setUrl("https://rukzbrothers.ru/api/authorization?locale=ru_RU");
         setMethod(POST);
+        setPhoneCode("7");
     }
 
     @Override

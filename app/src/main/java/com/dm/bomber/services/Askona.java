@@ -6,6 +6,7 @@ public class Askona extends ParamsService {
 
     public Askona() {
         setUrl("https://www.askona.ru/api/registration/sendcode");
+        setPhoneCode("7");
     }
 
     @Override
