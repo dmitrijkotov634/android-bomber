@@ -83,8 +83,7 @@ public class AttackManager {
 
     public AttackManager(Callback callback) {
         Service.client = new OkHttpClient.Builder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
+                .callTimeout(7, TimeUnit.SECONDS)
                 .build();
 
         this.callback = callback;
