@@ -51,23 +51,24 @@ public class BudZdorov extends Service {
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                JSONObject data = new JSONObject();
+
                 try {
-                    JSONObject data = new JSONObject();
                     data.put("contact", format(getFormattedPhone(), "+* (***) ***-**-**"));
                     data.put("type", "telephone");
                     data.put("template", "email_reset");
                     data.put("websiteId", "0");
-
-                    client.newCall(new Request.Builder()
-                            .url("https://www.budzdorov.ru/rest/V1/customers/smsAccount/password")
-                            .header("User-Agent", "RiglaMobileClient(android Android-Q-build-20210804020623 2.10.2 (stable) (Tue Oct 13 15:50:27 2020 +0200) on 'android_arm64')")
-                            .header("platform", "android")
-                            .put(RequestBody.create(data.toString(), MediaType.parse("application/json")))
-                            .build()).enqueue(callback);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                client.newCall(new Request.Builder()
+                        .url("https://www.budzdorov.ru/rest/V1/customers/smsAccount/password")
+                        .header("User-Agent", "RiglaMobileClient(android Android-Q-build-20210804020623 2.10.2 (stable) (Tue Oct 13 15:50:27 2020 +0200) on 'android_arm64')")
+                        .header("platform", "android")
+                        .put(RequestBody.create(data.toString(), MediaType.parse("application/json")))
+                        .build()).enqueue(callback);
             }
         });
     }

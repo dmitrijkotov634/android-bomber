@@ -69,7 +69,7 @@ public class Pyaterochka extends Service {
                             .post(RequestBody.create(req.toString(), MediaType.parse("application/json")))
                             .build()).enqueue(callback);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    callback.onResponse(call, response);
                 }
             }
         });
