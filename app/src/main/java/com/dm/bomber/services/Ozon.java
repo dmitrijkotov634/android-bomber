@@ -48,18 +48,14 @@ public class Ozon extends Service {
                     JSONObject json = new JSONObject(response.body().string());
                     JSONObject req = new JSONObject();
 
-                    try {
-                        req.put("vendor", "Xiaomi");
-                        req.put("hasSmartLock", "true");
-                        req.put("hasBiometrics", "true");
-                        req.put("biometryType", "FINGER_PRINT");
-                        req.put("model", "Xiaomi M2010J19SY");
-                        req.put("deviceId", "none");
-                        req.put("version", "11");
-                        req.put("phone", getFormattedPhone());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    req.put("vendor", "Xiaomi");
+                    req.put("hasSmartLock", "true");
+                    req.put("hasBiometrics", "true");
+                    req.put("biometryType", "FINGER_PRINT");
+                    req.put("model", "Xiaomi M2010J19SY");
+                    req.put("deviceId", "none");
+                    req.put("version", "11");
+                    req.put("phone", getFormattedPhone());
 
                     client.newCall(new Request.Builder()
                             .url("https://api.ozon.ru/composer-api.bx/_action/" + json
@@ -72,7 +68,7 @@ public class Ozon extends Service {
                             .post(RequestBody.create(req.toString(), MediaType.parse("application/json")))
                             .build()).enqueue(callback);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    callback.onResponse(call, response);
                 }
             }
         });
