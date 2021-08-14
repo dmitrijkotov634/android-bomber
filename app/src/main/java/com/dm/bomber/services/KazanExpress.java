@@ -39,19 +39,20 @@ public class KazanExpress extends Service {
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                try {
-                    JSONObject login = new JSONObject();
-                    login.put("login", getFormattedPhone());
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                JSONObject login = new JSONObject();
 
-                    client.newCall(new Request.Builder()
-                            .url("https://api.kazanexpress.ru/api/restore")
-                            .header("User-Agent", "KazanExpress/Android (com.kazanexpress.ke_app; 1.4.5)")
-                            .post(RequestBody.create(login.toString(), MediaType.parse("application/json")))
-                            .build()).enqueue(callback);
+                try {
+                    login.put("login", getFormattedPhone());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                client.newCall(new Request.Builder()
+                        .url("https://api.kazanexpress.ru/api/restore")
+                        .header("User-Agent", "KazanExpress/Android (com.kazanexpress.ke_app; 1.4.5)")
+                        .post(RequestBody.create(login.toString(), MediaType.parse("application/json")))
+                        .build()).enqueue(callback);
             }
         });
     }

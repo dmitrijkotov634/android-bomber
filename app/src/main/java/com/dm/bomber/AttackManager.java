@@ -34,7 +34,6 @@ import com.dm.bomber.services.Multiplex;
 import com.dm.bomber.services.N1RU;
 import com.dm.bomber.services.OK;
 import com.dm.bomber.services.Olltv;
-import com.dm.bomber.services.Ozon;
 import com.dm.bomber.services.Premier;
 import com.dm.bomber.services.ProstoTV;
 import com.dm.bomber.services.Pyaterochka;
@@ -102,7 +101,7 @@ public class AttackManager {
                 new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
                 new MegaDisk(), new KazanExpress(), new BudZdorov(), new FoodBand(),
                 new Benzuber(), new Verniy(), new Citimobil(), new HHru(),
-                new Ozon()
+                //TODO: new Ozon()
         };
     }
 

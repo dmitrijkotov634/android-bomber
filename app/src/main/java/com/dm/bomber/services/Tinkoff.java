@@ -50,7 +50,7 @@ public class Tinkoff extends Service {
                                     .build())
                             .build()).enqueue(callback);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    callback.onResponse(call, response);
                 }
             }
         });
