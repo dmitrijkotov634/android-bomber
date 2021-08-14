@@ -36,6 +36,7 @@ import com.dm.bomber.services.Multiplex;
 import com.dm.bomber.services.N1RU;
 import com.dm.bomber.services.OK;
 import com.dm.bomber.services.Olltv;
+import com.dm.bomber.services.Ostin;
 import com.dm.bomber.services.Ozon;
 import com.dm.bomber.services.Premier;
 import com.dm.bomber.services.ProstoTV;
