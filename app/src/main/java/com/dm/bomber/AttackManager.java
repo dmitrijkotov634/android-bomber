@@ -9,6 +9,7 @@ import com.dm.bomber.services.Benzuber;
 import com.dm.bomber.services.BudZdorov;
 import com.dm.bomber.services.CarSmile;
 import com.dm.bomber.services.Citilink;
+import com.dm.bomber.services.Citimobil;
 import com.dm.bomber.services.Eldorado;
 import com.dm.bomber.services.Farfor;
 import com.dm.bomber.services.Fivepost;
@@ -17,6 +18,7 @@ import com.dm.bomber.services.GloriaJeans;
 import com.dm.bomber.services.Gorparkovka;
 import com.dm.bomber.services.Gosuslugi;
 import com.dm.bomber.services.GreenBee;
+import com.dm.bomber.services.HHru;
 import com.dm.bomber.services.Hoff;
 import com.dm.bomber.services.ICQ;
 import com.dm.bomber.services.Kari;
@@ -32,6 +34,7 @@ import com.dm.bomber.services.Multiplex;
 import com.dm.bomber.services.N1RU;
 import com.dm.bomber.services.OK;
 import com.dm.bomber.services.Olltv;
+import com.dm.bomber.services.Ozon;
 import com.dm.bomber.services.Premier;
 import com.dm.bomber.services.ProstoTV;
 import com.dm.bomber.services.Pyaterochka;
@@ -49,6 +52,7 @@ import com.dm.bomber.services.Tinder;
 import com.dm.bomber.services.Tinkoff;
 import com.dm.bomber.services.ToGO;
 import com.dm.bomber.services.Ukrzoloto;
+import com.dm.bomber.services.Verniy;
 import com.dm.bomber.services.VoprosRU;
 import com.dm.bomber.services.Wink;
 import com.dm.bomber.services.Yandex;
@@ -56,10 +60,6 @@ import com.dm.bomber.services.YandexEda;
 import com.dm.bomber.services.YotaTV;
 import com.dm.bomber.services.Zdravcity;
 import com.dm.bomber.services.inDriver;
-import com.dm.bomber.services.Verniy;
-import com.dm.bomber.services.Citimobil;
-import com.dm.bomber.services.HHru;
-import com.dm.bomber.services.Ozon;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -83,8 +83,8 @@ public class AttackManager {
 
     public AttackManager(Callback callback) {
         Service.client = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
                 .build();
 
         this.callback = callback;
@@ -102,7 +102,8 @@ public class AttackManager {
                 new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
                 new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
                 new MegaDisk(), new KazanExpress(), new BudZdorov(), new FoodBand(),
-                new Benzuber(), new Verniy(), new Citimobil(), new HHru(), new Ozon()
+                new Benzuber(), new Verniy(), new Citimobil(), new HHru(),
+                new Ozon()
         };
     }
 

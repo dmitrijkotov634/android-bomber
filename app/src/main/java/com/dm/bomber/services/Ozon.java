@@ -10,7 +10,6 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
-import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -19,7 +18,7 @@ public class Ozon extends Service {
 
     @Override
     public void run(Callback callback) {
-    	JSONObject json = new JSONObject();
+        JSONObject json = new JSONObject();
 
         try {
             json.put("vendor", "Xiaomi");
@@ -47,17 +46,17 @@ public class Ozon extends Service {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
                     JSONObject json = new JSONObject(response.body().string());
-                    JSONObject json_ = new JSONObject();
+                    JSONObject req = new JSONObject();
 
                     try {
-                        json_.put("vendor", "Xiaomi");
-                        json_.put("hasSmartLock", "true");
-                        json_.put("hasBiometrics", "true");
-                        json_.put("biometryType", "FINGER_PRINT");
-                        json_.put("model", "Xiaomi M2010J19SY");
-                        json_.put("deviceId", "none");
-                        json_.put("version", "11");
-                        json_.put("phone", getFormattedPhone());
+                        req.put("vendor", "Xiaomi");
+                        req.put("hasSmartLock", "true");
+                        req.put("hasBiometrics", "true");
+                        req.put("biometryType", "FINGER_PRINT");
+                        req.put("model", "Xiaomi M2010J19SY");
+                        req.put("deviceId", "none");
+                        req.put("version", "11");
+                        req.put("phone", getFormattedPhone());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -70,7 +69,7 @@ public class Ozon extends Service {
                                     .getJSONObject("submitButton")
                                     .getString("action"))
                             .header("User-Agent", "ozonapp_android/13.18+1650")
-                            .post(RequestBody.create(json_.toString(), MediaType.parse("application/json")))
+                            .post(RequestBody.create(req.toString(), MediaType.parse("application/json")))
                             .build()).enqueue(callback);
                 } catch (JSONException e) {
                     e.printStackTrace();

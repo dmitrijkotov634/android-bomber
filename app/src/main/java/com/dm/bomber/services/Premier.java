@@ -33,7 +33,7 @@ public class Premier extends Service {
                 }
 
                 @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         client.newCall(new Request.Builder()
                                 .url("https://premier.one/app/v1.1.3/user/register/send-otp-password")
@@ -47,9 +47,9 @@ public class Premier extends Service {
                         e.printStackTrace();
                     }
                 }
-           });
-       } catch (JSONException e) {
-           e.printStackTrace();
-       }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
