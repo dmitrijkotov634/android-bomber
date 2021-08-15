@@ -5,6 +5,7 @@ import android.util.Log;
 import com.dm.bomber.services.Alltime;
 import com.dm.bomber.services.Askona;
 import com.dm.bomber.services.AtPrime;
+import com.dm.bomber.services.Aushan;
 import com.dm.bomber.services.Benzuber;
 import com.dm.bomber.services.BudZdorov;
 import com.dm.bomber.services.CarSmile;
@@ -29,11 +30,13 @@ import com.dm.bomber.services.Mcdonalds;
 import com.dm.bomber.services.MegaDisk;
 import com.dm.bomber.services.MegafonBank;
 import com.dm.bomber.services.MegafonTV;
+import com.dm.bomber.services.MFC;
 import com.dm.bomber.services.Modulebank;
 import com.dm.bomber.services.Multiplex;
 import com.dm.bomber.services.N1RU;
 import com.dm.bomber.services.OK;
 import com.dm.bomber.services.Olltv;
+import com.dm.bomber.services.Ostin;
 import com.dm.bomber.services.Ozon;
 import com.dm.bomber.services.Premier;
 import com.dm.bomber.services.ProstoTV;
@@ -51,6 +54,7 @@ import com.dm.bomber.services.Telegram;
 import com.dm.bomber.services.Tinder;
 import com.dm.bomber.services.Tinkoff;
 import com.dm.bomber.services.ToGO;
+import com.dm.bomber.services.Uber;
 import com.dm.bomber.services.Ukrzoloto;
 import com.dm.bomber.services.Verniy;
 import com.dm.bomber.services.VoprosRU;
@@ -102,7 +106,8 @@ public class AttackManager {
                 new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
                 new MegaDisk(), new KazanExpress(), new BudZdorov(), new FoodBand(),
                 new Benzuber(), new Verniy(), new Citimobil(), new HHru(),
-                new Ozon()
+                new Ozon(), new Aushan(), new Uber(), new MFC(),
+                new Ostin()
         };
     }
 
