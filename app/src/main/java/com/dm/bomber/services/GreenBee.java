@@ -7,7 +7,6 @@ public class GreenBee extends FormService {
     public GreenBee() {
         setUrl("https://admin.gbee.app/api/v6/sendSmsToken");
         setMethod(POST);
-        setPhoneCode("7");
     }
 
     @Override
