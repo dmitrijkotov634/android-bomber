@@ -1,11 +1,8 @@
 package com.dm.bomber.services;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import okhttp3.Request;
 
-public class Magnit extends JsonService {
+public class Magnit extends Gorparkovka {
 
     public Magnit() {
         setUrl("https://middle-api.magnit.ru/v3/auth/otp");
@@ -20,18 +17,5 @@ public class Magnit extends JsonService {
         builder.addHeader("x-app-version", "6.18.5");
 
         return super.buildRequest(builder);
-    }
-
-    @Override
-    public String buildJson() {
-        JSONObject json = new JSONObject();
-
-        try {
-            json.put("phone", getFormattedPhone());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return json.toString();
     }
 }

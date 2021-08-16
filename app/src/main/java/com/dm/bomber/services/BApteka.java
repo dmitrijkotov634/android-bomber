@@ -1,11 +1,8 @@
 package com.dm.bomber.services;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import okhttp3.Request;
 
-public class BApteka extends JsonService {
+public class BApteka extends Gorparkovka {
 
     public BApteka() {
         setUrl("https://b-apteka.ru/api/lk/send_code");
@@ -19,18 +16,5 @@ public class BApteka extends JsonService {
         builder.addHeader("b-apteka-session", "null");
 
         return super.buildRequest(builder);
-    }
-
-    @Override
-    public String buildJson() {
-        JSONObject json = new JSONObject();
-
-        try {
-            json.put("phone", getFormattedPhone());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return json.toString();
     }
 }
