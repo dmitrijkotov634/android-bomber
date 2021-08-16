@@ -2,7 +2,7 @@ package com.dm.bomber.services;
 
 import okhttp3.Request;
 
-public class Samokat extends GloriaJeans {
+public class Samokat extends Fivepost {
 
     public Samokat() {
         setUrl("https://api.samokat.ru/showcase/confirmation/code");

@@ -1,11 +1,8 @@
 package com.dm.bomber.services;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import okhttp3.Request;
 
-public class GloriaJeans extends JsonService {
+public class GloriaJeans extends Fivepost {
 
     public GloriaJeans() {
         setUrl("https://www.gloria-jeans.ru/phone-verification/send-code/registration");
@@ -19,18 +16,5 @@ public class GloriaJeans extends JsonService {
         builder.addHeader("X-Requested-With", "XMLHttpRequest");
 
         return super.buildRequest(builder);
-    }
-
-    @Override
-    public String buildJson() {
-        JSONObject json = new JSONObject();
-
-        try {
-            json.put("phoneNumber", "+" + getFormattedPhone());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return json.toString();
     }
 }
