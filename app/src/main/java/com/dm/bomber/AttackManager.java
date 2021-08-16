@@ -2,16 +2,20 @@ package com.dm.bomber;
 
 import android.util.Log;
 
+import com.dm.bomber.services.ABank24;
 import com.dm.bomber.services.Alltime;
 import com.dm.bomber.services.Askona;
 import com.dm.bomber.services.AtPrime;
 import com.dm.bomber.services.Aushan;
+import com.dm.bomber.services.BApteka;
 import com.dm.bomber.services.Benzuber;
 import com.dm.bomber.services.BudZdorov;
 import com.dm.bomber.services.CarSmile;
 import com.dm.bomber.services.Citilink;
 import com.dm.bomber.services.Citimobil;
+import com.dm.bomber.services.EKA;
 import com.dm.bomber.services.Eldorado;
+import com.dm.bomber.services.Evotor;
 import com.dm.bomber.services.Farfor;
 import com.dm.bomber.services.Fivepost;
 import com.dm.bomber.services.FoodBand;
@@ -20,11 +24,13 @@ import com.dm.bomber.services.Gorparkovka;
 import com.dm.bomber.services.Gosuslugi;
 import com.dm.bomber.services.GreenBee;
 import com.dm.bomber.services.HHru;
+import com.dm.bomber.services.HiceBank;
 import com.dm.bomber.services.Hoff;
 import com.dm.bomber.services.ICQ;
 import com.dm.bomber.services.Kari;
 import com.dm.bomber.services.KazanExpress;
 import com.dm.bomber.services.Lenta;
+import com.dm.bomber.services.Magnit;
 import com.dm.bomber.services.MTS;
 import com.dm.bomber.services.Mcdonalds;
 import com.dm.bomber.services.MegaDisk;
@@ -32,21 +38,29 @@ import com.dm.bomber.services.MegafonBank;
 import com.dm.bomber.services.MegafonTV;
 import com.dm.bomber.services.MFC;
 import com.dm.bomber.services.Modulebank;
+import com.dm.bomber.services.Mokka;
 import com.dm.bomber.services.Multiplex;
 import com.dm.bomber.services.N1RU;
+import com.dm.bomber.services.Neftm;
 import com.dm.bomber.services.OK;
+import com.dm.bomber.services.Okolo;
 import com.dm.bomber.services.Olltv;
 import com.dm.bomber.services.Ostin;
 import com.dm.bomber.services.Ozon;
+import com.dm.bomber.services.Plazius;
 import com.dm.bomber.services.Premier;
 import com.dm.bomber.services.ProstoTV;
 import com.dm.bomber.services.Pyaterochka;
 import com.dm.bomber.services.RendezVous;
 import com.dm.bomber.services.Robocredit;
 import com.dm.bomber.services.Samokat;
+import com.dm.bomber.services.SberZvuk;
 import com.dm.bomber.services.Sephora;
 import com.dm.bomber.services.Service;
+import com.dm.bomber.services.SimpleWine;
+import com.dm.bomber.services.Smotrim;
 import com.dm.bomber.services.Sravni;
+import com.dm.bomber.services.Stolichki;
 import com.dm.bomber.services.SushiWok;
 import com.dm.bomber.services.Tele2;
 import com.dm.bomber.services.Tele2TV;
@@ -87,7 +101,7 @@ public class AttackManager {
 
     public AttackManager(Callback callback) {
         Service.client = new OkHttpClient.Builder()
-                .callTimeout(7, TimeUnit.SECONDS)
+                // .callTimeout(7, TimeUnit.SECONDS)
                 .build();
 
         this.callback = callback;
@@ -107,7 +121,10 @@ public class AttackManager {
                 new MegaDisk(), new KazanExpress(), new BudZdorov(), new FoodBand(),
                 new Benzuber(), new Verniy(), new Citimobil(), new HHru(),
                 new Ozon(), new Aushan(), new Uber(), new MFC(),
-                new Ostin()
+                new Ostin(), new EKA(), new Neftm(), new Plazius(),
+                new Okolo(), new Magnit(), new SberZvuk(), new Smotrim(),
+                new Mokka(), new SimpleWine(), new ABank24(), new Stolichki(),
+                new BApteka(), new HiceBank(), new Evotor()
         };
     }
 
