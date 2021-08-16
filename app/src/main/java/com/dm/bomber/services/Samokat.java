@@ -1,11 +1,8 @@
 package com.dm.bomber.services;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import okhttp3.Request;
 
-public class Samokat extends JsonService {
+public class Samokat extends GloriaJeans {
 
     public Samokat() {
         setUrl("https://api.samokat.ru/showcase/confirmation/code");
@@ -20,18 +17,5 @@ public class Samokat extends JsonService {
         builder.addHeader("x-application-version", "3.16.2");
 
         return super.buildRequest(builder);
-    }
-
-    @Override
-    public String buildJson() {
-        JSONObject json = new JSONObject();
-
-        try {
-            json.put("phoneNumber", "+" + getFormattedPhone());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return json.toString();
     }
 }

@@ -1,7 +1,7 @@
 package com.dm.bomber.services;
 
-import okhttp3.Request;
 import okhttp3.HttpUrl;
+import okhttp3.Request;
 
 public class SberZvuk extends ParamsService {
 
@@ -10,7 +10,7 @@ public class SberZvuk extends ParamsService {
         setMethod(POST);
         setPhoneCode("7");
     }
-    
+
     @Override
     public Request buildRequest(Request.Builder builder) {
         builder.addHeader("User-Agent", "OpenPlay|4.5.4|Android|11|Xiaomi M2010J19SY");

