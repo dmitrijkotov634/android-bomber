@@ -6,4 +6,5 @@
     <string name="cycles_error">Количество повторов должно быть положительным числом</string>
     <string name="darktheme">Тёмная тема</string>
     <string name="donate">Пожертвование</string>
+    <string name="ignore_code">Игнорировать код страны</string>
 </resources>

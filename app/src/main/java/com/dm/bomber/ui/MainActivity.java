@@ -11,6 +11,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -23,7 +24,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import jp.wasabeef.blurry.Blurry;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AttackManager.Callback {
     private ActivityMainBinding binding;
 
     private AttackManager attackManager;
@@ -62,45 +63,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        attackManager = new AttackManager(new AttackManager.Callback() {
-            @Override
-            public void onAttackEnd() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        binding.attack.setVisibility(View.GONE);
-                        blurMain(false);
-                    }
-                });
-            }
-
-            @Override
-            public void onAttackStart(int serviceCount, int numberOfCycles) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                        input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
-
-                        binding.progress.setMax(serviceCount * numberOfCycles);
-                        binding.progress.setProgress(0);
-
-                        binding.attack.setVisibility(View.VISIBLE);
-                        blurMain(true);
-                    }
-                });
-            }
-
-            @Override
-            public void onProgressChange(int progress) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        binding.progress.setProgress(progress);
-                    }
-                });
-            }
-        });
+        attackManager = new AttackManager(this);
+        attackManager.setIgnoreCode(preferences.getIgnoreCode());
 
         binding.startAttack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +126,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.appThemeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
+        binding.ignoreCode.setChecked(preferences.getIgnoreCode());
+
+        binding.ignoreCode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                preferences.setIgnoreCode(isChecked);
+                attackManager.setIgnoreCode(isChecked);
+            }
+        });
     }
 
     @Override
@@ -188,6 +161,44 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void onAttackEnd() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                binding.attack.setVisibility(View.GONE);
+                blurMain(false);
+            }
+        });
+    }
+
+    @Override
+    public void onAttackStart(int serviceCount, int numberOfCycles) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
+
+                binding.progress.setMax(serviceCount * numberOfCycles);
+                binding.progress.setProgress(0);
+
+                binding.attack.setVisibility(View.VISIBLE);
+                blurMain(true);
+            }
+        });
+    }
+
+    @Override
+    public void onProgressChange(int progress) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                binding.progress.setProgress(progress);
+            }
+        });
     }
 
     private void blurMain(boolean visible) {
