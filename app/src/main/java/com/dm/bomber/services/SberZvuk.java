@@ -3,17 +3,17 @@ package com.dm.bomber.services;
 import okhttp3.Request;
 import okhttp3.HttpUrl;
 
-public class MFC extends ParamsService {
+public class SberZvuk extends ParamsService {
 
-    public MFC() {
-        setUrl("https://api.mfc-d.com/v1/auth/phone");
+    public SberZvuk() {
+        setUrl("https://zvuk.com/api/tiny/get-otp");
         setMethod(POST);
         setPhoneCode("7");
     }
-
+    
     @Override
     public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("User-Agent", "MFC/1.2.40 (com.mfcd.digital; build:68; Android 11 (30))");
+        builder.addHeader("User-Agent", "OpenPlay|4.5.4|Android|11|Xiaomi M2010J19SY");
 
         return super.buildRequest(builder);
     }
@@ -21,5 +21,7 @@ public class MFC extends ParamsService {
     @Override
     public void buildParams(HttpUrl.Builder builder) {
         builder.addQueryParameter("phone", "+" + getFormattedPhone());
+        builder.addQueryParameter("type", "login");
+        builder.addQueryParameter("length", "10");
     }
 }

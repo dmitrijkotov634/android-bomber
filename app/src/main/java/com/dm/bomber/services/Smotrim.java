@@ -3,23 +3,22 @@ package com.dm.bomber.services;
 import okhttp3.Request;
 import okhttp3.HttpUrl;
 
-public class MFC extends ParamsService {
+public class Smotrim extends ParamsService {
 
-    public MFC() {
-        setUrl("https://api.mfc-d.com/v1/auth/phone");
-        setMethod(POST);
+    public Smotrim() {
+        setUrl("https://account.smotrim.ru/api/v1/auth");
         setPhoneCode("7");
     }
-
+    
     @Override
     public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("User-Agent", "MFC/1.2.40 (com.mfcd.digital; build:68; Android 11 (30))");
+        builder.addHeader("User-Agent", "Smotrim/7.6_70502 (Redmi, M2010J19SY, Android 11)");
 
         return super.buildRequest(builder);
     }
 
     @Override
     public void buildParams(HttpUrl.Builder builder) {
-        builder.addQueryParameter("phone", "+" + getFormattedPhone());
+        builder.addQueryParameter("phone", getFormattedPhone());
     }
 }
