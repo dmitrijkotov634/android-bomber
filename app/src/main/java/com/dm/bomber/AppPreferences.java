@@ -10,6 +10,7 @@ public class AppPreferences {
     private SharedPreferences prefs;
 
     private static final String DARKMODE = "darkmode";
+    private static final String IGNORE_CODE = "ignore_code";
 
     public AppPreferences(Context context) {
         this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -21,5 +22,13 @@ public class AppPreferences {
 
     public int getTheme() {
         return prefs.getInt(DARKMODE, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+    }
+
+    public void setIgnoreCode(boolean status) {
+        prefs.edit().putBoolean(IGNORE_CODE, status).apply();
+    }
+
+    public boolean getIgnoreCode() {
+        return prefs.getBoolean(IGNORE_CODE, false);
     }
 }
