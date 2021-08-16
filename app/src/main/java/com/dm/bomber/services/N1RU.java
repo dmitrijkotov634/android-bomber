@@ -26,7 +26,7 @@ public class N1RU extends JsonService {
 
         try {
             json.put("login", getFormattedPhone());
-            json.put("password", "abcdefgejjsjdjsjwje");
+            json.put("password", "qwertyuiop123");
             json.put("type", "contractor");
         } catch (JSONException e) {
             e.printStackTrace();

@@ -8,7 +8,6 @@ public class SberZvuk extends ParamsService {
     public SberZvuk() {
         setUrl("https://zvuk.com/api/tiny/get-otp");
         setMethod(POST);
-        setPhoneCode("7");
     }
 
     @Override

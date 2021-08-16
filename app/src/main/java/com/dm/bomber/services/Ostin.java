@@ -10,7 +10,6 @@ public class Ostin extends JsonService {
     public Ostin() {
         setUrl("https://mobileapp.ostin.com/v3/sms?layout=mobile_app&locale=ru-RU");
         setMethod(POST);
-        setPhoneCode("7");
     }
 
     @Override
