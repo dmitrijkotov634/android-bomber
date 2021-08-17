@@ -10,18 +10,24 @@ import com.dm.bomber.services.Askona;
 import com.dm.bomber.services.AtPrime;
 import com.dm.bomber.services.Aushan;
 import com.dm.bomber.services.BApteka;
+import com.dm.bomber.services.Baucenter;
 import com.dm.bomber.services.Benzuber;
 import com.dm.bomber.services.BudZdorov;
 import com.dm.bomber.services.CarSmile;
+import com.dm.bomber.services.ChestnyZnak;
 import com.dm.bomber.services.Citilink;
 import com.dm.bomber.services.Citimobil;
+import com.dm.bomber.services.Dolyame;
+import com.dm.bomber.services.DvaBerega;
 import com.dm.bomber.services.EKA;
 import com.dm.bomber.services.Eldorado;
 import com.dm.bomber.services.Evotor;
 import com.dm.bomber.services.Farfor;
 import com.dm.bomber.services.Fivepost;
 import com.dm.bomber.services.FoodBand;
+import com.dm.bomber.services.FriendsClub;
 import com.dm.bomber.services.GloriaJeans;
+import com.dm.bomber.services.GoldApple;
 import com.dm.bomber.services.Gorparkovka;
 import com.dm.bomber.services.Gosuslugi;
 import com.dm.bomber.services.GreenBee;
@@ -54,6 +60,7 @@ import com.dm.bomber.services.Premier;
 import com.dm.bomber.services.ProstoTV;
 import com.dm.bomber.services.Pyaterochka;
 import com.dm.bomber.services.RendezVous;
+import com.dm.bomber.services.RiveGauche;
 import com.dm.bomber.services.Robocredit;
 import com.dm.bomber.services.Samokat;
 import com.dm.bomber.services.SberZvuk;
@@ -61,6 +68,7 @@ import com.dm.bomber.services.Sephora;
 import com.dm.bomber.services.Service;
 import com.dm.bomber.services.SimpleWine;
 import com.dm.bomber.services.Smotrim;
+import com.dm.bomber.services.Sportmaster;
 import com.dm.bomber.services.Sravni;
 import com.dm.bomber.services.Stolichki;
 import com.dm.bomber.services.SushiWok;
@@ -77,6 +85,7 @@ import com.dm.bomber.services.VoprosRU;
 import com.dm.bomber.services.Wink;
 import com.dm.bomber.services.Yandex;
 import com.dm.bomber.services.YandexEda;
+import com.dm.bomber.services.Yarche;
 import com.dm.bomber.services.YotaTV;
 import com.dm.bomber.services.Zdravcity;
 import com.dm.bomber.services.inDriver;
@@ -140,7 +149,9 @@ public class AttackManager {
                 new Ostin(), new EKA(), new Neftm(), new Plazius(),
                 new Okolo(), new Magnit(), new SberZvuk(), new Smotrim(),
                 new Mokka(), new SimpleWine(), new ABank24(), new Stolichki(),
-                new BApteka(), new HiceBank(), new Evotor()
+                new BApteka(), new HiceBank(), new Evotor(), new Sportmaster(),
+                new RiveGauche(), new Yarche(), new Baucenter(), new Dolyame(),
+                new GoldApple(), new FriendsClub(), new ChestnyZnak(), new DvaBerega()
         };
     }
 
