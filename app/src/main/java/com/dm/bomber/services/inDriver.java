@@ -8,7 +8,6 @@ public class inDriver extends FormService {
     public inDriver() {
         setUrl("https://rukzbrothers.ru/api/authorization?locale=ru_RU");
         setMethod(POST);
-        setPhoneCode("7");
     }
 
     @Override
@@ -22,7 +21,7 @@ public class inDriver extends FormService {
     public void buildBody(FormBody.Builder builder) {
         builder.add("phone", phone);
         builder.add("mode", "request");
-        builder.add("phoneCode", "+7");
+        builder.add("phoneCode", "+" + phoneCode);
         builder.add("countryIso", "RU");
         builder.add("phone_permission", "unknown");
         builder.add("stream_id", "0");
