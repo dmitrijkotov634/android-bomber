@@ -1,7 +1,5 @@
 package com.dm.bomber.services;
 
-import org.json.JSONObject;
-
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -16,8 +14,6 @@ public class Tele2 extends ParamsService {
 
     @Override
     public Request buildRequest(Request.Builder builder) {
-        JSONObject json = new JSONObject();
-
         RequestBody body = RequestBody.create(
                 "{\"sender\": \"Tele2\"}", MediaType.parse("application/json"));
 

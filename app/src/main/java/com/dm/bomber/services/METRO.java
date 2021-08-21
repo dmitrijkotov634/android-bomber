@@ -5,17 +5,16 @@ import org.json.JSONObject;
 
 import okhttp3.Request;
 
-public class Gorparkovka extends JsonService {
+public class METRO extends JsonService {
 
-    public Gorparkovka() {
-        setUrl("https://belparking.ru/auth/api/1.0/pincodes");
+    public METRO() {
+        setUrl("https://api.metro-cc.ru/auth/api/v1/public/send_otp");
         setMethod(POST);
-        setPhoneCode("7");
     }
 
     @Override
     public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("x-client-info", "androidMobileApp/2.6.5");
+        builder.addHeader("authorization", "9c0fe65e-51a9-4b7c-a54d-b2b28f3a922f");
 
         return super.buildRequest(builder);
     }
@@ -25,7 +24,8 @@ public class Gorparkovka extends JsonService {
         JSONObject json = new JSONObject();
 
         try {
-            json.put("phone", getFormattedPhone());
+            json.put("phone", "+" + getFormattedPhone());
+            json.put("smsHash", "hi2LBOdVq64");
         } catch (JSONException e) {
             e.printStackTrace();
         }
