@@ -5,17 +5,17 @@ import org.json.JSONObject;
 
 import okhttp3.Request;
 
-public class Gorparkovka extends JsonService {
+public class Sunlight extends JsonService {
 
-    public Gorparkovka() {
-        setUrl("https://belparking.ru/auth/api/1.0/pincodes");
+    public Sunlight() {
+        setUrl("https://api.sunlight.net/v1/auth/send_code/");
         setMethod(POST);
         setPhoneCode("7");
     }
 
     @Override
     public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("x-client-info", "androidMobileApp/2.6.5");
+        builder.addHeader("User-Agent", "sunlight-android, 12801080");
 
         return super.buildRequest(builder);
     }
@@ -25,7 +25,8 @@ public class Gorparkovka extends JsonService {
         JSONObject json = new JSONObject();
 
         try {
-            json.put("phone", getFormattedPhone());
+            json.put("type", "phone");
+            json.put("phone", phone);
         } catch (JSONException e) {
             e.printStackTrace();
         }

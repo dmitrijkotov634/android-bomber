@@ -20,9 +20,9 @@ public class Baucenter extends Service {
     public void run(Callback callback) {
         client.newCall(new Request.Builder()
                 .url("https://ma.baucenter.ru/auth/sessionRegister")
-                .header("x-api-token", "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCtj8uTFmdASuHU")
+                .header("x-api-key", "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCtj8uTFmdASuHU")
                 .header("x-auth-token", "")
-                .post(RequestBody.create("", MediaType.parse("application/json")))
+                .post(RequestBody.create(null, new byte[0]))
                 .build()).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
