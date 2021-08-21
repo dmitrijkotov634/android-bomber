@@ -5,17 +5,16 @@ import org.json.JSONObject;
 
 import okhttp3.Request;
 
-public class CarSmile extends JsonService {
+public class Citydrive extends JsonService {
 
-    public CarSmile() {
-        setUrl("https://api.carsmile.com/");
+    public Citydrive() {
+        setUrl("https://cs-v2.youdrive.today/signup");
         setMethod(POST);
     }
 
     @Override
     public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("User-Agent", "okhttp/3.12.1");
-        builder.addHeader("authorization", "Bearer null");
+        builder.addHeader("User-Agent", "carsharing/4.1.1 (Linux; Android 11; M2010J19SY Build/REL)");
 
         return super.buildRequest(builder);
     }
@@ -25,9 +24,12 @@ public class CarSmile extends JsonService {
         JSONObject json = new JSONObject();
 
         try {
-            json.put("operationName", "enterPhone");
-            json.put("variables", new JSONObject().put("phone", getFormattedPhone()));
-            json.put("query", "mutation enterPhone($phone: String!) {\n  enterPhone(phone: $phone)\n}\n");
+            json.put("os", "android");
+            json.put("phone", phone);
+            json.put("phone_code", phoneCode);
+            json.put("token", "null");
+            json.put("token_type", "fcm");
+            json.put("vendor_id", "null");
         } catch (JSONException e) {
             e.printStackTrace();
         }

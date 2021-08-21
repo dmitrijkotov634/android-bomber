@@ -15,7 +15,7 @@ public class EKA extends JsonService {
 
     @Override
     public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("User-Agent", "ru.growapps.eka/2.9 (M2010J19SY; Android 11)");
+        builder.addHeader("User-Agent", "ru.growapps.eka/2.9 (None; Android 11)");
 
         return super.buildRequest(builder);
     }
@@ -25,8 +25,8 @@ public class EKA extends JsonService {
         JSONObject json = new JSONObject();
 
         try {
-            json.put("Login", "+" + getFormattedPhone());
             json.put("Type", "0");
+            json.put("Login", "+" + getFormattedPhone());
         } catch (JSONException e) {
             e.printStackTrace();
         }
