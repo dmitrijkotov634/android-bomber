@@ -5,17 +5,21 @@ import org.json.JSONObject;
 
 import okhttp3.Request;
 
-public class Gorparkovka extends JsonService {
+public class Boxberry extends JsonService {
 
-    public Gorparkovka() {
-        setUrl("https://belparking.ru/auth/api/1.0/pincodes");
+    public Boxberry() {
+        setUrl("https://mobile.boxberry.ru/api/v1/sms/code/send");
         setMethod(POST);
         setPhoneCode("7");
     }
 
     @Override
     public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("x-client-info", "androidMobileApp/2.6.5");
+        builder.addHeader("platform", "android");
+        builder.addHeader("os-version", "11");
+        builder.addHeader("app-version", "1.5.2");
+        builder.addHeader("device", "null");
+        builder.addHeader("x-access-token", "null");
 
         return super.buildRequest(builder);
     }
@@ -26,6 +30,7 @@ public class Gorparkovka extends JsonService {
 
         try {
             json.put("phone", getFormattedPhone());
+            json.put("reason", "registration");
         } catch (JSONException e) {
             e.printStackTrace();
         }
