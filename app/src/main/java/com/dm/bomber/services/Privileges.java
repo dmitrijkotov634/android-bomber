@@ -15,7 +15,7 @@ public class Privileges extends JsonService {
         JSONObject json = new JSONObject();
 
         try {
-            json.put("parameter", "{\"MobilePhone\":\"" + "+" + getFormattedPhone() +"\",\"AppId\":\"15\"}");
+            json.put("parameter", "{\"MobilePhone\":\"" + "+" + getFormattedPhone() + "\",\"AppId\":\"15\"}");
         } catch (JSONException e) {
             e.printStackTrace();
         }
