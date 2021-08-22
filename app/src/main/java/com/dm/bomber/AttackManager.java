@@ -41,7 +41,7 @@ import com.dm.bomber.services.HHru;
 import com.dm.bomber.services.HiceBank;
 import com.dm.bomber.services.Hoff;
 import com.dm.bomber.services.ICQ;
-import com.dm.bomber.services.inDriver;
+import com.dm.bomber.services.InDriver;
 import com.dm.bomber.services.Kari;
 import com.dm.bomber.services.KazanExpress;
 import com.dm.bomber.services.Lenta;
@@ -52,7 +52,7 @@ import com.dm.bomber.services.Mcdonalds;
 import com.dm.bomber.services.MegaDisk;
 import com.dm.bomber.services.MegafonBank;
 import com.dm.bomber.services.MegafonTV;
-import com.dm.bomber.services.METRO;
+import com.dm.bomber.services.Metro;
 import com.dm.bomber.services.Modulebank;
 import com.dm.bomber.services.MoeZdorovie;
 import com.dm.bomber.services.Mokka;
@@ -158,7 +158,7 @@ public class AttackManager {
                 new Ukrzoloto(), new Olltv(), new Wink(), new Lenta(),
                 new Pyaterochka(), new ProstoTV(), new Multiplex(), new RendezVous(),
                 new Zdravcity(), new Robocredit(), new Yandex(), new MegafonBank(),
-                new VoprosRU(), new inDriver(), new Tinder(), new Gosuslugi(),
+                new VoprosRU(), new InDriver(), new Tinder(), new Gosuslugi(),
                 new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
                 new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
                 new MegaDisk(), new KazanExpress(), new BudZdorov(), new FoodBand(),
@@ -173,7 +173,7 @@ public class AttackManager {
                 new MoeZdorovie(), new Sokolov(), new Boxberry(), new Discord(),
                 new Privileges(), new NearKitchen(), new Citydrive(), new BelkaCar(),
                 new Mozen(), new MosMetro(), new BCS(), new Dostavista(),
-                new METRO(), new Niyama(), new RabotaRu(), new Sunlight(),
+                new Metro(), new Niyama(), new RabotaRu(), new Sunlight(),
                 new TikTok(), new Zoloto585()
         };
     }

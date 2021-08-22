@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
 public class AppPreferences {
-    private SharedPreferences prefs;
+    private final SharedPreferences prefs;
 
     private static final String DARKMODE = "darkmode";
     private static final String IGNORE_CODE = "ignore_code";

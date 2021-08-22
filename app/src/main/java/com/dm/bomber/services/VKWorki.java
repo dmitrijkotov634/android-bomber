@@ -33,13 +33,13 @@ public class VKWorki extends JsonService {
         try {
             adjust.put("adid", "null");
             adjust.put("android_id", "null");
-            
+
             device.put("adjust", adjust);
             device.put("language", "ru");
             device.put("sms_hash", "fxTe0rFJkXA");
             device.put("token", "null");
             device.put("type", "android");
-            
+
             json.put("device", device);
             json.put("phone", getFormattedPhone());
         } catch (JSONException e) {

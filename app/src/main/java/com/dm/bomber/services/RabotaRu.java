@@ -19,7 +19,7 @@ public class RabotaRu extends Service {
 
     @Override
     public void run(Callback callback) {
-        JSONObject req = new JSONObject();
+        JSONObject json = new JSONObject();
         JSONObject request = new JSONObject();
 
         try {
@@ -33,16 +33,16 @@ public class RabotaRu extends Service {
             request.put("mobile_app_version", "4.33.7");
             request.put("yandex_id", "");
 
-            req.put("request", request);
+            json.put("request", request);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         client.newCall(new Request.Builder()
-            .url("https://api.rabota.ru/v4/settings.json")
-            .header("User-Agent", "Rabota/4.33.7 (ru.rabota.app2; build:2021043307; Android 11) okhttp/4.8.0")
-            .post(RequestBody.create(req.toString(), MediaType.parse("application/json")))
-            .build()).enqueue(new Callback() {
+                .url("https://api.rabota.ru/v4/settings.json")
+                .header("User-Agent", "Rabota/4.33.7 (ru.rabota.app2; build:2021043307; Android 11) okhttp/4.8.0")
+                .post(RequestBody.create(json.toString(), MediaType.parse("application/json")))
+                .build()).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.onFailure(call, e);
@@ -53,21 +53,23 @@ public class RabotaRu extends Service {
                 try {
                     JSONObject json = new JSONObject(response.body().string());
                     JSONObject request = new JSONObject();
-                    JSONObject req = new JSONObject();
+                    JSONObject body = new JSONObject();
 
                     request.put("is_during_response", false);
                     request.put("login", getFormattedPhone());
 
-                    req.put("request", request);
-                    req.put("user_tags", new JSONArray());
-                    req.put("rabota_ru_id", json.getJSONObject("response").getString("rabota_ru_id"));
-                    req.put("application_id", "10");
+                    body.put("request", request);
+                    body.put("user_tags", new JSONArray());
+                    body.put("rabota_ru_id", json
+                            .getJSONObject("response")
+                            .getString("rabota_ru_id"));
+                    body.put("application_id", "10");
 
                     client.newCall(new Request.Builder()
-                        .url("https://api.rabota.ru/v4/register.json")
-                        .header("User-Agent", "Rabota/4.33.7 (ru.rabota.app2; build:2021043307; Android 11) okhttp/4.8.0")
-                        .post(RequestBody.create(req.toString(), MediaType.parse("application/json")))
-                        .build()).enqueue(callback);
+                            .url("https://api.rabota.ru/v4/register.json")
+                            .header("User-Agent", "Rabota/4.33.7 (ru.rabota.app2; build:2021043307; Android 11) okhttp/4.8.0")
+                            .post(RequestBody.create(body.toString(), MediaType.parse("application/json")))
+                            .build()).enqueue(callback);
                 } catch (JSONException e) {
                     callback.onResponse(call, response);
                 }

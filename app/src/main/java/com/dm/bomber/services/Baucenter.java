@@ -22,7 +22,7 @@ public class Baucenter extends Service {
                 .url("https://ma.baucenter.ru/auth/sessionRegister")
                 .header("x-api-key", "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCtj8uTFmdASuHU")
                 .header("x-auth-token", "")
-                .post(RequestBody.create(null, new byte[0]))
+                .post(RequestBody.create(new byte[0]))
                 .build()).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
