@@ -11,7 +11,6 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -66,74 +65,54 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
         attackManager = new AttackManager(this);
         attackManager.setIgnoreCode(preferences.getIgnoreCode());
 
-        binding.startAttack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String phoneNumber = binding.phoneNumber.getText().toString();
-                String numberOfCycles = binding.cyclesCount.getText().toString();
+        binding.startAttack.setOnClickListener(view -> {
+            String phoneNumber = binding.phoneNumber.getText().toString();
+            String numberOfCycles = binding.cyclesCount.getText().toString();
 
-                if (phoneNumber.length() < 7) {
-                    Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-
-                int numberOfCyclesNum;
-                if (numberOfCycles.isEmpty() || numberOfCycles.equals("-") ||
-                        (numberOfCyclesNum = Integer.parseInt(numberOfCycles)) < 0) {
-
-                    Snackbar.make(view, R.string.cycles_error, Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-
-                if (!attackManager.hasAttack())
-                    attackManager.performAttack(phoneCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
+            if (phoneNumber.length() < 7) {
+                Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
+                return;
             }
+
+            int numberOfCyclesNum;
+            if (numberOfCycles.isEmpty() || numberOfCycles.equals("-") ||
+                    (numberOfCyclesNum = Integer.parseInt(numberOfCycles)) < 0) {
+
+                Snackbar.make(view, R.string.cycles_error, Snackbar.LENGTH_LONG).show();
+                return;
+            }
+
+            if (!attackManager.hasAttack())
+                attackManager.performAttack(phoneCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
         });
 
-        binding.openMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.menu.setVisibility(View.VISIBLE);
-                blurMain(true);
-            }
+        binding.openMenu.setOnClickListener(view -> {
+            binding.menu.setVisibility(View.VISIBLE);
+            blurMain(true);
         });
 
-        binding.appThemeTile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int mode = binding.appThemeTile.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
+        binding.appThemeTile.setOnClickListener(view -> {
+            int mode = binding.appThemeTile.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
 
-                preferences.setTheme(mode);
-                AppCompatDelegate.setDefaultNightMode(mode);
-            }
+            preferences.setTheme(mode);
+            AppCompatDelegate.setDefaultNightMode(mode);
         });
 
-        binding.appThemeTile.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                preferences.setTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        binding.appThemeTile.setOnLongClickListener(view -> {
+            preferences.setTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 
-                return true;
-            }
+            return true;
         });
 
-        binding.donateTile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://qiwi.com/n/PHOSS105")));
-            }
-        });
+        binding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://qiwi.com/n/PHOSS105"))));
 
         binding.appThemeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
         binding.ignoreCode.setChecked(preferences.getIgnoreCode());
 
-        binding.ignoreCode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                preferences.setIgnoreCode(isChecked);
-                attackManager.setIgnoreCode(isChecked);
-            }
+        binding.ignoreCode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferences.setIgnoreCode(isChecked);
+            attackManager.setIgnoreCode(isChecked);
         });
     }
 
@@ -165,40 +144,29 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
 
     @Override
     public void onAttackEnd() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                binding.attack.setVisibility(View.GONE);
-                blurMain(false);
-            }
+        runOnUiThread(() -> {
+            binding.attack.setVisibility(View.GONE);
+            blurMain(false);
         });
     }
 
     @Override
     public void onAttackStart(int serviceCount, int numberOfCycles) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
+        runOnUiThread(() -> {
+            InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
 
-                binding.progress.setMax(serviceCount * numberOfCycles);
-                binding.progress.setProgress(0);
+            binding.progress.setMax(serviceCount * numberOfCycles);
+            binding.progress.setProgress(0);
 
-                binding.attack.setVisibility(View.VISIBLE);
-                blurMain(true);
-            }
+            binding.attack.setVisibility(View.VISIBLE);
+            blurMain(true);
         });
     }
 
     @Override
     public void onProgressChange(int progress) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                binding.progress.setProgress(progress);
-            }
-        });
+        runOnUiThread(() -> binding.progress.setProgress(progress));
     }
 
     private void blurMain(boolean visible) {
