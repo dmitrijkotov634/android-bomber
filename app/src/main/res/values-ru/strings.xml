@@ -3,7 +3,6 @@
     <string name="start_attack">Начать атаку</string>
     <string name="number_of_cycles">Количество повторов</string>
     <string name="phone_error">Неверный формат номера</string>
-    <string name="cycles_error">Количество повторов должно быть положительным числом</string>
     <string name="darktheme">Тёмная тема</string>
     <string name="donate">Пожертвование</string>
     <string name="ignore_code">Игнорировать код страны</string>

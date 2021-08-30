@@ -5,7 +5,6 @@
     <string name="start_attack">Start attack</string>
     <string name="number_of_cycles">Number of repetitions</string>
     <string name="phone_error">Invalid number format</string>
-    <string name="cycles_error">The number of repetitions must be a positive number</string>
     <string name="darktheme">Dark theme</string>
     <string name="donate">Donate</string>
     <string name="ignore_code">Ignore country code</string>
