@@ -65,7 +65,7 @@
             android:layout_marginStart="4dp"
             android:background="@drawable/cycles_count"
             android:hint="@string/number_of_cycles"
-            android:inputType="numberSigned"
+            android:inputType="number"
             android:maxLength="3"
             android:paddingLeft="@dimen/paddings"
             android:paddingTop="@dimen/paddings"

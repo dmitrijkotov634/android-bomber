@@ -74,13 +74,7 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
                 return;
             }
 
-            int numberOfCyclesNum;
-            if (numberOfCycles.isEmpty() || numberOfCycles.equals("-") ||
-                    (numberOfCyclesNum = Integer.parseInt(numberOfCycles)) < 0) {
-
-                Snackbar.make(view, R.string.cycles_error, Snackbar.LENGTH_LONG).show();
-                return;
-            }
+            int numberOfCyclesNum = numberOfCycles.isEmpty() ? 1 : Integer.parseInt(numberOfCycles);
 
             if (!attackManager.hasAttack())
                 attackManager.performAttack(phoneCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
