@@ -1,7 +1,7 @@
 # Android Bomber
 Открытый SMS Bomber на Android
 
-| ![screenshot1](https://user-images.githubusercontent.com/53375304/126612543-4da2aa68-b226-4f75-a1e7-7535745c7b6a.png) | ![screenshot2](https://user-images.githubusercontent.com/53375304/126612551-b8110a6c-8838-4c53-bd8e-da840f3fc185.png) |
+| ![screenshot1](https://user-images.githubusercontent.com/53375304/132372699-6dcf16be-a90b-44a7-af9b-d1dfeccb09a3.png) | ![screenshot2](https://user-images.githubusercontent.com/53375304/132372703-93edec31-d083-4714-b362-1e76f6c926e0.png) |
 |-----------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 
 ## Контакты
