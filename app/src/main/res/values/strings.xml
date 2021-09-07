@@ -7,7 +7,6 @@
     <string name="phone_error">Invalid number format</string>
     <string name="darktheme">Dark theme</string>
     <string name="donate">Donate</string>
-    <string name="ignore_code">Ignore country code</string>
 
     <string-array name="hints">
         <item>912 345-67-89</item>

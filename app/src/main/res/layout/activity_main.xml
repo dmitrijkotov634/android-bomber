@@ -175,30 +175,12 @@
             app:flow_maxElementsWrap="2"
             app:flow_verticalGap="8dp"
             app:flow_wrapMode="chain"
-            app:layout_constraintBottom_toTopOf="@+id/flow2"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
-
-        <CheckBox
-            android:id="@+id/ignore_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ignore_code"
-            tools:layout_editor_absoluteX="32dp"
-            tools:layout_editor_absoluteY="402dp" />
-
-        <androidx.constraintlayout.helper.widget.Flow
-            android:id="@+id/flow2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:constraint_referenced_ids="ignore_code"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/app_theme_tile"
-            app:layout_constraintTop_toBottomOf="@+id/flow" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

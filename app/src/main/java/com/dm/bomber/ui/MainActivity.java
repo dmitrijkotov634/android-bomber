@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
         });
 
         attackManager = new AttackManager(this);
-        attackManager.setIgnoreCode(preferences.getIgnoreCode());
 
         binding.startAttack.setOnClickListener(view -> {
             String phoneNumber = binding.phoneNumber.getText().toString();
@@ -100,14 +99,7 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
         });
 
         binding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://qiwi.com/n/PHOSS105"))));
-
         binding.appThemeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
-        binding.ignoreCode.setChecked(preferences.getIgnoreCode());
-
-        binding.ignoreCode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            preferences.setIgnoreCode(isChecked);
-            attackManager.setIgnoreCode(isChecked);
-        });
     }
 
     @Override
