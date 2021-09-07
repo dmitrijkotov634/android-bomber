@@ -23,7 +23,6 @@ public class AttackManager {
 
     private Attack attack;
     private final Callback callback;
-    private boolean ignoreCode;
 
     public AttackManager(Callback callback) {
         Service.client = new OkHttpClient.Builder()
@@ -74,10 +73,6 @@ public class AttackManager {
         attack.start();
     }
 
-    public void setIgnoreCode(boolean status) {
-        ignoreCode = status;
-    }
-
     public boolean hasAttack() {
         return attack != null && attack.isAlive();
     }
@@ -91,7 +86,7 @@ public class AttackManager {
         List<Service> usableServices = new ArrayList<>();
 
         for (Service service : services) {
-            if (ignoreCode || service.requireCode == null || service.requireCode.equals(phoneCode))
+            if (service.requireCode == null || service.requireCode.equals(phoneCode) || phoneCode.isEmpty())
                 usableServices.add(service);
         }
 

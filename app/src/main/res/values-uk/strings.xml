@@ -5,5 +5,4 @@
     <string name="phone_error">Невірний формат номера</string>
     <string name="darktheme">Темна тема</string>
     <string name="donate">Пожертвування</string>
-    <string name="ignore_code">Ігнорувати код країни</string>
 </resources>
