@@ -8,13 +8,13 @@ import okhttp3.Request;
 public class Wink extends JsonService {
 
     public Wink() {
-        setUrl("https://cnt-vlmr-itv01.svc.iptv.rt.ru/api/v2/portal/send_sms_code");
+        setUrl("https://cnt-vlmr-itv02.svc.iptv.rt.ru/api/v2/portal/send_sms_code");
         setMethod(POST);
     }
 
     @Override
     public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("session_id", "82e3c374-f507-11eb-8c0b-9c1d36dcd072:1951416:2237006:2");
+        builder.addHeader("session_id", "73ad9141-1323-11ec-9883-4857027601a0:1951416:2237006:2");
         return super.buildRequest(builder);
     }
 
