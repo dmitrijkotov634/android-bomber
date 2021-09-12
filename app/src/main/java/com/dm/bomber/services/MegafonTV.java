@@ -12,7 +12,7 @@ public class MegafonTV extends YotaTV {
 
     @Override
     public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("Cookie", "SessionID=9bu7oyJSGEoGRkOho-5kOR7DcG7JC_4t0zaeM2bJ1YM");
+        builder.addHeader("Cookie", "SessionID=cD52ZTEFTR5JPrL3T94T7K-lV5wfZEKz8VV1GQlFL6w");
         return super.buildRequest(builder);
     }
 }
