@@ -129,11 +129,14 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
     }
 
     @Override
-    public void onAttackEnd() {
+    public void onAttackEnd(boolean success) {
         runOnUiThread(() -> {
             binding.attack.setVisibility(View.GONE);
             blurMain(false);
         });
+
+        if (!success)
+            Snackbar.make(binding.main, R.string.phone_error, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
