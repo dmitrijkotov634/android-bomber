@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
 
             int numberOfCyclesNum = numberOfCycles.isEmpty() ? 1 : Integer.parseInt(numberOfCycles);
 
+            preferences.setLastPhoneCode(binding.phoneCode.getSelectedItemPosition());
+            preferences.setLastPhone(phoneNumber);
+
             if (!attackManager.hasAttack())
                 attackManager.performAttack(phoneCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
         });
@@ -100,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
 
         binding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://qiwi.com/n/PHOSS105"))));
         binding.appThemeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
+
+        onWindowFocusChanged(true);
     }
 
     @Override
@@ -109,22 +114,24 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
-        if (!clipboard.hasPrimaryClip())
-            return;
+        if (clipboard.hasPrimaryClip()) {
+            String text = clipboard.getPrimaryClip().getItemAt(0).coerceToText(this).toString();
 
-        String text = clipboard.getPrimaryClip().getItemAt(0).coerceToText(this).toString();
+            if (text.matches("\\+(7|380|375)([0-9()\\-\\s])*")) {
+                text = text.substring(1);
 
-        if (text.matches("\\+(7|380|375)([0-9()\\-\\s])*")) {
-            text = text.substring(1);
+                for (int i = 0; i < phoneCodes.length; i++) {
+                    if (text.startsWith(phoneCodes[i])) {
+                        binding.phoneCode.setSelection(i);
+                        binding.phoneNumber.setText(text.substring(phoneCodes[i].length()).replaceAll("[^\\d.]", ""));
 
-            for (int i = 0; i < phoneCodes.length; i++) {
-                if (text.startsWith(phoneCodes[i])) {
-                    binding.phoneCode.setSelection(i);
-                    binding.phoneNumber.setText(text.substring(phoneCodes[i].length()).replaceAll("[^\\d.]", ""));
-
-                    return;
+                        return;
+                    }
                 }
             }
+        } else {
+            binding.phoneCode.setSelection(preferences.getLastPhoneCode());
+            binding.phoneNumber.setText(preferences.getLastPhone());
         }
     }
 

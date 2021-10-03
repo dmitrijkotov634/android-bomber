@@ -14,7 +14,7 @@ public class Wink extends JsonService {
 
     @Override
     public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("session_id", "73ad9141-1323-11ec-9883-4857027601a0:1951416:2237006:2");
+        builder.addHeader("session_id", "6048b2b6-244a-11ec-8146-4857027601a0:1951416:2237006:2");
         return super.buildRequest(builder);
     }
 

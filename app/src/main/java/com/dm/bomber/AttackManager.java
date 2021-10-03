@@ -33,7 +33,6 @@ import com.dm.bomber.services.GreenBee;
 import com.dm.bomber.services.HHru;
 import com.dm.bomber.services.HiceBank;
 import com.dm.bomber.services.Hoff;
-import com.dm.bomber.services.ICQ;
 import com.dm.bomber.services.InDriver;
 import com.dm.bomber.services.Kari;
 import com.dm.bomber.services.KazanExpress;
@@ -56,7 +55,6 @@ import com.dm.bomber.services.NearKitchen;
 import com.dm.bomber.services.Niyama;
 import com.dm.bomber.services.OK;
 import com.dm.bomber.services.Olltv;
-import com.dm.bomber.services.Ostin;
 import com.dm.bomber.services.Ozon;
 import com.dm.bomber.services.Premier;
 import com.dm.bomber.services.Privileges;
@@ -75,7 +73,6 @@ import com.dm.bomber.services.Sokolov;
 import com.dm.bomber.services.Sportmaster;
 import com.dm.bomber.services.Stolichki;
 import com.dm.bomber.services.Sunlight;
-import com.dm.bomber.services.SushiWok;
 import com.dm.bomber.services.Tele2;
 import com.dm.bomber.services.Tele2TV;
 import com.dm.bomber.services.Telegram;
@@ -85,7 +82,6 @@ import com.dm.bomber.services.Tinkoff;
 import com.dm.bomber.services.ToGO;
 import com.dm.bomber.services.Ukrzoloto;
 import com.dm.bomber.services.VKWorki;
-import com.dm.bomber.services.VoprosRU;
 import com.dm.bomber.services.Wink;
 import com.dm.bomber.services.Yandex;
 import com.dm.bomber.services.YandexEda;
@@ -129,22 +125,20 @@ public class AttackManager {
 
         this.callback = callback;
         this.services = new Service[]{
-                new Kari(), new Modulebank(), new YandexEda(), new ICQ(),
+                new Kari(), new Modulebank(), new YandexEda(),
                 new GloriaJeans(), new Telegram(), new MTS(), new CarSmile(),
-                new OK(), new SushiWok(), new Tele2(), new Zoloto585(),
                 new Eldorado(), new Tele2TV(), new MegafonTV(), new YotaTV(),
                 new Fivepost(), new Askona(), new FarforCall(), new Sephora(),
                 new Ukrzoloto(), new Olltv(), new Wink(), new Lenta(),
                 new Pyaterochka(), new ProstoTV(), new Multiplex(), new RendezVous(),
-                new Zdravcity(), new Robocredit(), new Yandex(), new VoprosRU(),
-                new InDriver(), new Tinder(), new Gosuslugi(),
+                new Zdravcity(), new Robocredit(), new Yandex(), new InDriver(),
+                new Tinder(), new Gosuslugi(), new Tele2(), new Zoloto585(),
                 new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
                 new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
                 new MegaDisk(), new KazanExpress(), new FoodBand(),
-                new Benzuber(), new Citimobil(), new HHru(),
-                new Ozon(), new MFC(), new Ostin(), new EKA(),
+                new Benzuber(), new Citimobil(), new HHru(), new TikTok(),
+                new Ozon(), new MFC(), new EKA(), new OK(), new MBK(),
                 new VKWorki(), new Magnit(), new SberZvuk(), new Smotrim(),
-                new Mokka(), new FarforSMS(), new Stolichki(),
                 new BApteka(), new HiceBank(), new Evotor(), new Sportmaster(),
                 new RiveGauche(), new Yarche(), new Baucenter(), new Dolyame(),
                 new GoldApple(), new FriendsClub(), new ChestnyZnak(), new DvaBerega(),
@@ -152,7 +146,8 @@ public class AttackManager {
                 new Privileges(), new NearKitchen(), new Citydrive(), new BelkaCar(),
                 new Mozen(), new MosMetro(), new BCS(), new Dostavista(),
                 new Metro(), new Niyama(), new RabotaRu(), new Sunlight(),
-                new TikTok(), new MBK()
+                new Mokka(), new FarforSMS(), new Stolichki(),
+                // TODO: Ostin, ICQ, SushiWok, VoprosRU
         };
     }
 
