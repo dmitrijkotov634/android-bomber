@@ -15,7 +15,7 @@ public class YotaTV extends JsonService {
 
     @Override
     public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("Cookie", "SessionID=892g6kpDXMvRJlFt5wSGGED1P0slOse2jIx6WvrTfdA");
+        builder.addHeader("Cookie", "SessionID=VkthegNuC_UTNWXHuVX-CUVYLfeHomiFdtSD7sx_pm8");
         return super.buildRequest(builder);
     }
 
