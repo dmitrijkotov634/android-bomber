@@ -44,6 +44,7 @@ import com.dm.bomber.services.Magnit;
 import com.dm.bomber.services.MegaDisk;
 import com.dm.bomber.services.MegafonTV;
 import com.dm.bomber.services.Metro;
+import com.dm.bomber.services.Mirkorma;
 import com.dm.bomber.services.Modulebank;
 import com.dm.bomber.services.MoeZdorovie;
 import com.dm.bomber.services.Mokka;
@@ -146,7 +147,7 @@ public class AttackManager {
                 new Privileges(), new NearKitchen(), new Citydrive(), new BelkaCar(),
                 new Mozen(), new MosMetro(), new BCS(), new Dostavista(),
                 new Metro(), new Niyama(), new RabotaRu(), new Sunlight(),
-                new Mokka(), new FarforSMS(), new Stolichki(),
+                new Mokka(), new FarforSMS(), new Stolichki(), new Mirkorma()
                 // TODO: Ostin, ICQ, SushiWok, VoprosRU
         };
     }
