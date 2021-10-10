@@ -87,6 +87,7 @@ import com.dm.bomber.services.Wink;
 import com.dm.bomber.services.Yandex;
 import com.dm.bomber.services.YandexEda;
 import com.dm.bomber.services.Yarche;
+import com.dm.bomber.services.YooMoney;
 import com.dm.bomber.services.YotaTV;
 import com.dm.bomber.services.Zdravcity;
 import com.dm.bomber.services.Zoloto585;
@@ -147,7 +148,8 @@ public class AttackManager {
                 new Privileges(), new NearKitchen(), new Citydrive(), new BelkaCar(),
                 new Mozen(), new MosMetro(), new BCS(), new Dostavista(),
                 new Metro(), new Niyama(), new RabotaRu(), new Sunlight(),
-                new Mokka(), new FarforSMS(), new Stolichki(), new Mirkorma()
+                new Mokka(), new FarforSMS(), new Stolichki(), new Mirkorma(),
+                new YooMoney()
                 // TODO: Ostin, ICQ, SushiWok, VoprosRU
         };
     }
