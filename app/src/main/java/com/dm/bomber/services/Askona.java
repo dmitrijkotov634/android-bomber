@@ -11,7 +11,7 @@ public class Askona extends ParamsService {
 
     @Override
     public void buildParams(HttpUrl.Builder builder) {
-        builder.addQueryParameter("csrf_token", "d5f096efeef60426fd83178815e6c771");
+        builder.addQueryParameter("csrf_token", "f3ba0b13b52ee360489b8806d1ef6a89");
         builder.addQueryParameter("contact[phone]", getFormattedPhone());
     }
 }

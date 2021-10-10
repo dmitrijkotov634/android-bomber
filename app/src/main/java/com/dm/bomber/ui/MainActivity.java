@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
     private AttackManager attackManager;
     private AppPreferences preferences;
 
-    private final String[] phoneCodes = {"7", "380", "375", ""};
+    private final String[] phoneCodes = {"7", "380", ""};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
         setContentView(binding.getRoot());
 
         CountryCodeAdapter adapter = new CountryCodeAdapter(this,
-                new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_by, R.drawable.ic_all},
+                new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_all},
                 phoneCodes);
 
         String[] hints = getResources().getStringArray(R.array.hints);
@@ -130,7 +130,11 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
                 }
             }
         } else {
-            binding.phoneCode.setSelection(preferences.getLastPhoneCode());
+            int lastPhoneCode = preferences.getLastPhoneCode();
+            if (lastPhoneCode > 2)
+                lastPhoneCode = 0;
+
+            binding.phoneCode.setSelection(lastPhoneCode);
             binding.phoneNumber.setText(preferences.getLastPhone());
         }
     }
