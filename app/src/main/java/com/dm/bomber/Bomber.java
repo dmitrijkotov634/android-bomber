@@ -2,6 +2,7 @@ package com.dm.bomber;
 
 import android.util.Log;
 
+import com.dm.bomber.services.AlloUa;
 import com.dm.bomber.services.Askona;
 import com.dm.bomber.services.BApteka;
 import com.dm.bomber.services.BCS;
@@ -132,7 +133,7 @@ public class Bomber {
             new Metro(), new Niyama(), new RabotaRu(), new Sunlight(),
             new Mokka(), new FarforSMS(), new Stolichki(), new Mirkorma(),
             new YooMoney(), new Uchiru(), new Biua(), new MdFashion(),
-            new XtraTV()
+            new XtraTV(), new AlloUa()
     };
 
     public static boolean isAlive(Attack attack) {
