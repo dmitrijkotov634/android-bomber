@@ -16,17 +16,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.dm.bomber.AppPreferences;
-import com.dm.bomber.AttackManager;
+import com.dm.bomber.Bomber;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import jp.wasabeef.blurry.Blurry;
 
-public class MainActivity extends AppCompatActivity implements AttackManager.Callback {
+public class MainActivity extends AppCompatActivity implements Bomber.Callback {
     private ActivityMainBinding binding;
 
-    private AttackManager attackManager;
+    private Bomber.Attack attack;
     private AppPreferences preferences;
 
     private final String[] phoneCodes = {"7", "380", ""};
@@ -62,8 +62,6 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
             }
         });
 
-        attackManager = new AttackManager(this);
-
         binding.startAttack.setOnClickListener(view -> {
             String phoneNumber = binding.phoneNumber.getText().toString();
             String numberOfCycles = binding.cyclesCount.getText().toString();
@@ -78,8 +76,10 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
             preferences.setLastPhoneCode(binding.phoneCode.getSelectedItemPosition());
             preferences.setLastPhone(phoneNumber);
 
-            if (!attackManager.hasAttack())
-                attackManager.performAttack(phoneCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
+            if (!Bomber.isAlive(attack)) {
+                attack = new Bomber.Attack(this, phoneCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
+                attack.start();
+            }
         });
 
         binding.openMenu.setOnClickListener(view -> {
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        if (attackManager.hasAttack() || !binding.phoneNumber.getText().toString().isEmpty())
+        if (Bomber.isAlive(attack) || !binding.phoneNumber.getText().toString().isEmpty())
             return;
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
@@ -196,8 +196,8 @@ public class MainActivity extends AppCompatActivity implements AttackManager.Cal
 
     @Override
     public void onBackPressed() {
-        if (attackManager.hasAttack())
-            attackManager.stopAttack();
+        if (Bomber.isAlive(attack))
+            attack.interrupt();
         else if (binding.menu.getVisibility() == View.VISIBLE) {
             binding.menu.setVisibility(View.GONE);
             blurMain(false);
