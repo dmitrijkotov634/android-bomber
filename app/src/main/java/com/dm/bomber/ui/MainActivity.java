@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements Bomber.Callback {
 
     private final String[] phoneCodes = {"7", "380", ""};
 
+    private String clipText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         preferences = new AppPreferences(this);
@@ -73,9 +75,6 @@ public class MainActivity extends AppCompatActivity implements Bomber.Callback {
 
             int numberOfCyclesNum = numberOfCycles.isEmpty() ? 1 : Integer.parseInt(numberOfCycles);
 
-            preferences.setLastPhoneCode(binding.phoneCode.getSelectedItemPosition());
-            preferences.setLastPhone(phoneNumber);
-
             if (!Bomber.isAlive(attack)) {
                 attack = new Bomber.Attack(this, phoneCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
                 attack.start();
@@ -101,41 +100,62 @@ public class MainActivity extends AppCompatActivity implements Bomber.Callback {
             return true;
         });
 
+        binding.bomb.setOnClickListener(view -> view.animate()
+                .scaleX(1.1f)
+                .scaleY(1.1f)
+                .setDuration(100)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        view.animate()
+                                .scaleX(1f)
+                                .scaleY(1f)
+                                .setDuration(90)
+                                .setListener(null)
+                                .start();
+                    }
+                })
+                .start());
+
+        binding.phoneNumber.setOnLongClickListener(view -> {
+            if (binding.phoneNumber.getText().toString().isEmpty() &&
+                    clipText != null &&
+                    clipText.matches("\\+(7|380)([0-9()\\-\\s])*")) {
+
+                clipText = clipText.substring(1);
+
+                for (int i = 0; i < phoneCodes.length; i++) {
+
+                    if (clipText.startsWith(phoneCodes[i])) {
+                        binding.phoneCode.setSelection(i);
+                        binding.phoneNumber.setText(clipText.substring(phoneCodes[i].length()).replaceAll("[^\\d.]", ""));
+
+                        break;
+                    }
+                }
+            }
+
+            return false;
+        });
+
         binding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://qiwi.com/n/PHOSS105"))));
         binding.appThemeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
 
-        onWindowFocusChanged(true);
+        int lastPhoneCode = preferences.getLastPhoneCode();
+        if (lastPhoneCode > 2)
+            lastPhoneCode = 0;
+
+        binding.phoneCode.setSelection(lastPhoneCode);
+        binding.phoneNumber.setText(preferences.getLastPhone());
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        if (Bomber.isAlive(attack) || !binding.phoneNumber.getText().toString().isEmpty())
-            return;
+        if (hasFocus) {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-
-        if (clipboard.hasPrimaryClip()) {
-            String text = clipboard.getPrimaryClip().getItemAt(0).coerceToText(this).toString();
-
-            if (text.matches("\\+(7|380|375)([0-9()\\-\\s])*")) {
-                text = text.substring(1);
-
-                for (int i = 0; i < phoneCodes.length; i++) {
-                    if (text.startsWith(phoneCodes[i])) {
-                        binding.phoneCode.setSelection(i);
-                        binding.phoneNumber.setText(text.substring(phoneCodes[i].length()).replaceAll("[^\\d.]", ""));
-
-                        return;
-                    }
-                }
-            }
-        } else {
-            int lastPhoneCode = preferences.getLastPhoneCode();
-            if (lastPhoneCode > 2)
-                lastPhoneCode = 0;
-
-            binding.phoneCode.setSelection(lastPhoneCode);
-            binding.phoneNumber.setText(preferences.getLastPhone());
+            if (clipboard.hasPrimaryClip())
+                clipText = clipboard.getPrimaryClip().getItemAt(0).coerceToText(this).toString();
         }
     }
 
@@ -146,8 +166,12 @@ public class MainActivity extends AppCompatActivity implements Bomber.Callback {
             blurMain(false);
         });
 
-        if (!success)
+        if (success) {
+            preferences.setLastPhoneCode(binding.phoneCode.getSelectedItemPosition());
+            preferences.setLastPhone(binding.phoneNumber.getText().toString());
+        } else {
             Snackbar.make(binding.main, R.string.phone_error, Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override
