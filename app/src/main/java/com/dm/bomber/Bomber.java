@@ -43,7 +43,8 @@ public class Bomber {
             new XtraTV(), new AlloUa(), new Rulybka(), new Velobike(),
             new Technopark(), new Call2Friends(), new Ievaphone(), new WebCom(),
             new MTSBank(), new ATB(), new PerekrestokDostavka(), new Paygram(),
-            new SravniMobile(), new Otkritie(), new TeaRU(), new PetStory()
+            new SravniMobile(), new Otkritie(), new TeaRU(), new PetStory(),
+            new Profi(), new Eleven(), new Apteka(), new TochkaBank()
     };
 
     public static boolean isAlive(Attack attack) {
