@@ -68,6 +68,7 @@ import com.dm.bomber.services.RabotaRu;
 import com.dm.bomber.services.RendezVous;
 import com.dm.bomber.services.RiveGauche;
 import com.dm.bomber.services.Robocredit;
+import com.dm.bomber.services.Rulybka;
 import com.dm.bomber.services.Samokat;
 import com.dm.bomber.services.SberZvuk;
 import com.dm.bomber.services.Sephora;
@@ -77,6 +78,7 @@ import com.dm.bomber.services.Sokolov;
 import com.dm.bomber.services.Sportmaster;
 import com.dm.bomber.services.Stolichki;
 import com.dm.bomber.services.Sunlight;
+import com.dm.bomber.services.Technopark;
 import com.dm.bomber.services.Tele2;
 import com.dm.bomber.services.Tele2TV;
 import com.dm.bomber.services.Telegram;
@@ -87,6 +89,7 @@ import com.dm.bomber.services.ToGO;
 import com.dm.bomber.services.Uchiru;
 import com.dm.bomber.services.Ukrzoloto;
 import com.dm.bomber.services.VKWorki;
+import com.dm.bomber.services.Velobike;
 import com.dm.bomber.services.Wink;
 import com.dm.bomber.services.XtraTV;
 import com.dm.bomber.services.Yandex;
@@ -133,7 +136,8 @@ public class Bomber {
             new Metro(), new Niyama(), new RabotaRu(), new Sunlight(),
             new Mokka(), new FarforSMS(), new Stolichki(), new Mirkorma(),
             new YooMoney(), new Uchiru(), new Biua(), new MdFashion(),
-            new XtraTV(), new AlloUa()
+            new XtraTV(), new AlloUa(), new Rulybka(), new Velobike(),
+            new Technopark()
     };
 
     public static boolean isAlive(Attack attack) {
