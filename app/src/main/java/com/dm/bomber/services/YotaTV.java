@@ -1,35 +1,56 @@
 package com.dm.bomber.services;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import okhttp3.Request;
+import java.io.IOException;
 
-public class YotaTV extends JsonService {
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+public class YotaTV extends Service {
 
     public YotaTV() {
-        setUrl("https://bmp.tv.yota.ru/api/v10/auth/register/msisdn");
-        setMethod(POST);
         setPhoneCode("7");
     }
 
     @Override
-    public Request buildRequest(Request.Builder builder) {
-        builder.addHeader("Cookie", "SessionID=VkthegNuC_UTNWXHuVX-CUVYLfeHomiFdtSD7sx_pm8");
-        return super.buildRequest(builder);
-    }
+    public void run(Callback callback) {
+        client.newCall(new Request.Builder()
+                .url("https://tv.yota.ru/")
+                .get().build()).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(call, e);
+            }
 
-    @Override
-    public String buildJson() {
-        JSONObject json = new JSONObject();
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                JSONObject json = new JSONObject();
 
-        try {
-            json.put("msisdn", getFormattedPhone());
-            json.put("password", "91234657");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+                try {
+                    json.put("msisdn", getFormattedPhone());
+                    json.put("password", "91234657");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-        return json.toString();
+                for (String cookie : response.headers().get("Set-Cookie").split(";")) {
+                    if (cookie.startsWith("SessionID"))
+                        client.newCall(new Request.Builder()
+                                .url("https://bmp.tv.yota.ru/api/v10/auth/register/msisdn")
+                                .addHeader("Cookie", cookie)
+                                .post(RequestBody.create(
+                                        json.toString(), MediaType.parse("application/json")))
+                                .build()).enqueue(callback);
+                }
+            }
+        });
     }
 }

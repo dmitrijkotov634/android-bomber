@@ -46,7 +46,8 @@ public class Bomber {
             new SravniMobile(), new Otkritie(), new TeaRU(), new PetStory(),
             new Profi(), new Eleven(), new Apteka(), new TochkaBank(),
             new BeriZaryad(), new PikBroker(), new OneDelivery(), new PrivetMir(),
-            new CardsMobile(), new Labirint()
+            new CardsMobile(), new Labirint(), new FixPrice(), new CallMyPhone(),
+            new SberMobile(), new YandexTips()
 
     };
 
