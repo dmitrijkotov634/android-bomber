@@ -14,7 +14,7 @@ android {
         applicationId "com.dm.bomber"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 6
+        versionCode 7
         versionName "1.4"
     }
 
