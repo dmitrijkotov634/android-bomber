@@ -89,8 +89,9 @@ public class Bomber {
 
             this.phoneCode = phoneCode;
             this.phone = phone;
-            this.numberOfCycles = cycles;
             this.callback = callback;
+
+            numberOfCycles = cycles;
         }
 
         @Override

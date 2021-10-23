@@ -14,7 +14,7 @@ public class AppPreferences {
     private static final String LAST_PHONECODE = "lastphonecode";
 
     public AppPreferences(Context context) {
-        this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public void setTheme(int mode) {

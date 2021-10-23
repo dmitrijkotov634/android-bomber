@@ -1,5 +1,6 @@
 package com.dm.bomber.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.widget.BaseAdapter;
 import com.dm.bomber.databinding.CountryCodeRowBinding;
 
 public class CountryCodeAdapter extends BaseAdapter {
-    private CountryCodeRowBinding binding;
 
     private final int[] flags;
     private final String[] countryCodes;
@@ -38,13 +38,32 @@ public class CountryCodeAdapter extends BaseAdapter {
         return 0;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View getView(int index, View view, ViewGroup parent) {
-        binding = CountryCodeRowBinding.inflate(inflter);
+        ViewHolder holder;
 
-        binding.icon.setImageResource(flags[index]);
-        binding.code.setText("+" + countryCodes[index]);
+        if (view == null) {
+            CountryCodeRowBinding binding = CountryCodeRowBinding.inflate(inflter);
 
-        return binding.getRoot();
+            view = binding.getRoot();
+            view.setTag(holder = new ViewHolder(binding));
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
+
+
+        holder.binding.icon.setImageResource(flags[index]);
+        holder.binding.code.setText("+" + countryCodes[index]);
+
+        return view;
+    }
+
+    private static class ViewHolder {
+        CountryCodeRowBinding binding;
+
+        public ViewHolder(CountryCodeRowBinding binding) {
+            this.binding = binding;
+        }
     }
 }
