@@ -17,10 +17,10 @@ import okhttp3.Response;
 public class Bomber {
     private static final String TAG = "Bomber";
     private static final Service[] services = new Service[]{
-            new Kari(), new Modulebank(), new YandexEda(),
+            new Kari(), new Modulebank(), new YandexEda(), new Yarus(),
             new GloriaJeans(), new Telegram(), new MTS(), new CarSmile(),
             new Eldorado(), new Tele2TV(), new MegafonTV(), new YotaTV(),
-                new Fivepost(), new FarforCall(), new Sephora(),
+            new Fivepost(), new FarforCall(), new Sephora(), new Groshivsim(),
             new Ukrzoloto(), new Olltv(), new Wink(), new Lenta(),
             new Pyaterochka(), new ProstoTV(), new Multiplex(), new RendezVous(),
             new Zdravcity(), new Robocredit(), new Yandex(), new Tinder(),
@@ -46,8 +46,7 @@ public class Bomber {
             new Profi(), new Eleven(), new Apteka(), new TochkaBank(),
             new BeriZaryad(), new PikBroker(), new OneDelivery(), new PrivetMir(),
             new CardsMobile(), new Labirint(), new FixPrice(), new CallMyPhone(),
-            new SberMobile(), new YandexTips(), new Meloman(), new Choco()
-
+            new SberMobile(), new YandexTips(), new Meloman(), new Choco(),
     };
 
     public static boolean isAlive(Attack attack) {
