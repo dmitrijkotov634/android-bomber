@@ -120,12 +120,13 @@ public class MainActivity extends AppCompatActivity implements Bomber.Callback {
         binding.phoneNumber.setOnLongClickListener(view -> {
             if (binding.phoneNumber.getText().toString().isEmpty() &&
                     clipText != null &&
-                    clipText.matches("\\+(7|380)([0-9()\\-\\s])*")) {
+                    clipText.matches("(8|\\+(7|380))([0-9()\\-\\s])*")) {
+
+                if (clipText.startsWith("8"))
+                    clipText = "+7" + clipText.substring(1);
 
                 clipText = clipText.substring(1);
-
                 for (int i = 0; i < phoneCodes.length; i++) {
-
                     if (clipText.startsWith(phoneCodes[i])) {
                         binding.phoneCode.setSelection(i);
                         binding.phoneNumber.setText(clipText.substring(phoneCodes[i].length()).replaceAll("[^\\d.]", ""));
