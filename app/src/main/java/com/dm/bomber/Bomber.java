@@ -47,6 +47,7 @@ public class Bomber {
             new BeriZaryad(), new PikBroker(), new OneDelivery(), new PrivetMir(),
             new CardsMobile(), new Labirint(), new FixPrice(), new CallMyPhone(),
             new SberMobile(), new YandexTips(), new Meloman(), new Choco(),
+            new AptekaOtSklada()
     };
 
     public static boolean isAlive(Attack attack) {
@@ -99,15 +100,14 @@ public class Bomber {
             callback.onAttackStart(usableServices.size(), numberOfCycles);
             Log.i(TAG, String.format("Starting attack on +%s%s", phoneCode, phone));
 
-            for (int cycle = 0; cycle < numberOfCycles; cycle++) {
-                Log.i(TAG, String.format("Started cycle %s", cycle));
+            try {
+                for (int cycle = 0; cycle < numberOfCycles; cycle++) {
+                    Log.i(TAG, String.format("Started cycle %s", cycle));
 
-                tasks = new CountDownLatch(usableServices.size());
+                    tasks = new CountDownLatch(usableServices.size());
 
-                for (Service service : usableServices) {
-                    service.prepare(phoneCode, phone);
-
-                    try {
+                    for (Service service : usableServices) {
+                        service.prepare(phoneCode, phone);
                         service.run(new okhttp3.Callback() {
                             @Override
                             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -128,23 +128,23 @@ public class Bomber {
                                 callback.onProgressChange(progress++);
                             }
                         });
-                    } catch (StringIndexOutOfBoundsException e) {
-                        callback.onAttackEnd(false);
+                    }
 
-                        Log.i(TAG, "Invalid number format");
-                        return;
+                    try {
+                        tasks.await();
+                    } catch (InterruptedException e) {
+                        break;
                     }
                 }
 
-                try {
-                    tasks.await();
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
+                callback.onAttackEnd(true);
+            } catch (StringIndexOutOfBoundsException e) {
+                Log.i(TAG, "Invalid number format");
 
-            callback.onAttackEnd(true);
-            Log.i(TAG, String.format("Attack on +%s%s ended", phoneCode, phone));
+                callback.onAttackEnd(false);
+            } finally {
+                Log.i(TAG, String.format("Attack on +%s%s ended", phoneCode, phone));
+            }
         }
     }
 }
