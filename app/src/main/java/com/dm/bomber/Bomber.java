@@ -47,7 +47,7 @@ public class Bomber {
             new BeriZaryad(), new PikBroker(), new OneDelivery(), new PrivetMir(),
             new CardsMobile(), new Labirint(), new FixPrice(), new CallMyPhone(),
             new SberMobile(), new YandexTips(), new Meloman(), new Choco(),
-            new AptekaOtSklada()
+            new AptekaOtSklada(), new Dodopizza(), new AutoRu()
     };
 
     public static boolean isAlive(Attack attack) {
