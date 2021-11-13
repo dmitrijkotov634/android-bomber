@@ -48,7 +48,7 @@ public class Bomber {
             new AptekaOtSklada(), new Dodopizza(), new AutoRu(), new SatUa(),
             new VapeZone(), new TakeEat(), new BibiSushi(), new Melzdrav(),
             new Fonbet(), new Grafkrasnov(), new SixSeasons(), new Stroyudacha(),
-            new Grilnica(), new Trapezapizza()
+            new Grilnica(), new Trapezapizza(), new Vpodarok(), new Aitu()
     };
 
     public static boolean isAlive(Attack attack) {
