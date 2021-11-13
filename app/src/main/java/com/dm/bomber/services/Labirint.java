@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -47,7 +47,7 @@ public class Labirint extends Service {
     @Override
     public void run(Callback callback) {
         client.newCall(new Request.Builder()
-                .url(HttpUrl.parse("https://api.labirint.ru/v3/token").newBuilder()
+                .url(Objects.requireNonNull(HttpUrl.parse("https://api.labirint.ru/v3/token")).newBuilder()
                         .addQueryParameter("build", "3720")
                         .addQueryParameter("version", "3.1.0")
                         .addQueryParameter("bundleId", "11532537")
@@ -58,7 +58,7 @@ public class Labirint extends Service {
                         .addQueryParameter("sig", "d29d04eef23dbac42fd28cc124f10e3a")
                         .build())
                 .get()
-                .build()).enqueue(new Callback() {
+                .build()).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.onFailure(call, e);
@@ -67,7 +67,7 @@ public class Labirint extends Service {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
-                    JSONObject json = new JSONObject(response.body().string());
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
 
                     String sign = json.getString("token") + "build3720bundleId11532537confirmTypecalldebugfalseimageSize2phone" +
                             getFormattedPhone() + "timeZone+3token" +
@@ -75,7 +75,7 @@ public class Labirint extends Service {
 
 
                     client.newCall(new Request.Builder()
-                            .url(HttpUrl.parse("https://api.labirint.ru/v3/user/remind").newBuilder()
+                            .url(Objects.requireNonNull(HttpUrl.parse("https://api.labirint.ru/v3/user/remind")).newBuilder()
                                     .addQueryParameter("build", "3720")
                                     .addQueryParameter("version", "3.1.0")
                                     .addQueryParameter("bundleId", "11532537")
@@ -91,7 +91,7 @@ public class Labirint extends Service {
                                     .toString(), MediaType.parse("application/json")))
                             .build()).enqueue(callback);
                 } catch (JSONException e) {
-                    callback.onResponse(call, response);
+                    callback.onError(e);
                 }
             }
         });

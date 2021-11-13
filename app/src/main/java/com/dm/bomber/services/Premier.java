@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -26,7 +25,7 @@ public class Premier extends Service {
                     .header("x-auth-token", "")
                     .header("User-Agent", "premier-one-Android-2.19.0")
                     .post(RequestBody.create(new JSONObject().put("phone", "+" + getFormattedPhone()).toString(), MediaType.parse("application/json")))
-                    .build()).enqueue(new Callback() {
+                    .build()).enqueue(new okhttp3.Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     callback.onFailure(call, e);
@@ -44,7 +43,7 @@ public class Premier extends Service {
                                 .post(RequestBody.create(new JSONObject().put("phone", "+" + getFormattedPhone()).toString(), MediaType.parse("application/json")))
                                 .build()).enqueue(callback);
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        callback.onError(e);
                     }
                 }
             });

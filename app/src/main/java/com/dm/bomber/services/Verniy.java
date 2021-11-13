@@ -6,9 +6,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -22,7 +22,7 @@ public class Verniy extends Service {
         client.newCall(new Request.Builder()
                 .url("https://loymax.ivoin.ru/publicapi/token?client_id=OAIvoinMP")
                 .post(new FormBody.Builder().add("grant_type", "anonymous").build())
-                .build()).enqueue(new Callback() {
+                .build()).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.onFailure(call, e);
@@ -31,7 +31,7 @@ public class Verniy extends Service {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
-                    JSONObject json = new JSONObject(response.body().string());
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     JSONObject req = new JSONObject();
 
                     req.put("login", getFormattedPhone());
@@ -43,7 +43,7 @@ public class Verniy extends Service {
                             .post(RequestBody.create(req.toString(), MediaType.parse("application/json")))
                             .build()).enqueue(callback);
                 } catch (JSONException e) {
-                    callback.onResponse(call, response);
+                    callback.onError(e);
                 }
             }
         });

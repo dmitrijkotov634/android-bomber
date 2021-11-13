@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -44,7 +43,7 @@ public class BudZdorov extends Service {
                 .header("User-Agent", "RiglaMobileClient(android Android-Q-build-20210804020623 2.10.2 (stable) (Tue Oct 13 15:50:27 2020 +0200) on 'android_arm64')")
                 .header("platform", "android")
                 .post(RequestBody.create(main.toString(), MediaType.parse("application/json")))
-                .build()).enqueue(new Callback() {
+                .build()).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.onFailure(call, e);

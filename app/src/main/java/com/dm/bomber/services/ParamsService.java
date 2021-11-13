@@ -1,6 +1,7 @@
 package com.dm.bomber.services;
 
-import okhttp3.Callback;
+import java.util.Objects;
+
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -8,7 +9,7 @@ import okhttp3.RequestBody;
 public abstract class ParamsService extends SimpleBaseService {
 
     public void run(Callback callback) {
-        HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
+        HttpUrl.Builder httpBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
         buildParams(httpBuilder);
 
         Request.Builder requestBuilder = new Request.Builder();

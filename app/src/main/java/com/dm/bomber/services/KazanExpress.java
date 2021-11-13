@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -32,7 +31,7 @@ public class KazanExpress extends Service {
                 .header("User-Agent", "KazanExpress/Android (com.kazanexpress.ke_app; 1.4.5)")
                 .header("Authorization", "Basic a2F6YW5leHByZXNzLWFuZHJvaWQ6YW5kcm9pZFNlY3JldEtleQ==")
                 .post(RequestBody.create(register.toString(), MediaType.parse("application/json")))
-                .build()).enqueue(new Callback() {
+                .build()).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.onFailure(call, e);

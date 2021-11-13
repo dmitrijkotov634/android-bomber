@@ -6,9 +6,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -36,7 +36,7 @@ public class Ozon extends Service {
                 .url("https://api.ozon.ru/composer-api.bx/page/json/v1?url=%2Fmy%2Fentry%2Fcredentials-required")
                 .header("User-Agent", "ozonapp_android/13.18+1650")
                 .post(RequestBody.create(json.toString(), MediaType.parse("application/json")))
-                .build()).enqueue(new Callback() {
+                .build()).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.onFailure(call, e);
@@ -45,7 +45,7 @@ public class Ozon extends Service {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
-                    JSONObject json = new JSONObject(response.body().string());
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     JSONObject req = new JSONObject();
 
                     req.put("vendor", "Xiaomi");
@@ -68,7 +68,7 @@ public class Ozon extends Service {
                             .post(RequestBody.create(req.toString(), MediaType.parse("application/json")))
                             .build()).enqueue(callback);
                 } catch (JSONException e) {
-                    callback.onResponse(call, response);
+                    callback.onError(e);
                 }
             }
         });
