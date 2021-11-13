@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.MediaType;
@@ -47,14 +46,14 @@ public class Velobike extends Service {
                 .headers(HEADERS)
                 .post(RequestBody.create(
                         json.toString(), MediaType.parse("application/json")))
-                .build()).enqueue(new Callback() {
+                .build()).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.onFailure(call, e);
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
                 client.newCall(new Request.Builder()
                         .url("https://velobike.ru/api/restore_pin/")
                         .headers(HEADERS)

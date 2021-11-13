@@ -7,9 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -42,7 +42,7 @@ public class RabotaRu extends Service {
                 .url("https://api.rabota.ru/v4/settings.json")
                 .header("User-Agent", "Rabota/4.33.7 (ru.rabota.app2; build:2021043307; Android 11) okhttp/4.8.0")
                 .post(RequestBody.create(json.toString(), MediaType.parse("application/json")))
-                .build()).enqueue(new Callback() {
+                .build()).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.onFailure(call, e);
@@ -51,7 +51,7 @@ public class RabotaRu extends Service {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
-                    JSONObject json = new JSONObject(response.body().string());
+                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
                     JSONObject request = new JSONObject();
                     JSONObject body = new JSONObject();
 
@@ -71,7 +71,7 @@ public class RabotaRu extends Service {
                             .post(RequestBody.create(body.toString(), MediaType.parse("application/json")))
                             .build()).enqueue(callback);
                 } catch (JSONException e) {
-                    callback.onResponse(call, response);
+                    callback.onError(e);
                 }
             }
         });

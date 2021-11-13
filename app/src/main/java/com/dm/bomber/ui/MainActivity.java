@@ -16,14 +16,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.dm.bomber.AppPreferences;
-import com.dm.bomber.Bomber;
 import com.dm.bomber.R;
+import com.dm.bomber.bomber.Bomber;
+import com.dm.bomber.bomber.Callback;
 import com.dm.bomber.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import jp.wasabeef.blurry.Blurry;
 
-public class MainActivity extends AppCompatActivity implements Bomber.Callback {
+public class MainActivity extends AppCompatActivity implements Callback {
     private ActivityMainBinding binding;
 
     private Bomber.Attack attack;

