@@ -22,4 +22,8 @@
         <item name="android:textColor">?colorOnPrimary</item>
         <item name="drawableTint">?colorOnPrimary</item>
     </style>
+
+    <style name="AlertDialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
 </resources>

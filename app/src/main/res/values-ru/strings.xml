@@ -5,4 +5,8 @@
     <string name="phone_error">Неверный формат номера</string>
     <string name="darktheme">Тёмная тема</string>
     <string name="donate">Пожертвование</string>
+    <string name="information">Информация</string>
+    <string name="promotion">Хочешь следить за обновлениями и разработкой? Подпишись на наш Telegram канал</string>
+    <string name="open">Открыть</string>
+    <string name="close">Закрыть</string>
 </resources>
