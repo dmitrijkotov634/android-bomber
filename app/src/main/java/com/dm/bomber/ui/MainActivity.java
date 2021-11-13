@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -21,6 +20,7 @@ import com.dm.bomber.R;
 import com.dm.bomber.bomber.Bomber;
 import com.dm.bomber.bomber.Callback;
 import com.dm.bomber.databinding.ActivityMainBinding;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 import jp.wasabeef.blurry.Blurry;
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements Callback {
         binding.phoneNumber.setText(preferences.getLastPhone());
 
         if (!preferences.getPromotionShown())
-            new AlertDialog.Builder(this, R.style.AlertDialog)
+            new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.information)
                     .setMessage(R.string.promotion)
                     .setPositiveButton(R.string.open, (dialogInterface, i) -> {

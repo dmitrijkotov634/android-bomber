@@ -12,6 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:textColor">@color/white</item>
+        <item name="materialAlertDialogTheme">@style/AlertDialog</item>
     </style>
 
     <color name="footerColor">@color/grey_900</color>
