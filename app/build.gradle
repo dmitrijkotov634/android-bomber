@@ -14,8 +14,8 @@ android {
         applicationId "com.dm.bomber"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 7
-        versionName "1.4"
+        versionCode 8
+        versionName "1.5"
     }
 
     buildTypes {
@@ -24,6 +24,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
