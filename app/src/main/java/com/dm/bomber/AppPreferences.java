@@ -12,6 +12,7 @@ public class AppPreferences {
     private static final String DARKMODE = "darkmode";
     private static final String LAST_PHONE = "lastphone";
     private static final String LAST_PHONECODE = "lastphonecode";
+    private static final String PROMOTION_SHOWN = "promotionshown";
 
     public AppPreferences(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -39,5 +40,13 @@ public class AppPreferences {
 
     public int getLastPhoneCode() {
         return prefs.getInt(LAST_PHONECODE, 0);
+    }
+
+    public void setPromotionShown(boolean status) {
+        prefs.edit().putBoolean(PROMOTION_SHOWN, status).apply();
+    }
+
+    public boolean getPromotionShown() {
+        return prefs.getBoolean(PROMOTION_SHOWN, false);
     }
 }

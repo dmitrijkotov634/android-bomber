@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -149,6 +150,18 @@ public class MainActivity extends AppCompatActivity implements Callback {
 
         binding.phoneCode.setSelection(lastPhoneCode);
         binding.phoneNumber.setText(preferences.getLastPhone());
+
+        if (!preferences.getPromotionShown())
+            new AlertDialog.Builder(this, R.style.AlertDialog)
+                    .setTitle(R.string.information)
+                    .setMessage(R.string.promotion)
+                    .setPositiveButton(R.string.open, (dialogInterface, i) -> {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/androidsmsbomber")));
+                        preferences.setPromotionShown(true);
+                    })
+                    .setNegativeButton(R.string.close, (dialogInterface, i) -> {
+                    })
+                    .show();
     }
 
     @Override
