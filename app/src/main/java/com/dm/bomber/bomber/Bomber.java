@@ -49,7 +49,8 @@ public class Bomber {
             new VapeZone(), new TakeEat(), new BibiSushi(), new Melzdrav(),
             new Fonbet(), new Grafkrasnov(), new SixSeasons(), new Stroyudacha(),
             new Grilnica(), new Trapezapizza(), new Vpodarok(), new Aitu(),
-            new Pizzaman(), new VSK()
+            new Pizzaman(), new VSK(), new Soscredit(), new ChernovtsyRabota(),
+            new Eva()
     };
 
     public static boolean isAlive(Attack attack) {
