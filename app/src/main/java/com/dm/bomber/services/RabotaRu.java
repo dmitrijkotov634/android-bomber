@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -18,7 +19,7 @@ import okhttp3.Response;
 public class RabotaRu extends Service {
 
     @Override
-    public void run(Callback callback) {
+    public void run(OkHttpClient client, Callback callback) {
         JSONObject json = new JSONObject();
         JSONObject request = new JSONObject();
 

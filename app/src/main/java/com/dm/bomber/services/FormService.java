@@ -1,11 +1,12 @@
 package com.dm.bomber.services;
 
 import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public abstract class FormService extends SimpleBaseService {
 
-    public void run(Callback callback) {
+    public void run(OkHttpClient client, Callback callback) {
         Request.Builder requestBuilder = new Request.Builder();
 
         FormBody.Builder formBuilder = new FormBody.Builder();

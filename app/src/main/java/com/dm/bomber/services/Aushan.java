@@ -9,13 +9,14 @@ import java.io.IOException;
 import java.util.Objects;
 
 import okhttp3.Call;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class Aushan extends Service {
 
     @Override
-    public void run(Callback callback) {
+    public void run(OkHttpClient client, Callback callback) {
         client.newCall(new Request.Builder()
                 .url("https://mobile.auchan.ru/lk/clientauth/token")
                 .header("login", "checkmail_user")

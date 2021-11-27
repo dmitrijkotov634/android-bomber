@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -16,7 +17,7 @@ import okhttp3.Response;
 public class Premier extends Service {
 
     @Override
-    public void run(Callback callback) {
+    public void run(OkHttpClient client, Callback callback) {
         try {
             client.newCall(new Request.Builder()
                     .url("https://premier.one/app/v1.1.3/user/register/check-phone")

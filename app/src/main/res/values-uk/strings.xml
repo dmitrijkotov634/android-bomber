@@ -9,4 +9,6 @@
     <string name="promotion">Хочеш стежити за оновленнями та розробкою? Підпишись на наш Telegram канал</string>
     <string name="open">Відкрити</string>
     <string name="close">Закрити</string>
+    <string name="proxy">Проксi</string>
+    <string name="proxy_format_error">Неверний формат проксі</string>
 </resources>

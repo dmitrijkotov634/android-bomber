@@ -10,10 +10,14 @@
     <string name="promotion">Do you want to follow the updates and development? Subscribe to our Telegram channel</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="proxy">Proxy</string>
+    <string name="proxy_format_error">Invalid proxy format</string>
+    <string name="proxy_format_hint" translatable="false">ip:port\n...</string>
 
     <string-array name="hints">
         <item>912 345-67-89</item>
         <item>50 123 4567</item>
         <item>1 202-555-0135</item>
     </string-array>
+
 </resources>

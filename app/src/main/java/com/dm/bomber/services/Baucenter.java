@@ -10,6 +10,7 @@ import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -17,7 +18,7 @@ import okhttp3.Response;
 public class Baucenter extends Service {
 
     @Override
-    public void run(Callback callback) {
+    public void run(OkHttpClient client, Callback callback) {
         client.newCall(new Request.Builder()
                 .url("https://ma.baucenter.ru/auth/sessionRegister")
                 .header("x-api-key", "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCtj8uTFmdASuHU")

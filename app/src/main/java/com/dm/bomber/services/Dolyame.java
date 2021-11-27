@@ -10,13 +10,14 @@ import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class Dolyame extends Service {
 
     @Override
-    public void run(Callback callback) {
+    public void run(OkHttpClient client, Callback callback) {
         client.newCall(new Request.Builder()
                 .url("https://id.dolyame.ru/auth/authorize")
                 .post(new FormBody.Builder()
