@@ -1,5 +1,6 @@
 package com.dm.bomber.services;
 
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
@@ -10,7 +11,7 @@ public class Olltv extends Service {
     }
 
     @Override
-    public void run(Callback callback) {
+    public void run(OkHttpClient client, Callback callback) {
         client.newCall(new Request.Builder()
                 .url("https://oll.tv/api/signup?lang=uk")
                 .addHeader("Accept", "*/*")

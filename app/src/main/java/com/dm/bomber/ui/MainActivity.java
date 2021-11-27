@@ -20,8 +20,11 @@ import com.dm.bomber.R;
 import com.dm.bomber.bomber.Bomber;
 import com.dm.bomber.bomber.Callback;
 import com.dm.bomber.databinding.ActivityMainBinding;
+import com.dm.bomber.databinding.DialogProxiesBinding;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.ArrayList;
 
 import jp.wasabeef.blurry.Blurry;
 
@@ -78,7 +81,8 @@ public class MainActivity extends AppCompatActivity implements Callback {
             int numberOfCyclesNum = numberOfCycles.isEmpty() ? 1 : Integer.parseInt(numberOfCycles);
 
             if (!Bomber.isAlive(attack)) {
-                attack = new Bomber.Attack(this, phoneCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber, numberOfCyclesNum);
+                attack = new Bomber.Attack(this, phoneCodes[binding.phoneCode.getSelectedItemPosition()],
+                        phoneNumber, numberOfCyclesNum, preferences.getProxyEnabled() ? preferences.getProxy() : new ArrayList<>());
                 attack.start();
             }
         });
@@ -100,6 +104,35 @@ public class MainActivity extends AppCompatActivity implements Callback {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 
             return true;
+        });
+
+        binding.proxyTile.setChecked(preferences.getProxyEnabled());
+
+        binding.proxyTile.setOnCheckedChangeListener((button, checked) -> {
+            if (checked) {
+                binding.menu.setVisibility(View.GONE);
+
+                DialogProxiesBinding dialog = DialogProxiesBinding.inflate(getLayoutInflater());
+                dialog.proxies.setText(preferences.getRawProxy());
+
+                new MaterialAlertDialogBuilder(MainActivity.this)
+                        .setTitle(R.string.proxy)
+                        .setView(dialog.getRoot())
+                        .setCancelable(false)
+                        .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
+                            try {
+                                preferences.parseProxy(dialog.proxies.getText().toString());
+                                preferences.setRawProxy(dialog.proxies.getText().toString());
+                            } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+                                Snackbar.make(button, R.string.proxy_format_error, Snackbar.LENGTH_LONG).show();
+                            }
+
+                            binding.menu.setVisibility(View.VISIBLE);
+                        })
+                        .show();
+            }
+
+            preferences.setProxyEnabled(checked);
         });
 
         binding.bomb.setOnClickListener(view -> view.animate()

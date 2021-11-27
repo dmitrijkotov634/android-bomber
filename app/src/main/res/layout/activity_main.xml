@@ -180,13 +180,19 @@
             android:drawableStart="@drawable/ic_donate"
             android:text="@string/donate" />
 
+        <ToggleButton
+            android:id="@+id/proxy_tile"
+            style="@style/ToggleTile"
+            android:drawableStart="@drawable/ic_donate"
+            android:text="@string/proxy" />
+
         <androidx.constraintlayout.helper.widget.Flow
             android:id="@+id/flow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            app:constraint_referenced_ids="app_theme_tile,donate_tile"
+            app:constraint_referenced_ids="app_theme_tile,donate_tile,proxy_tile"
             app:flow_horizontalGap="8dp"
             app:flow_maxElementsWrap="2"
             app:flow_verticalGap="8dp"

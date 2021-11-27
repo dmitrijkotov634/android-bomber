@@ -6,6 +6,11 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.util.ArrayList;
+import java.util.List;
+
 public class AppPreferences {
     private final SharedPreferences prefs;
 
@@ -13,6 +18,8 @@ public class AppPreferences {
     private static final String LAST_PHONE = "lastphone";
     private static final String LAST_PHONECODE = "lastphonecode";
     private static final String PROMOTION_SHOWN = "promotionshown";
+    private static final String PROXY = "proxy";
+    private static final String PROXY_ENABLED = "proxyenabled";
 
     public AppPreferences(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -48,5 +55,37 @@ public class AppPreferences {
 
     public boolean getPromotionShown() {
         return prefs.getBoolean(PROMOTION_SHOWN, false);
+    }
+
+    public void setRawProxy(String proxyStrings) {
+        prefs.edit().putString(PROXY, proxyStrings).apply();
+    }
+
+    public String getRawProxy() {
+        return prefs.getString(PROXY, "");
+    }
+
+    public List<Proxy> getProxy() {
+        return parseProxy(getRawProxy());
+    }
+
+    public List<Proxy> parseProxy(String proxyStrings) {
+        if (proxyStrings.isEmpty())
+            return new ArrayList<>();
+
+        List<Proxy> proxies = new ArrayList<>();
+        for (String proxy : proxyStrings.split("\n")) {
+            String[] proxyData = proxy.split(":");
+            proxies.add(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyData[0], Integer.parseInt(proxyData[1]))));
+        }
+        return proxies;
+    }
+
+    public void setProxyEnabled(boolean enabled) {
+        prefs.edit().putBoolean(PROXY_ENABLED, enabled).apply();
+    }
+
+    public boolean getProxyEnabled() {
+        return prefs.getBoolean(PROXY_ENABLED, false);
     }
 }
