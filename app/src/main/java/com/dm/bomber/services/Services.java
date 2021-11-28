@@ -1,5 +1,7 @@
 package com.dm.bomber.services;
 
+import okhttp3.HttpUrl;
+
 public class Services {
     public static Service[] services = {
             new GloriaJeans(), new Telegram(), new MTS(), new CarSmile(),
@@ -30,5 +32,12 @@ public class Services {
             new Trapezapizza(), new Aitu(), new Pizzaman(), new VSK(),
             new Soscredit(), new ChernovtsyRabota(), new Eva(), new Apteka(),
             new Kari(), new Modulebank(),
+
+            new ParamsService("https://findclone.ru/register") {
+                @Override
+                public void buildParams(HttpUrl.Builder builder) {
+                    builder.addQueryParameter("phone", getFormattedPhone());
+                }
+            }
     };
 }

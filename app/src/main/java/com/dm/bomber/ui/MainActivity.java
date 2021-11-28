@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.dm.bomber.AppPreferences;
 import com.dm.bomber.R;
+import com.dm.bomber.bomber.Attack;
 import com.dm.bomber.bomber.Bomber;
 import com.dm.bomber.bomber.Callback;
 import com.dm.bomber.databinding.ActivityMainBinding;
@@ -31,7 +32,7 @@ import jp.wasabeef.blurry.Blurry;
 public class MainActivity extends AppCompatActivity implements Callback {
     private ActivityMainBinding binding;
 
-    private Bomber.Attack attack;
+    private Attack attack;
     private AppPreferences preferences;
 
     private final String[] phoneCodes = {"7", "380", ""};
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements Callback {
             int numberOfCyclesNum = numberOfCycles.isEmpty() ? 1 : Integer.parseInt(numberOfCycles);
 
             if (!Bomber.isAlive(attack)) {
-                attack = new Bomber.Attack(this, phoneCodes[binding.phoneCode.getSelectedItemPosition()],
+                attack = new Attack(this, phoneCodes[binding.phoneCode.getSelectedItemPosition()],
                         phoneNumber, numberOfCyclesNum, preferences.getProxyEnabled() ? preferences.getProxy() : new ArrayList<>());
                 attack.start();
             }
