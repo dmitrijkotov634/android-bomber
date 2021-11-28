@@ -10,7 +10,7 @@ public abstract class Service {
     public String phoneCode;
     public String phone;
 
-    public String requireCode;
+    public int[] countryCodes;
 
     private static String randomString(char min, char max, int length) {
         StringBuilder result = new StringBuilder();
@@ -51,8 +51,9 @@ public abstract class Service {
         return formattedPhone.toString();
     }
 
-    public void setPhoneCode(String phoneCode) {
-        this.requireCode = phoneCode;
+    @Deprecated
+    public void setPhoneCode(String countryCode) {
+        countryCodes = new int[]{Integer.parseInt(countryCode)};
     }
 
     public void prepare(String phoneCode, String phone) {

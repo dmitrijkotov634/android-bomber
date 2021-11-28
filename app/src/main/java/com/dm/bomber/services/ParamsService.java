@@ -9,6 +9,17 @@ import okhttp3.RequestBody;
 
 public abstract class ParamsService extends SimpleBaseService {
 
+    public ParamsService(String url, String method, int... countryCodes) {
+        super(url, method, countryCodes);
+    }
+
+    public ParamsService(String url, int... countryCodes) {
+        super(url, null, countryCodes);
+    }
+
+    public ParamsService() {
+    }
+
     public void run(OkHttpClient client, Callback callback) {
         HttpUrl.Builder httpBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
         buildParams(httpBuilder);

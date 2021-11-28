@@ -6,6 +6,17 @@ import okhttp3.Request;
 
 public abstract class FormService extends SimpleBaseService {
 
+    public FormService(String url, String method, int... countryCodes) {
+        super(url, method, countryCodes);
+    }
+
+    public FormService(String url, int... countryCodes) {
+        super(url, "POST", countryCodes);
+    }
+
+    public FormService() {
+    }
+
     public void run(OkHttpClient client, Callback callback) {
         Request.Builder requestBuilder = new Request.Builder();
 
