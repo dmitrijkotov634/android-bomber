@@ -5,7 +5,6 @@ import java.util.Random;
 import okhttp3.OkHttpClient;
 
 public abstract class Service {
-    public static final String TAG = "Service";
 
     public String phoneCode;
     public String phone;

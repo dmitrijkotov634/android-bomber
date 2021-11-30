@@ -18,7 +18,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Services {
-    public static Service[] services = {
+    public final static Service[] services = {
             new GloriaJeans(), new Telegram(), new MTS(), new CarSmile(),
             new Eldorado(), new Tele2TV(), new MegafonTV(), new YotaTV(),
             new Ukrzoloto(), new Olltv(), new Wink(), new ProstoTV(),
@@ -81,7 +81,7 @@ public class Services {
                         }
 
                         @Override
-                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        public void onResponse(@NonNull Call call, @NonNull Response response) {
                             JSONObject json = new JSONObject();
 
                             try {

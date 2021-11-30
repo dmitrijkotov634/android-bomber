@@ -85,7 +85,7 @@ public class AppPreferences {
         prefs.edit().putBoolean(PROXY_ENABLED, enabled).apply();
     }
 
-    public boolean getProxyEnabled() {
+    public boolean isProxyEnabled() {
         return prefs.getBoolean(PROXY_ENABLED, false);
     }
 }
