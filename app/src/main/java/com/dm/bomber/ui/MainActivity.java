@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements Callback {
 
             if (!Bomber.isAlive(attack)) {
                 attack = new Attack(this, phoneCodes[binding.phoneCode.getSelectedItemPosition()],
-                        phoneNumber, numberOfCyclesNum, preferences.getProxyEnabled() ? preferences.getProxy() : new ArrayList<>());
+                        phoneNumber, numberOfCyclesNum, preferences.isProxyEnabled() ? preferences.getProxy() : new ArrayList<>());
                 attack.start();
             }
         });
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements Callback {
             return true;
         });
 
-        binding.proxyTile.setChecked(preferences.getProxyEnabled());
+        binding.proxyTile.setChecked(preferences.isProxyEnabled());
 
         binding.proxyTile.setOnCheckedChangeListener((button, checked) -> {
             if (checked) {
@@ -152,6 +152,13 @@ public class MainActivity extends AppCompatActivity implements Callback {
                     }
                 })
                 .start());
+
+        binding.bomb.setOnLongClickListener(view -> {
+            binding.proxyTile.setVisibility(View.VISIBLE);
+            return false;
+        });
+
+        binding.proxyTile.setVisibility(preferences.isProxyEnabled() ? View.VISIBLE : View.GONE);
 
         binding.phoneNumber.setOnLongClickListener(view -> {
             if (binding.phoneNumber.getText().toString().isEmpty() &&
