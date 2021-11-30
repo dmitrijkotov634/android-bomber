@@ -183,7 +183,7 @@
         <ToggleButton
             android:id="@+id/proxy_tile"
             style="@style/ToggleTile"
-            android:drawableStart="@drawable/ic_donate"
+            android:drawableStart="@drawable/ic_proxy"
             android:text="@string/proxy" />
 
         <androidx.constraintlayout.helper.widget.Flow

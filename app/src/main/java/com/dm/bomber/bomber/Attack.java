@@ -28,6 +28,18 @@ public class Attack extends Thread {
 
     private CountDownLatch tasks;
 
+    private static final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
+            .addInterceptor(chain -> {
+                Request request = chain.request();
+                Log.v(TAG, String.format("Sending request %s", request.url()));
+
+                Response response = chain.proceed(request);
+                Log.v(TAG, String.format("Received response for %s with status code %s",
+                        response.request().url(), response.code()));
+
+                return response;
+            });
+
     public Attack(Callback callback, String phoneCode, String phone, int cycles, List<Proxy> proxies) {
         super(phone);
 
@@ -45,18 +57,6 @@ public class Attack extends Thread {
 
         callback.onAttackStart(usableServices.size(), numberOfCycles);
         Log.i(TAG, String.format("Starting attack on +%s%s", phoneCode, phone));
-
-        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
-                .addInterceptor(chain -> {
-                    Request request = chain.request();
-                    Log.v(TAG, String.format("Sending request %s", request.url()));
-
-                    Response response = chain.proceed(request);
-                    Log.v(TAG, String.format("Received response for %s with status code %s",
-                            response.request().url(), response.code()));
-
-                    return response;
-                });
 
         try {
             for (int cycle = 0; cycle < numberOfCycles; cycle++) {
