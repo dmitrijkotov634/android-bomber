@@ -4,7 +4,6 @@ import com.dm.bomber.services.Service;
 import com.dm.bomber.services.Services;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Bomber {
@@ -12,11 +11,20 @@ public class Bomber {
         return attack != null && attack.isAlive();
     }
 
+    public static boolean contains(final int[] array, final int key) {
+        for (final int i : array) {
+            if (i == key) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static List<Service> getUsableServices(int countryCode) {
         List<Service> usableServices = new ArrayList<>();
 
         for (Service service : Services.services) {
-            if (service.countryCodes == null || Arrays.asList(service.countryCodes).contains(countryCode))
+            if (service.countryCodes == null || contains(service.countryCodes, countryCode))
                 usableServices.add(service);
         }
 
