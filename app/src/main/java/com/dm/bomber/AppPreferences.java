@@ -15,11 +15,11 @@ public class AppPreferences {
     private final SharedPreferences prefs;
 
     private static final String DARKMODE = "darkmode";
-    private static final String LAST_PHONE = "lastphone";
-    private static final String LAST_PHONECODE = "lastphonecode";
-    private static final String PROMOTION_SHOWN = "promotionshown";
+    private static final String LAST_PHONE = "last_phone";
+    private static final String LAST_PHONECODE = "last_phonecode";
+    private static final String PROMOTION_SHOWN = "promotion_shown";
     private static final String PROXY = "proxy";
-    private static final String PROXY_ENABLED = "proxyenabled";
+    private static final String PROXY_ENABLED = "proxy_enabled";
 
     public AppPreferences(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
