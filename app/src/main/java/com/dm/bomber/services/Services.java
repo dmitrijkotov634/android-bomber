@@ -236,6 +236,28 @@ public class Services {
                     builder.addFormDataPart("redirect_back", "");
                     builder.addFormDataPart("token", "");
                 }
+            },
+
+            new FormService("https://chuck-family.ru/s/get-registration-confirm-code.json", 7) {
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("register_phone", format(phone, "8+***-***-**-**"));
+                    builder.add("register_name", getRussianName());
+                    builder.add("register_birthday", "01.01.1981");
+                    builder.add("", "");
+                }
+            },
+
+            new ParamsService("https://vsem-edu-oblako.ru/singlemerchant/api/sendconfirmationcode", 7) {
+                @Override
+                public void buildParams(HttpUrl.Builder builder) {
+                    builder.addQueryParameter("lang", "ru");
+                    builder.addQueryParameter("json", "true");
+                    builder.addQueryParameter("merchant_keys", "b27447ba613046d3659f9730ccf15e3c");
+                    builder.addQueryParameter("device_id", "f330883f-b829-41df-83f5-7e263b780e0e");
+                    builder.addQueryParameter("device_platform", "desktop");
+                    builder.addQueryParameter("phone", format(phone, "+7 (***) ***-**-**"));
+                }
             }
     };
 }
