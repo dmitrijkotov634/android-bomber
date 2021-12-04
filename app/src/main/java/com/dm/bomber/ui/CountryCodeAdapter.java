@@ -1,6 +1,5 @@
 package com.dm.bomber.ui;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +37,6 @@ public class CountryCodeAdapter extends BaseAdapter {
         return 0;
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public View getView(int index, View view, ViewGroup parent) {
         ViewHolder holder;
@@ -54,7 +52,7 @@ public class CountryCodeAdapter extends BaseAdapter {
 
 
         holder.binding.icon.setImageResource(flags[index]);
-        holder.binding.code.setText("+" + countryCodes[index]);
+        holder.binding.code.setText(String.format("+%s", countryCodes[index]));
 
         return view;
     }

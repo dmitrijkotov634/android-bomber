@@ -19,7 +19,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Services {
-    public final static Service[] services = {
+    public final static Service[] services = new Service[]{
             new GloriaJeans(), new Telegram(), new MTS(), new CarSmile(),
             new Eldorado(), new Tele2TV(), new MegafonTV(), new YotaTV(),
             new Ukrzoloto(), new Olltv(), new Wink(), new ProstoTV(),
@@ -257,6 +257,40 @@ public class Services {
                     builder.addQueryParameter("device_id", "f330883f-b829-41df-83f5-7e263b780e0e");
                     builder.addQueryParameter("device_platform", "desktop");
                     builder.addQueryParameter("phone", format(phone, "+7 (***) ***-**-**"));
+                }
+            },
+
+            new FormService("https://novayagollandiya.com/auth/?backurl=/personal/", 7) {
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("component", "bxmaker.authuserphone.login");
+                    builder.add("sessid", "624313ea9d90eac9093d49000c8e2dbf");
+                    builder.add("method", "sendCode");
+                    builder.add("phone", format(phone, "+7+(***)-***-**-**"));
+                    builder.add("registration", "N");
+                }
+            },
+
+            new JsonService("https://api.petrovich.ru/api/rest/v1/user/pincode/reg?city_code=rf&client_id=pet_site") {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0");
+                    builder.addHeader("Cookie", "SNK=124; u__typeDevice=desktop; geoQtyTryRedirect=1; u__geoUserChoose=1; qrator_msid=1638604580.330.8vox5jrGVn8JeE5a-f7j5tbrq8vdc6ae4kths8i52pi66kom8; u__geoCityGuid=d31cf195-2928-11e9-a76e-00259038e9f2; u__cityCode=rf; SIK=fAAAAHRZ8mRMMMkQ4zoJAA; SIV=1; C_o72-jqSdEZI2mxcQ9hjwCsP7WhI=AAAAAAAACEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8D8AAIDJKZjpQfJVD28tnILC3BseM5mEUbQ; ssaid=afa34f20-54d7-11ec-9e2a-e50833b98526; dd__lastEventTimestamp=1638604588417; dd__persistedKeys=[%22custom.lastViewedProductImages%22]; dd_custom.lastViewedProductImages=[]; __tld__=null");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone", getFormattedPhone());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
                 }
             }
     };

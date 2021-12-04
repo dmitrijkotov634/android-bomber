@@ -16,7 +16,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class Attack extends Thread {
-    private static final String TAG = "Bomber";
+    private static final String TAG = "Attack";
 
     private final Callback callback;
     private final String phoneCode;
@@ -53,10 +53,12 @@ public class Attack extends Thread {
 
     @Override
     public void run() {
-        List<Service> usableServices = Bomber.getUsableServices(Integer.parseInt(phoneCode));
+        List<Service> usableServices = Bomber.getUsableServices(phoneCode.isEmpty() ? 0 : Integer.parseInt(phoneCode));
 
         callback.onAttackStart(usableServices.size(), numberOfCycles);
         Log.i(TAG, String.format("Starting attack on +%s%s", phoneCode, phone));
+
+        clientBuilder.proxy(null);
 
         try {
             for (int cycle = 0; cycle < numberOfCycles; cycle++) {
@@ -100,7 +102,6 @@ public class Attack extends Thread {
             callback.onAttackEnd(true);
         } catch (StringIndexOutOfBoundsException e) {
             Log.i(TAG, "Invalid number format");
-
             callback.onAttackEnd(false);
         } finally {
             Log.i(TAG, String.format("Attack on +%s%s ended", phoneCode, phone));

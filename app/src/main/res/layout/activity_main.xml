@@ -54,7 +54,7 @@
             android:paddingTop="@dimen/paddings"
             android:paddingRight="@dimen/paddings"
             android:paddingBottom="@dimen/paddings"
-            android:textSize="@dimen/text_size"
+            android:textSize="@dimen/textSize"
             app:layout_constraintBottom_toBottomOf="@+id/phone_code"
             app:layout_constraintEnd_toStartOf="@+id/cycles_count"
             app:layout_constraintStart_toEndOf="@+id/phone_code"
@@ -73,7 +73,7 @@
             android:paddingTop="@dimen/paddings"
             android:paddingRight="@dimen/paddings"
             android:paddingBottom="@dimen/paddings"
-            android:textSize="@dimen/text_size"
+            android:textSize="@dimen/textSize"
             app:layout_constraintBottom_toBottomOf="@+id/phone_number"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/phone_number"
@@ -184,8 +184,7 @@
             android:id="@+id/proxy_tile"
             style="@style/ToggleTile"
             android:drawableStart="@drawable/ic_proxy"
-            android:text="@string/proxy"
-            android:visibility="gone" />
+            android:text="@string/proxy" />
 
         <FrameLayout
             android:id="@+id/placeholder"
