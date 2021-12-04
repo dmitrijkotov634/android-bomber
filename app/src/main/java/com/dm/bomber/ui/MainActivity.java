@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements Callback {
                             try {
                                 preferences.parseProxy(dialog.proxies.getText().toString());
                                 preferences.setRawProxy(dialog.proxies.getText().toString());
-                            } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+                            } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
                                 Snackbar.make(button, R.string.proxy_format_error, Snackbar.LENGTH_LONG).show();
                             }
 
@@ -152,13 +152,6 @@ public class MainActivity extends AppCompatActivity implements Callback {
                     }
                 })
                 .start());
-
-        binding.bomb.setOnLongClickListener(view -> {
-            binding.proxyTile.setVisibility(View.VISIBLE);
-            return false;
-        });
-
-        binding.proxyTile.setVisibility(preferences.isProxyEnabled() ? View.VISIBLE : View.GONE);
 
         binding.phoneNumber.setOnLongClickListener(view -> {
             if (binding.phoneNumber.getText().toString().isEmpty() &&

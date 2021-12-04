@@ -30,5 +30,4 @@ public class Bomber {
 
         return usableServices;
     }
-
 }
