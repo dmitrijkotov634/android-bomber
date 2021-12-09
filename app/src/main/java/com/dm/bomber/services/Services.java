@@ -292,6 +292,52 @@ public class Services {
 
                     return json.toString();
                 }
+            },
+
+            new JsonService("https://blanc.ru/api/sso/entrance/login") {
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phoneNumber", getFormattedPhone());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new JsonService("https://api.sunlight.net/v3/customers/authorization/") {
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone", getFormattedPhone());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new JsonService("https://www.letu.ru/s/api/user/account/v1/confirmations/phone?pushSite=storeMobileRU") {
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("captcha", "");
+                        json.put("phoneNumber", format(phone, "+7 (***) ***-**-**"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
             }
     };
 }
