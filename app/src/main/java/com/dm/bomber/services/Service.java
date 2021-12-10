@@ -11,6 +11,10 @@ public abstract class Service {
 
     public int[] countryCodes;
 
+    public Service(int... countryCodes) {
+        this.countryCodes = countryCodes;
+    }
+
     private static String randomString(char min, char max, int length) {
         StringBuilder result = new StringBuilder();
         Random random = new Random();
