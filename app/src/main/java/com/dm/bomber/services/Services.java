@@ -338,6 +338,46 @@ public class Services {
 
                     return json.toString();
                 }
+            },
+
+            new FormService("https://www.m-reason.ru/auth/", 7) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("X-Requested-With", "XMLHttpRequest");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("sessid", "c717bc5eb39427003dc49a6e4f8b1675");
+                    builder.add("action", "send_sms");
+                    builder.add("PHONE", format(phone, "+7+(***)+***-**-**"));
+                    builder.add("privacy", "on");
+                }
+            },
+
+            new FormService("https://telephony.jivosite.com/api/1/sites/900909/widgets/OVHsL3W8hY/clients/17314/telephony/callback") {
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("phone", getFormattedPhone());
+                    builder.add("invitation_text", "");
+                }
+            },
+
+            new ParamsService("https://oapi.raiffeisen.ru/api/sms-auth/public/v1.0/phone/code") {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0");
+                    builder.addHeader("Referer", "https://www.raiffeisen.ru/promo/500/?utm_campaign=perfluence%7cpr:dc%7csp:cashback%7ctype:referral%7cgeo:russia%7cmodel:issue%7coffer:private%7caud:AAAAAEazJzK_u9lCZcabcA&utm_medium=affiliate&utm_source=perfluence&utm_content=PF13516&utm_term=f56cb6d037db79233e3ff66fbe70b375");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public void buildParams(HttpUrl.Builder builder) {
+                    builder.addQueryParameter("number", getFormattedPhone());
+                }
             }
     };
 }
