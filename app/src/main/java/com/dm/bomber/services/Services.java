@@ -378,6 +378,65 @@ public class Services {
                 public void buildParams(HttpUrl.Builder builder) {
                     builder.addQueryParameter("number", getFormattedPhone());
                 }
+            },
+
+            new FormService("https://www.traektoria.ru/local/ajax/authorize.php?action=2") {
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("phone", getFormattedPhone());
+                    builder.add("bxsessid", "68eb9e074e9677e3a7a3b4620abdff29");
+                    builder.add("lid", "tr");
+                }
+            },
+
+            new Service(7) {
+                @Override
+                public void run(OkHttpClient client, Callback callback) {
+                    String formattedPhone = format(phone, "+7 (***) ***-**-**");
+
+                    JSONObject json = new JSONObject();
+                    JSONObject user = new JSONObject();
+
+                    try {
+                        user.put("email", getEmail());
+                        user.put("first_name", getRussianName());
+                        user.put("is_subscribed", false);
+                        user.put("password", getEmail());
+                        user.put("phone", formattedPhone);
+
+                        json.put("user", user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    client.newCall(new Request.Builder()
+                            .url("https://www.respublica.ru/api/v1/users/signup")
+                            .post(RequestBody.create(
+                                    json.toString(), MediaType.parse("application/json")))
+                            .build()).enqueue(new okhttp3.Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                            callback.onFailure(call, e);
+                        }
+
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) {
+                            JSONObject json = new JSONObject();
+
+                            try {
+                                json.put("user", new JSONObject().put("phone", formattedPhone));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            client.newCall(new Request.Builder()
+                                    .url("https://www.respublica.ru/api/v1/users/login")
+                                    .post(RequestBody.create(
+                                            json.toString(), MediaType.parse("application/json")))
+                                    .build()).enqueue(callback);
+                        }
+                    });
+                }
             }
     };
 }
