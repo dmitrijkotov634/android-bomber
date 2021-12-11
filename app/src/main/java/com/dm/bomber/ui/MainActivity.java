@@ -153,6 +153,14 @@ public class MainActivity extends AppCompatActivity implements Callback {
                 })
                 .start());
 
+        binding.snowfall.stopFalling();
+        binding.bomb.setOnLongClickListener(view -> {
+            binding.snowfall.setVisibility(View.VISIBLE);
+            binding.snowfall.restartFalling();
+
+            return true;
+        });
+
         binding.phoneNumber.setOnLongClickListener(view -> {
             if (binding.phoneNumber.getText().toString().isEmpty() &&
                     clipText != null &&

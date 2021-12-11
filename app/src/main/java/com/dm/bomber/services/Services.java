@@ -437,6 +437,31 @@ public class Services {
                         }
                     });
                 }
+            },
+
+            new JsonService("https://api.magonline.ru/api/graphql") {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("token", "3a4711a14672e7a56b2072f1e06f10f3a578e8d1-d697b32f5a10ee16e71d407721f181ca63b78931");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("query", "  mutation ($input: RequestPhoneVerificationInput!) {    requestSignInPhoneVerificationCode (input: $input) {  count  maxCount  resendTime  lifetime  isVerified}  }");
+                        json.put("variables", new JSONObject().put("input", new JSONObject()
+                                .put("phone", "+" + getFormattedPhone())
+                                .put("force", false)));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
             }
     };
 }
