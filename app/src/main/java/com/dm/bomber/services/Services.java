@@ -462,6 +462,45 @@ public class Services {
 
                     return json.toString();
                 }
-            }
+            },
+
+            new ParamsService("https://05.ru/api/v1/oauth/code/send/", 7) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("Authorization", "Bearer 1f27b755-5b44-11ec-b968-12c0bc664a05");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public void buildParams(HttpUrl.Builder builder) {
+                    builder.addPathSegment(format(phone, "+7 (***) ***-**-**"));
+                    builder.addQueryParameter("short", "true");
+                }
+            },
+
+            new JsonService("https://kos-mart.ru/send_code.json?code_iso3=RUS") {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("X-CSRF-Token", "346f6048925a05eed2bb00f6f2638c8698835b6b210d8008dd52434c9d3fd6db");
+                    builder.addHeader("Cookie", "visitor=hAj8xSk%2BWTqzWzIVzg9YKxQC24hQ%2BovUq%2FINA%2FhzRcrK%2BDpmrxGgHS0YuXy8Vc2KhZncrn4A6eD4tWPPgeXAbbxpLgX8eiftIu6oW6nAMf4etxH12h%2Fkc3cSKHNYXyGqhplGMABzIWS%2BYhM2Yr4XOv78GGZ1--WklonPFjDt9ZXN1y--ft3u0Hj4RfSK%2BlicU8bHjw%3D%3D; csrf_token=hRtO1GjeLhMOne47Kqv55g1tOY0f81YZp6jDXqnsLCNAEVA5FQ3nu6EYSgTnhNqufOZ6PWAhYPokQX007NWP2P6v8sy0%2FibcO6Bpb2znkRE%2FVsWoLWpifQdUV1TQwn%2FDlFxdvHMYkM0SylJGyKCwUgp05X1TViDNmxxjihjFgRDu1jKNdv2a5TrRvqa%2BBIvg0s5vXvxOh7%2FiKzPAV2Ppl%2Fo%3D--%2FaKP69e2yjH62Z06--nePoBJumFNoxCckoj73AJQ%3D%3D");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("csrf_token", "346f6048925a05eed2bb00f6f2638c8698835b6b210d8008dd52434c9d3fd6db");
+                        json.put("login", "+" + getFormattedPhone());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
     };
 }
