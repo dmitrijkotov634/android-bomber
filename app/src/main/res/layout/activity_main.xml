@@ -11,12 +11,6 @@
         android:layout_height="match_parent"
         android:gravity="center">
 
-        <com.jetradarmobile.snowfall.SnowfallView
-            android:id="@+id/snowfall"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-
         <TextView
             android:id="@+id/app_title"
             android:layout_width="wrap_content"
@@ -133,6 +127,12 @@
             app:layout_constraintTop_toTopOf="@+id/app_title"
             app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/logo" />
+
+        <com.jetradarmobile.snowfall.SnowfallView
+            android:id="@+id/snowfall"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
