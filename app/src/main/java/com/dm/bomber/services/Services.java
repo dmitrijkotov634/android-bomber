@@ -520,6 +520,66 @@ public class Services {
                     builder.add("confirm_mobile_code", "");
                     builder.add("terms", "on");
                 }
+            },
+
+            new JsonService("https://ogon.ru/v1/users/auth") {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("X-App-Name", "Site");
+                    builder.addHeader("X-App-Version", "1.0.341.2");
+                    builder.addHeader("X-Domain", "https://ogon.ru");
+                    builder.addHeader("X-Fingerprint", "f7b509dccd4c01019b3e5ca233a851bb");
+                    builder.addHeader("X-Pragma", "ReK6+msei8Y7ssRIkKmkrSJERsntCFHPAXmr2XnD4Zs=");
+                    builder.addHeader("X-Support-SDK", "false");
+                    builder.addHeader("X-UUID", "3fc54ee8-149e-4677-bbb2-fe5b98912e79");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone_number", "+" + getFormattedPhone());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new JsonService("https://ciel.ru/client/registration/get-code") {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("X-CSRF-Token", "GmvqEcerItk8twA7vBScaTlA9WWC7S0ncA3fb0tXEqlXIthXvfkav3TUZnnwI8MwUhGFKtCBZ10UNI4WDGFU-g==");
+                    builder.addHeader("Cookie", "fuid=61ba1835889d6; user_key=5a637b0471c9c6e3a03a78304fd7de3cf14fa78c0a981e319e46341c11d4c513a%3A2%3A%7Bi%3A0%3Bs%3A8%3A%22user_key%22%3Bi%3A1%3Bs%3A40%3A%224b590ae70e9a6b5da428d63bc4504abbbdb1a64a%22%3B%7D; _csrf=e5e4d6997b96ac6cd5408ddb5c2d24930e74a66c92f48a4f80e84a5377ca4e11a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22MI2FzR8fHcfBL7_YkQpORlJzd9QyG6FS%22%3B%7D; PHPSESSID=vk8gs80kra59nhvqm716n4m6ou; visit=true");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("number", getFormattedPhone());
+                        json.put("fuid", "61ba1835889d6");
+                        json.put("ok", true);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new ParamsService("https://cvety.kz/ajax/actions/get-auth-phone.php", 7) {
+                @Override
+                public void buildParams(HttpUrl.Builder builder) {
+                    builder.addQueryParameter("phone", format(phone, "+7 *** ***-**-**"));
+                }
             }
     };
 }
