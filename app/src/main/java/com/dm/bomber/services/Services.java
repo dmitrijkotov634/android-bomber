@@ -20,32 +20,32 @@ import okhttp3.Response;
 
 public class Services {
     public final static Service[] services = new Service[]{
-            new GloriaJeans(), new Telegram(), new MTS(), new CarSmile(),
+            new Telegram(), new MTS(), new CarSmile(),
             new Eldorado(), new Tele2TV(), new MegafonTV(), new YotaTV(),
             new Ukrzoloto(), new Olltv(), new Wink(), new ProstoTV(),
             new Zdravcity(), new Robocredit(), new Tinder(), new Groshivsim(),
-            new Hoff(), new Dolyame(), new Gorparkovka(), new Tinkoff(),
-            new MegaDisk(), new KazanExpress(), new FoodBand(), new Gosuslugi(),
+            new Dolyame(), new Tinkoff(),
+            new KazanExpress(), new FoodBand(), new Gosuslugi(),
             new Citimobil(), new HHru(), new TikTok(), new Multiplex(),
             new Ozon(), new MFC(), new EKA(), new OK(), new MBK(),
-            new VKWorki(), new Magnit(), new SberZvuk(), new Smotrim(),
-            new BApteka(), new HiceBank(), new Evotor(), new Sportmaster(),
+            new VKWorki(), new Magnit(), new SberZvuk(),
+            new BApteka(), new Evotor(), new Sportmaster(),
             new GoldApple(), new FriendsClub(), new ChestnyZnak(),
-            new MoeZdorovie(), new Sokolov(), new Boxberry(), new Discord(),
-            new NearKitchen(), new Citydrive(), new Metro(), new RabotaRu(),
-            new Mozen(), new MosMetro(), new BCS(), new Dostavista(),
-            new Mokka(), new Stolichki(), new Mirkorma(), new TochkaBank(),
+            new MoeZdorovie(), new Boxberry(), new Discord(),
+            new Citydrive(), new Metro(), new RabotaRu(),
+            new Mozen(), new MosMetro(), new BCS(),
+            new Stolichki(), new Mirkorma(), new TochkaBank(),
             new Uchiru(), new Biua(), new MdFashion(), new RiveGauche(),
-            new XtraTV(), new AlloUa(), new Rulybka(), new Velobike(),
+            new XtraTV(), new AlloUa(), new Rulybka(),
             new Technopark(), new Call2Friends(), new Ievaphone(), new WebCom(),
-            new MTSBank(), new ATB(), new Paygram(), new Tele2(),
+            new MTSBank(), new Paygram(), new Tele2(),
             new SravniMobile(), new TeaRU(), new PetStory(), new Profi(),
             new BeriZaryad(), new PrivetMir(), new CardsMobile(), new Labirint(),
-            new CallMyPhone(), new SberMobile(), new YandexTips(), new Meloman(),
-            new Choco(), new AptekaOtSklada(), new Dodopizza(), new AutoRu(),
+            new CallMyPhone(), new SberMobile(), new YandexTips(), new Choco(),
+            new AptekaOtSklada(), new Dodopizza(), new AutoRu(),
             new SatUa(), new VapeZone(), new TakeEat(), new BibiSushi(),
-            new Melzdrav(), new Fonbet(), new Stroyudacha(), new Grilnica(),
-            new Trapezapizza(), new Aitu(), new Pizzaman(), new VSK(),
+            new Melzdrav(), new Fonbet(), new Grilnica(),
+            new Aitu(), new Pizzaman(), new VSK(),
             new Soscredit(), new ChernovtsyRabota(), new Eva(), new Apteka(),
             new Kari(), new Modulebank(),
 
@@ -502,5 +502,24 @@ public class Services {
                     return json.toString();
                 }
             },
+
+            new FormService("https://www.meloman.kz/loyalty/customer/createConfirm/", 7) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("Cookie", "PHPSESSID=vpqcv1o4psr14aripnt2a728ao; region_id=541; region_just_set=1; _dyjsession=audqfsd8yyfd75iqwvk8j32eqtqo1vfa; dy_fs_page=www.meloman.kz%2Fcustomer%2Faccount%2Flogin%2Freferer%2Fahr0chm6ly93d3cubwvsb21hbi5rei9jdxn0b21lci9hy2nvdw50l2luzgv4lw%252c%252c; _dy_csc_ses=audqfsd8yyfd75iqwvk8j32eqtqo1vfa; _dy_c_exps=; _dy_soct=362831.602231.1639410140*398001.680451.1639410143.audqfsd8yyfd75iqwvk8j32eqtqo1vfa*477267.869366.1639410143; mage-cache-storage=%7B%7D; mage-cache-storage-section-invalidation=%7B%7D; form_key=b2SMIQBgbkQmR4FF; mage-cache-sessid=true; mage-messages=; recently_viewed_product=%7B%7D; recently_viewed_product_previous=%7B%7D; recently_compared_product=%7B%7D; recently_compared_product_previous=%7B%7D; product_data_storage=%7B%7D; section_data_ids=%7B%22customer%22%3A1639410141%2C%22cart%22%3A1639410141%2C%22gtm%22%3A1639410141%7D");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("form_key", "b2SMIQBgbkQmR4FF");
+                    builder.add("success_url", "");
+                    builder.add("error_url", "");
+                    builder.add("un_approved_mobile", format(phone, "+7(***)***-**-**"));
+                    builder.add("confirm_mobile_code", "");
+                    builder.add("terms", "on");
+                }
+            }
     };
 }

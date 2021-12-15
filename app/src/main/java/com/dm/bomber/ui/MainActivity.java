@@ -9,19 +9,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.dm.bomber.AppPreferences;
+import com.dm.bomber.MainRepository;
 import com.dm.bomber.R;
 import com.dm.bomber.bomber.Attack;
 import com.dm.bomber.bomber.Bomber;
 import com.dm.bomber.bomber.Callback;
 import com.dm.bomber.databinding.ActivityMainBinding;
 import com.dm.bomber.databinding.DialogProxiesBinding;
+import com.dm.bomber.databinding.DialogSettingsBinding;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -30,10 +34,12 @@ import java.util.ArrayList;
 import jp.wasabeef.blurry.Blurry;
 
 public class MainActivity extends AppCompatActivity implements Callback {
-    private ActivityMainBinding binding;
+    private ActivityMainBinding mainBinding;
+    private DialogSettingsBinding settingsBinding;
+    private MainViewModel model;
 
     private Attack attack;
-    private AppPreferences preferences;
+    private MainRepository repository;
 
     private final String[] phoneCodes = {"7", "380", ""};
 
@@ -41,28 +47,73 @@ public class MainActivity extends AppCompatActivity implements Callback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        preferences = new AppPreferences(this);
-        AppCompatDelegate.setDefaultNightMode(preferences.getTheme());
+        repository = new MainRepository(this);
+        AppCompatDelegate.setDefaultNightMode(repository.getTheme());
 
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        settingsBinding = DialogSettingsBinding.inflate(getLayoutInflater());
+        setContentView(mainBinding.getRoot());
+
+        model = new ViewModelProvider(this, new MainModelFactory(repository)).get(MainViewModel.class);
+
+        model.isSnowfallEnabled().observe(this, enabled -> {
+            if (enabled)
+                mainBinding.snowfall.setVisibility(View.VISIBLE);
+        });
+
+        model.isPromotionShown().observe(this, shown -> {
+            if (!shown)
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.information)
+                        .setMessage(R.string.promotion)
+                        .setPositiveButton(R.string.open, (dialogInterface, i) -> {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/androidsmsbomber")));
+                            model.closePromotion();
+                        })
+                        .setNegativeButton(R.string.close, (dialogInterface, i) -> model.showPromotion())
+                        .show();
+        });
+
+        model.isBlurEnabled().observe(this, enabled -> {
+            if (enabled) {
+                mainBinding.main.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        Blurry.with(MainActivity.this)
+                                .radius(20)
+                                .sampling(1)
+                                .async()
+                                .capture(mainBinding.main)
+                                .into(mainBinding.blur);
+
+                        mainBinding.blur.setVisibility(View.VISIBLE);
+                        mainBinding.main.setVisibility(View.INVISIBLE);
+
+                        mainBinding.main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
+            } else {
+                mainBinding.main.setVisibility(View.VISIBLE);
+                mainBinding.blur.setVisibility(View.GONE);
+            }
+        });
 
         CountryCodeAdapter adapter = new CountryCodeAdapter(this,
                 new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_all},
                 phoneCodes);
 
         String[] hints = getResources().getStringArray(R.array.hints);
-        binding.phoneNumber.setHint(hints[0]);
+        mainBinding.phoneNumber.setHint(hints[0]);
 
-        binding.footer.setMovementMethod(LinkMovementMethod.getInstance());
+        mainBinding.footer.setMovementMethod(LinkMovementMethod.getInstance());
 
-        binding.phoneCode.setAdapter(adapter);
-        binding.phoneCode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mainBinding.phoneCode.setAdapter(adapter);
+        mainBinding.phoneCode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
-                binding.phoneNumber.setHint(hints[index]);
+                mainBinding.phoneNumber.setHint(hints[index]);
             }
 
             @Override
@@ -70,9 +121,9 @@ public class MainActivity extends AppCompatActivity implements Callback {
             }
         });
 
-        binding.startAttack.setOnClickListener(view -> {
-            String phoneNumber = binding.phoneNumber.getText().toString();
-            String numberOfCycles = binding.cyclesCount.getText().toString();
+        mainBinding.startAttack.setOnClickListener(view -> {
+            String phoneNumber = mainBinding.phoneNumber.getText().toString();
+            String numberOfCycles = mainBinding.cyclesCount.getText().toString();
 
             if (phoneNumber.length() < 7) {
                 Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
@@ -82,61 +133,13 @@ public class MainActivity extends AppCompatActivity implements Callback {
             int numberOfCyclesNum = numberOfCycles.isEmpty() ? 1 : Integer.parseInt(numberOfCycles);
 
             if (!Bomber.isAlive(attack)) {
-                attack = new Attack(this, phoneCodes[binding.phoneCode.getSelectedItemPosition()],
-                        phoneNumber, numberOfCyclesNum, preferences.isProxyEnabled() ? preferences.getProxy() : new ArrayList<>());
+                attack = new Attack(this, phoneCodes[mainBinding.phoneCode.getSelectedItemPosition()],
+                        phoneNumber, numberOfCyclesNum, repository.isProxyEnabled() ? repository.getProxy() : new ArrayList<>());
                 attack.start();
             }
         });
 
-        binding.openMenu.setOnClickListener(view -> {
-            binding.menu.setVisibility(View.VISIBLE);
-            blurMain(true);
-        });
-
-        binding.appThemeTile.setOnClickListener(view -> {
-            int mode = binding.appThemeTile.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
-
-            preferences.setTheme(mode);
-            AppCompatDelegate.setDefaultNightMode(mode);
-        });
-
-        binding.appThemeTile.setOnLongClickListener(view -> {
-            preferences.setTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-
-            return true;
-        });
-
-        binding.proxyTile.setChecked(preferences.isProxyEnabled());
-
-        binding.proxyTile.setOnCheckedChangeListener((button, checked) -> {
-            if (checked) {
-                binding.menu.setVisibility(View.GONE);
-
-                DialogProxiesBinding dialog = DialogProxiesBinding.inflate(getLayoutInflater());
-                dialog.proxies.setText(preferences.getRawProxy());
-
-                new MaterialAlertDialogBuilder(MainActivity.this)
-                        .setTitle(R.string.proxy)
-                        .setView(dialog.getRoot())
-                        .setCancelable(false)
-                        .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                            try {
-                                preferences.parseProxy(dialog.proxies.getText().toString());
-                                preferences.setRawProxy(dialog.proxies.getText().toString());
-                            } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
-                                Snackbar.make(button, R.string.proxy_format_error, Snackbar.LENGTH_LONG).show();
-                            }
-
-                            binding.menu.setVisibility(View.VISIBLE);
-                        })
-                        .show();
-            }
-
-            preferences.setProxyEnabled(checked);
-        });
-
-        binding.bomb.setOnClickListener(view -> view.animate()
+        mainBinding.bomb.setOnClickListener(view -> view.animate()
                 .scaleX(1.1f)
                 .scaleY(1.1f)
                 .setDuration(100)
@@ -153,13 +156,13 @@ public class MainActivity extends AppCompatActivity implements Callback {
                 })
                 .start());
 
-        binding.bomb.setOnLongClickListener(view -> {
-           binding.snowfall.setVisibility(View.VISIBLE);
+        mainBinding.bomb.setOnLongClickListener(view -> {
+            model.enableSnowfall();
             return true;
         });
 
-        binding.phoneNumber.setOnLongClickListener(view -> {
-            if (binding.phoneNumber.getText().toString().isEmpty() &&
+        mainBinding.phoneNumber.setOnLongClickListener(view -> {
+            if (mainBinding.phoneNumber.getText().toString().isEmpty() &&
                     clipText != null &&
                     clipText.matches("(8|\\+(7|380))([0-9()\\-\\s])*")) {
 
@@ -169,8 +172,8 @@ public class MainActivity extends AppCompatActivity implements Callback {
                 clipText = clipText.substring(1);
                 for (int i = 0; i < phoneCodes.length; i++) {
                     if (clipText.startsWith(phoneCodes[i])) {
-                        binding.phoneCode.setSelection(i);
-                        binding.phoneNumber.setText(clipText.substring(phoneCodes[i].length()).replaceAll("[^\\d.]", ""));
+                        mainBinding.phoneCode.setSelection(i);
+                        mainBinding.phoneNumber.setText(clipText.substring(phoneCodes[i].length()).replaceAll("[^\\d.]", ""));
 
                         break;
                     }
@@ -180,27 +183,61 @@ public class MainActivity extends AppCompatActivity implements Callback {
             return false;
         });
 
-        binding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://qiwi.com/n/PHOSS105"))));
-        binding.appThemeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
+        BottomSheetDialog settings = new BottomSheetDialog(this);
+        settings.setContentView(settingsBinding.getRoot());
 
-        int lastPhoneCode = preferences.getLastPhoneCode();
+        mainBinding.openMenu.setOnClickListener(view -> settings.show());
+
+        settingsBinding.appThemeTile.setOnClickListener(view -> {
+            int mode = settingsBinding.appThemeTile.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
+
+            repository.setTheme(mode);
+            AppCompatDelegate.setDefaultNightMode(mode);
+        });
+
+        settingsBinding.appThemeTile.setOnLongClickListener(view -> {
+            repository.setTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+
+            return true;
+        });
+
+        settingsBinding.proxyTile.setChecked(repository.isProxyEnabled());
+        settingsBinding.proxyTile.setOnCheckedChangeListener((button, checked) -> {
+            if (checked) {
+                BottomSheetDialog proxy = new BottomSheetDialog(this);
+
+                DialogProxiesBinding dialog = DialogProxiesBinding.inflate(getLayoutInflater());
+                dialog.proxies.setText(repository.getRawProxy());
+                dialog.save.setOnClickListener(view -> {
+                    try {
+                        repository.parseProxy(dialog.proxies.getText().toString());
+                        repository.setRawProxy(dialog.proxies.getText().toString());
+
+                        proxy.cancel();
+                    } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
+                        dialog.proxies.setError(getString(R.string.proxy_format_error));
+                    }
+                });
+
+                proxy.setContentView(dialog.getRoot());
+                proxy.show();
+
+                settings.cancel();
+            }
+
+            repository.setProxyEnabled(checked);
+        });
+
+        settingsBinding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://qiwi.com/n/PHOSS105"))));
+        settingsBinding.appThemeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
+
+        int lastPhoneCode = repository.getLastPhoneCode();
         if (lastPhoneCode > 2)
             lastPhoneCode = 0;
 
-        binding.phoneCode.setSelection(lastPhoneCode);
-        binding.phoneNumber.setText(preferences.getLastPhone());
-
-        if (!preferences.getPromotionShown())
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.information)
-                    .setMessage(R.string.promotion)
-                    .setPositiveButton(R.string.open, (dialogInterface, i) -> {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/androidsmsbomber")));
-                        preferences.setPromotionShown(true);
-                    })
-                    .setNegativeButton(R.string.close, (dialogInterface, i) -> {
-                    })
-                    .show();
+        mainBinding.phoneCode.setSelection(lastPhoneCode);
+        mainBinding.phoneNumber.setText(repository.getLastPhone());
     }
 
     @Override
@@ -216,15 +253,15 @@ public class MainActivity extends AppCompatActivity implements Callback {
     @Override
     public void onAttackEnd(boolean success) {
         runOnUiThread(() -> {
-            binding.attack.setVisibility(View.GONE);
-            blurMain(false);
+            mainBinding.attack.setVisibility(View.GONE);
+            model.setBlurEnabled(false);
         });
 
         if (success) {
-            preferences.setLastPhoneCode(binding.phoneCode.getSelectedItemPosition());
-            preferences.setLastPhone(binding.phoneNumber.getText().toString());
+            repository.setLastPhoneCode(mainBinding.phoneCode.getSelectedItemPosition());
+            repository.setLastPhone(mainBinding.phoneNumber.getText().toString());
         } else {
-            Snackbar.make(binding.main, R.string.phone_error, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(mainBinding.main, R.string.phone_error, Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -232,54 +269,27 @@ public class MainActivity extends AppCompatActivity implements Callback {
     public void onAttackStart(int serviceCount, int numberOfCycles) {
         runOnUiThread(() -> {
             InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
+            input.hideSoftInputFromWindow(mainBinding.getRoot().getWindowToken(), 0);
 
-            binding.progress.setMax(serviceCount * numberOfCycles);
-            binding.progress.setProgress(0);
+            mainBinding.progress.setMax(serviceCount * numberOfCycles);
+            mainBinding.progress.setProgress(0);
 
-            binding.attack.setVisibility(View.VISIBLE);
-            blurMain(true);
+            mainBinding.attack.setVisibility(View.VISIBLE);
+
+            model.setBlurEnabled(true);
         });
     }
 
     @Override
     public void onProgressChange(int progress) {
-        runOnUiThread(() -> binding.progress.setProgress(progress));
-    }
-
-    private void blurMain(boolean visible) {
-        if (visible) {
-            binding.blur.setImageBitmap(Blurry.with(this)
-                    .sampling(1)
-                    .radius(20)
-                    .capture(binding.main)
-                    .get());
-
-            binding.blur.setVisibility(View.VISIBLE);
-            binding.main.setVisibility(View.GONE);
-        } else {
-            binding.main.setVisibility(View.VISIBLE);
-
-            binding.blur.animate()
-                    .alpha(0f)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            binding.blur.setAlpha(1f);
-                            binding.blur.setVisibility(View.GONE);
-                        }
-                    });
-        }
+        runOnUiThread(() -> mainBinding.progress.setProgress(progress));
     }
 
     @Override
     public void onBackPressed() {
         if (Bomber.isAlive(attack))
             attack.interrupt();
-        else if (binding.menu.getVisibility() == View.VISIBLE) {
-            binding.menu.setVisibility(View.GONE);
-            blurMain(false);
-        } else
+        else
             super.onBackPressed();
     }
 }

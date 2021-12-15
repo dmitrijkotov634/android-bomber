@@ -11,4 +11,5 @@
     <string name="close">Закрити</string>
     <string name="proxy">Проксi</string>
     <string name="proxy_format_error">Неверний формат проксі</string>
+    <string name="save">Зберегти</string>
 </resources>
