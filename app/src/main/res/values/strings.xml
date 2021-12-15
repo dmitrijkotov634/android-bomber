@@ -12,7 +12,7 @@
     <string name="close">Close</string>
     <string name="proxy">Proxy</string>
     <string name="proxy_format_error">Invalid proxy format</string>
-    <string name="proxy_format_hint" translatable="false">ip:port\n...</string>
+    <string name="save">Save</string>
 
     <string-array name="hints">
         <item>912 345-67-89</item>

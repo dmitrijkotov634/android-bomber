@@ -11,7 +11,7 @@ import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppPreferences {
+public class MainRepository {
     private final SharedPreferences prefs;
 
     private static final String DARKMODE = "darkmode";
@@ -21,7 +21,7 @@ public class AppPreferences {
     private static final String PROXY = "proxy";
     private static final String PROXY_ENABLED = "proxy_enabled";
 
-    public AppPreferences(Context context) {
+    public MainRepository(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
