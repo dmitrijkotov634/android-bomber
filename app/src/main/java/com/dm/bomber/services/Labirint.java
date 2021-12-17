@@ -68,7 +68,7 @@ public class Labirint extends Service {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
-                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    JSONObject json = new JSONObject(response.body().string());
 
                     String sign = json.getString("token") + "build3720bundleId11532537confirmTypecalldebugfalseimageSize2phone" +
                             getFormattedPhone() + "timeZone+3token" +
@@ -91,7 +91,7 @@ public class Labirint extends Service {
                                     .put("phone", getFormattedPhone())
                                     .toString(), MediaType.parse("application/json")))
                             .build()).enqueue(callback);
-                } catch (JSONException e) {
+                } catch (JSONException | NullPointerException e) {
                     callback.onError(e);
                 }
             }

@@ -6,7 +6,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -45,7 +44,7 @@ public class CardsMobile extends Service {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
-                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    JSONObject json = new JSONObject(response.body().string());
 
                     client.newCall(new Request.Builder()
                             .url("https://service-a.cardsmobile.ru/aaa/session/" +
@@ -54,7 +53,7 @@ public class CardsMobile extends Service {
                                     + "/account/login/confirmation/msisdn/request")
                             .post(RequestBody.create(getFormattedPhone(), MediaType.parse("application/json")))
                             .build()).enqueue(callback);
-                } catch (JSONException e) {
+                } catch (JSONException | NullPointerException e) {
                     callback.onError(e);
                 }
             }
