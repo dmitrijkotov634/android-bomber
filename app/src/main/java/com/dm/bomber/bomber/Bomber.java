@@ -24,7 +24,7 @@ public class Bomber {
         List<Service> usableServices = new ArrayList<>();
 
         for (Service service : Services.services) {
-            if (service.countryCodes == null || contains(service.countryCodes, countryCode))
+            if (service.countryCodes == null || service.countryCodes.length == 0 || contains(service.countryCodes, countryCode))
                 usableServices.add(service);
         }
 
