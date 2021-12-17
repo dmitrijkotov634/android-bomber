@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -52,7 +51,7 @@ public class RabotaRu extends Service {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
-                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    JSONObject json = new JSONObject(response.body().string());
                     JSONObject request = new JSONObject();
                     JSONObject body = new JSONObject();
 
@@ -71,7 +70,7 @@ public class RabotaRu extends Service {
                             .header("User-Agent", "Rabota/4.33.7 (ru.rabota.app2; build:2021043307; Android 11) okhttp/4.8.0")
                             .post(RequestBody.create(body.toString(), MediaType.parse("application/json")))
                             .build()).enqueue(callback);
-                } catch (JSONException e) {
+                } catch (JSONException | NullPointerException e) {
                     callback.onError(e);
                 }
             }

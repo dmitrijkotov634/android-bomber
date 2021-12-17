@@ -21,7 +21,7 @@ import okhttp3.Response;
 public class Services {
     public final static Service[] services = new Service[]{
             new Telegram(), new MTS(), new CarSmile(),
-            new Eldorado(), new Tele2TV(), new MegafonTV(), new YotaTV(),
+            new Eldorado(), new Tele2TV(),
             new Ukrzoloto(), new Olltv(), new Wink(), new ProstoTV(),
             new Zdravcity(), new Robocredit(), new Tinder(), new Groshivsim(),
             new Dolyame(), new Tinkoff(),

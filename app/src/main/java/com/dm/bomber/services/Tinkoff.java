@@ -40,7 +40,7 @@ public class Tinkoff extends Service {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
-                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+                    JSONObject json = new JSONObject(response.body().string());
 
                     client.newCall(new Request.Builder()
                             .url("https://id.tinkoff.ru/auth/step?cid=" + json.getString("cid") + "&cpswc=true&ccc=true")
@@ -50,7 +50,7 @@ public class Tinkoff extends Service {
                                     .add("step", "phone")
                                     .build())
                             .build()).enqueue(callback);
-                } catch (JSONException e) {
+                } catch (JSONException | NullPointerException e) {
                     callback.onError(e);
                 }
             }
