@@ -19,9 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.dm.bomber.MainRepository;
 import com.dm.bomber.R;
-import com.dm.bomber.bomber.Attack;
-import com.dm.bomber.bomber.Bomber;
-import com.dm.bomber.bomber.Callback;
 import com.dm.bomber.databinding.ActivityMainBinding;
 import com.dm.bomber.databinding.DialogProxiesBinding;
 import com.dm.bomber.databinding.DialogSettingsBinding;
@@ -29,19 +26,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
-
 import jp.wasabeef.blurry.Blurry;
 
-public class MainActivity extends AppCompatActivity implements Callback {
+public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mainBinding;
     private DialogSettingsBinding settingsBinding;
+
     private MainViewModel model;
-
-    private Attack attack;
     private MainRepository repository;
-
-    private final String[] phoneCodes = {"7", "380", ""};
 
     private String clipText;
 
@@ -76,8 +68,17 @@ public class MainActivity extends AppCompatActivity implements Callback {
                         .show();
         });
 
-        model.isBlurEnabled().observe(this, enabled -> {
-            if (enabled) {
+        model.isProxyEnabled().observe(this, enabled -> settingsBinding.proxyTile.setChecked(enabled));
+        model.getSelectedTheme().observe(this, theme -> {
+            AppCompatDelegate.setDefaultNightMode(theme);
+            settingsBinding.themeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
+        });
+
+        model.getCurrentProgress().observe(this, progress -> mainBinding.progress.setProgress(progress));
+        model.getMaxProgress().observe(this, maxProgress -> mainBinding.progress.setMax(maxProgress));
+
+        model.getAttackStatus().observe(this, attackStatus -> {
+            if (attackStatus) {
                 mainBinding.main.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
@@ -86,23 +87,30 @@ public class MainActivity extends AppCompatActivity implements Callback {
                                 .sampling(1)
                                 .async()
                                 .capture(mainBinding.main)
-                                .into(mainBinding.blur);
+                                .getAsync(bitmap -> {
+                                    mainBinding.blur.setImageBitmap(bitmap);
 
-                        mainBinding.blur.setVisibility(View.VISIBLE);
-                        mainBinding.main.setVisibility(View.INVISIBLE);
+                                    mainBinding.blur.setVisibility(View.VISIBLE);
+                                    mainBinding.main.setVisibility(View.INVISIBLE);
+
+                                    mainBinding.attack.setVisibility(View.VISIBLE);
+                                });
 
                         mainBinding.main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                 });
+
+                mainBinding.main.requestLayout();
             } else {
                 mainBinding.main.setVisibility(View.VISIBLE);
                 mainBinding.blur.setVisibility(View.GONE);
+                mainBinding.attack.setVisibility(View.GONE);
             }
         });
 
         CountryCodeAdapter adapter = new CountryCodeAdapter(this,
                 new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_all},
-                phoneCodes);
+                MainViewModel.phoneCodes);
 
         String[] hints = getResources().getStringArray(R.array.hints);
         mainBinding.phoneNumber.setHint(hints[0]);
@@ -122,6 +130,9 @@ public class MainActivity extends AppCompatActivity implements Callback {
         });
 
         mainBinding.startAttack.setOnClickListener(view -> {
+            InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            input.hideSoftInputFromWindow(mainBinding.getRoot().getWindowToken(), 0);
+
             String phoneNumber = mainBinding.phoneNumber.getText().toString();
             String numberOfCycles = mainBinding.cyclesCount.getText().toString();
 
@@ -132,11 +143,7 @@ public class MainActivity extends AppCompatActivity implements Callback {
 
             int numberOfCyclesNum = numberOfCycles.isEmpty() ? 1 : Integer.parseInt(numberOfCycles);
 
-            if (!Bomber.isAlive(attack)) {
-                attack = new Attack(this, phoneCodes[mainBinding.phoneCode.getSelectedItemPosition()],
-                        phoneNumber, numberOfCyclesNum, repository.isProxyEnabled() ? repository.getProxy() : new ArrayList<>());
-                attack.start();
-            }
+            model.startAttack(mainBinding.phoneCode.getSelectedItemPosition(), phoneNumber, numberOfCyclesNum);
         });
 
         mainBinding.bomb.setOnClickListener(view -> view.animate()
@@ -170,10 +177,10 @@ public class MainActivity extends AppCompatActivity implements Callback {
                     clipText = "+7" + clipText.substring(1);
 
                 clipText = clipText.substring(1);
-                for (int i = 0; i < phoneCodes.length; i++) {
-                    if (clipText.startsWith(phoneCodes[i])) {
+                for (int i = 0; i < MainViewModel.phoneCodes.length; i++) {
+                    if (clipText.startsWith(MainViewModel.phoneCodes[i])) {
                         mainBinding.phoneCode.setSelection(i);
-                        mainBinding.phoneNumber.setText(clipText.substring(phoneCodes[i].length()).replaceAll("[^\\d.]", ""));
+                        mainBinding.phoneNumber.setText(clipText.substring(MainViewModel.phoneCodes[i].length()).replaceAll("[^\\d.]", ""));
 
                         break;
                     }
@@ -188,22 +195,25 @@ public class MainActivity extends AppCompatActivity implements Callback {
 
         mainBinding.openMenu.setOnClickListener(view -> settings.show());
 
-        settingsBinding.appThemeTile.setOnClickListener(view -> {
-            int mode = settingsBinding.appThemeTile.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
+        settingsBinding.themeTile.setOnClickListener(view -> {
+            settings.cancel();
 
-            repository.setTheme(mode);
-            AppCompatDelegate.setDefaultNightMode(mode);
+            int mode = settingsBinding.themeTile.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
+
+            model.setTheme(mode);
         });
 
-        settingsBinding.appThemeTile.setOnLongClickListener(view -> {
-            repository.setTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        settingsBinding.themeTile.setOnLongClickListener(view -> {
+            settings.cancel();
 
+            model.setTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
             return true;
         });
 
-        settingsBinding.proxyTile.setChecked(repository.isProxyEnabled());
         settingsBinding.proxyTile.setOnCheckedChangeListener((button, checked) -> {
+            if (!button.isPressed())
+                return;
+
             if (checked) {
                 BottomSheetDialog proxy = new BottomSheetDialog(this);
 
@@ -226,11 +236,10 @@ public class MainActivity extends AppCompatActivity implements Callback {
                 settings.cancel();
             }
 
-            repository.setProxyEnabled(checked);
+            model.setProxyEnabled(checked);
         });
 
         settingsBinding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://qiwi.com/n/PHOSS105"))));
-        settingsBinding.appThemeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
 
         int lastPhoneCode = repository.getLastPhoneCode();
         if (lastPhoneCode > 2)
@@ -251,45 +260,8 @@ public class MainActivity extends AppCompatActivity implements Callback {
     }
 
     @Override
-    public void onAttackEnd(boolean success) {
-        runOnUiThread(() -> {
-            mainBinding.attack.setVisibility(View.GONE);
-            model.setBlurEnabled(false);
-        });
-
-        if (success) {
-            repository.setLastPhoneCode(mainBinding.phoneCode.getSelectedItemPosition());
-            repository.setLastPhone(mainBinding.phoneNumber.getText().toString());
-        } else {
-            Snackbar.make(mainBinding.main, R.string.phone_error, Snackbar.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public void onAttackStart(int serviceCount, int numberOfCycles) {
-        runOnUiThread(() -> {
-            InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            input.hideSoftInputFromWindow(mainBinding.getRoot().getWindowToken(), 0);
-
-            mainBinding.progress.setMax(serviceCount * numberOfCycles);
-            mainBinding.progress.setProgress(0);
-
-            mainBinding.attack.setVisibility(View.VISIBLE);
-
-            model.setBlurEnabled(true);
-        });
-    }
-
-    @Override
-    public void onProgressChange(int progress) {
-        runOnUiThread(() -> mainBinding.progress.setProgress(progress));
-    }
-
-    @Override
     public void onBackPressed() {
-        if (Bomber.isAlive(attack))
-            attack.interrupt();
-        else
+        if (!model.stopAttack())
             super.onBackPressed();
     }
 }

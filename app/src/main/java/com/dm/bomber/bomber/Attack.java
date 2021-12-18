@@ -43,9 +43,9 @@ public class Attack extends Thread {
     public Attack(Callback callback, String phoneCode, String phone, int cycles, List<Proxy> proxies) {
         super(phone);
 
+        this.callback = callback;
         this.phoneCode = phoneCode;
         this.phone = phone;
-        this.callback = callback;
         this.proxies = proxies;
 
         numberOfCycles = cycles;
@@ -60,17 +60,17 @@ public class Attack extends Thread {
 
         clientBuilder.proxy(null);
 
-        try {
-            for (int cycle = 0; cycle < numberOfCycles; cycle++) {
-                if (!proxies.isEmpty())
-                    clientBuilder.proxy(proxies.get(cycle % proxies.size()));
+        for (int cycle = 0; cycle < numberOfCycles; cycle++) {
+            if (!proxies.isEmpty())
+                clientBuilder.proxy(proxies.get(cycle % proxies.size()));
 
-                OkHttpClient client = clientBuilder.build();
+            OkHttpClient client = clientBuilder.build();
 
-                Log.i(TAG, String.format("Started cycle %s", cycle));
-                tasks = new CountDownLatch(usableServices.size());
+            Log.i(TAG, String.format("Started cycle %s", cycle));
+            tasks = new CountDownLatch(usableServices.size());
 
-                for (Service service : usableServices) {
+            for (Service service : usableServices) {
+                try {
                     service.prepare(phoneCode, phone);
                     service.run(client, new com.dm.bomber.services.Callback() {
                         @Override
@@ -90,21 +90,19 @@ public class Attack extends Thread {
                             callback.onProgressChange(progress++);
                         }
                     });
-                }
-
-                try {
-                    tasks.await();
-                } catch (InterruptedException e) {
-                    break;
+                } catch (StringIndexOutOfBoundsException e) {
+                    Log.w(TAG, String.format("%s could not process the number", service.getClass().getName()));
                 }
             }
 
-            callback.onAttackEnd(true);
-        } catch (StringIndexOutOfBoundsException e) {
-            Log.i(TAG, "Invalid number format");
-            callback.onAttackEnd(false);
-        } finally {
-            Log.i(TAG, String.format("Attack on +%s%s ended", phoneCode, phone));
+            try {
+                tasks.await();
+            } catch (InterruptedException e) {
+                break;
+            }
         }
+
+        callback.onAttackEnd();
+        Log.i(TAG, String.format("Attack on +%s%s ended", phoneCode, phone));
     }
 }
