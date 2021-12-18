@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         repository = new MainRepository(this);
-        AppCompatDelegate.setDefaultNightMode(repository.getTheme());
 
         super.onCreate(savedInstanceState);
 
