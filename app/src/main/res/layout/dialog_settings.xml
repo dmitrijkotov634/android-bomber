@@ -6,7 +6,7 @@
     android:padding="8dp">
 
     <ToggleButton
-        android:id="@+id/app_theme_tile"
+        android:id="@+id/theme_tile"
         style="@style/ToggleTile"
         android:drawableStart="@drawable/ic_night_theme"
         android:text="@string/darktheme" />
@@ -32,7 +32,7 @@
         android:id="@+id/flow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="app_theme_tile,donate_tile,proxy_tile,placeholder"
+        app:constraint_referenced_ids="theme_tile,donate_tile,proxy_tile,placeholder"
         app:flow_horizontalGap="8dp"
         app:flow_maxElementsWrap="2"
         app:flow_verticalGap="8dp"

@@ -324,7 +324,7 @@ public class Services {
                 }
             },
 
-            new JsonService("https://www.letu.ru/s/api/user/account/v1/confirmations/phone?pushSite=storeMobileRU") {
+            new JsonService("https://www.letu.ru/s/api/user/account/v1/confirmations/phone?pushSite=storeMobileRU", 7) {
                 @Override
                 public String buildJson() {
                     JSONObject json = new JSONObject();
@@ -380,7 +380,7 @@ public class Services {
                 }
             },
 
-            new FormService("https://www.traektoria.ru/local/ajax/authorize.php?action=2") {
+            new FormService("https://www.traektoria.ru/local/ajax/authorize.php?action=2", 7) {
                 @Override
                 public void buildBody(FormBody.Builder builder) {
                     builder.add("phone", getFormattedPhone());

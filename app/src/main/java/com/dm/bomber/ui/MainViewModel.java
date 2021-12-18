@@ -5,16 +5,53 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.dm.bomber.MainRepository;
+import com.dm.bomber.bomber.Attack;
+import com.dm.bomber.bomber.Callback;
 
-public class MainViewModel extends ViewModel {
+import java.util.ArrayList;
+
+public class MainViewModel extends ViewModel implements Callback {
     private final MainRepository repository;
 
+    private Attack attack;
+
+    private int countryCode;
+    private String phoneNumber;
+
     private MutableLiveData<Boolean> snowfallEnabled;
-    private MutableLiveData<Boolean> blurEnabled;
+    private MutableLiveData<Boolean> proxyEnabled;
+    private MutableLiveData<Integer> selectedTheme;
     private MutableLiveData<Boolean> promotionShown;
+
+    private MutableLiveData<Integer> currentProgress;
+    private MutableLiveData<Integer> maxProgress;
+    private MutableLiveData<Boolean> attackStatus;
+
+    public static final String[] phoneCodes = {"7", "380", ""};
 
     public MainViewModel(MainRepository preferences) {
         this.repository = preferences;
+    }
+
+    @Override
+    public void onAttackEnd() {
+        attackStatus.postValue(false);
+
+        repository.setLastPhoneCode(countryCode);
+        repository.setLastPhone(phoneNumber);
+    }
+
+    @Override
+    public void onAttackStart(int serviceCount, int numberOfCycles) {
+        attackStatus.postValue(true);
+
+        maxProgress.postValue(serviceCount * numberOfCycles);
+        currentProgress.postValue(0);
+    }
+
+    @Override
+    public void onProgressChange(int progress) {
+        currentProgress.postValue(progress);
     }
 
     public void enableSnowfall() {
@@ -29,8 +66,29 @@ public class MainViewModel extends ViewModel {
         repository.setPromotionShown(true);
     }
 
-    public void setBlurEnabled(boolean enabled) {
-        blurEnabled.setValue(enabled);
+    public void setProxyEnabled(boolean enabled) {
+        repository.setProxyEnabled(enabled);
+        proxyEnabled.setValue(enabled);
+    }
+
+    public void setTheme(int theme) {
+        repository.setTheme(theme);
+        selectedTheme.setValue(theme);
+    }
+
+    public void startAttack(int countryCode, String phoneNumber, int numberOfCyclesNum) {
+        this.countryCode = countryCode;
+        this.phoneNumber = phoneNumber;
+
+        attack = new Attack(this, phoneCodes[countryCode], phoneNumber, numberOfCyclesNum,
+                repository.isProxyEnabled() ? repository.getProxy() : new ArrayList<>());
+
+        attack.start();
+    }
+
+    public Boolean stopAttack() {
+        attack.interrupt();
+        return attackStatus.getValue();
     }
 
     public LiveData<Boolean> isSnowfallEnabled() {
@@ -47,10 +105,38 @@ public class MainViewModel extends ViewModel {
         return promotionShown;
     }
 
-    public LiveData<Boolean> isBlurEnabled() {
-        if (blurEnabled == null)
-            blurEnabled = new MutableLiveData<>(false);
+    public LiveData<Boolean> isProxyEnabled() {
+        if (proxyEnabled == null)
+            proxyEnabled = new MutableLiveData<>(repository.isProxyEnabled());
 
-        return blurEnabled;
+        return proxyEnabled;
+    }
+
+    public LiveData<Integer> getSelectedTheme() {
+        if (selectedTheme == null)
+            selectedTheme = new MutableLiveData<>(repository.getTheme());
+
+        return selectedTheme;
+    }
+
+    public LiveData<Integer> getCurrentProgress() {
+        if (currentProgress == null)
+            currentProgress = new MutableLiveData<>(0);
+
+        return currentProgress;
+    }
+
+    public LiveData<Integer> getMaxProgress() {
+        if (maxProgress == null)
+            maxProgress = new MutableLiveData<>(0);
+
+        return maxProgress;
+    }
+
+    public LiveData<Boolean> getAttackStatus() {
+        if (attackStatus == null)
+            attackStatus = new MutableLiveData<>(false);
+
+        return attackStatus;
     }
 }
