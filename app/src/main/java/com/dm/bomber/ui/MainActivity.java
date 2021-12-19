@@ -41,13 +41,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         repository = new MainRepository(this);
 
+        model = new ViewModelProvider(this, new MainModelFactory(repository)).get(MainViewModel.class);
+
+        model.getSelectedTheme().observe(this, theme -> {
+            AppCompatDelegate.setDefaultNightMode(theme);
+            settingsBinding.themeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
+        });
+
         super.onCreate(savedInstanceState);
 
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         settingsBinding = DialogSettingsBinding.inflate(getLayoutInflater());
-        setContentView(mainBinding.getRoot());
 
-        model = new ViewModelProvider(this, new MainModelFactory(repository)).get(MainViewModel.class);
+        setContentView(mainBinding.getRoot());
 
         model.isSnowfallEnabled().observe(this, enabled -> {
             if (enabled)
@@ -59,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 new MaterialAlertDialogBuilder(this)
                         .setTitle(R.string.information)
                         .setMessage(R.string.promotion)
+                        .setCancelable(false)
                         .setPositiveButton(R.string.open, (dialogInterface, i) -> {
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/androidsmsbomber")));
                             model.closePromotion();
@@ -68,10 +75,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         model.isProxyEnabled().observe(this, enabled -> settingsBinding.proxyTile.setChecked(enabled));
-        model.getSelectedTheme().observe(this, theme -> {
-            AppCompatDelegate.setDefaultNightMode(theme);
-            settingsBinding.themeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
-        });
 
         model.getCurrentProgress().observe(this, progress -> mainBinding.progress.setProgress(progress));
         model.getMaxProgress().observe(this, maxProgress -> mainBinding.progress.setMax(maxProgress));

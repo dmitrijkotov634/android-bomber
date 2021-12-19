@@ -87,7 +87,9 @@ public class MainViewModel extends ViewModel implements Callback {
     }
 
     public Boolean stopAttack() {
-        attack.interrupt();
+        if (attackStatus.getValue())
+            attack.interrupt();
+
         return attackStatus.getValue();
     }
 
