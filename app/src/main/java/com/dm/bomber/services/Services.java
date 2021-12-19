@@ -22,7 +22,7 @@ public class Services {
     public final static Service[] services = new Service[]{
             new Telegram(), new MTS(), new CarSmile(),
             new Eldorado(), new Tele2TV(),
-            new Ukrzoloto(), new Olltv(), new Wink(), new ProstoTV(),
+            new Ukrzoloto(), new Olltv(), new ProstoTV(),
             new Zdravcity(), new Robocredit(), new Tinder(), new Groshivsim(),
             new Dolyame(), new Tinkoff(),
             new KazanExpress(), new FoodBand(), new Gosuslugi(),
@@ -579,6 +579,62 @@ public class Services {
                 @Override
                 public void buildParams(HttpUrl.Builder builder) {
                     builder.addQueryParameter("phone", format(phone, "+7 *** ***-**-**"));
+                }
+            },
+
+            new JsonService("https://cnt-vlmr-itv02.svc.iptv.rt.ru/api/v2/portal/send_sms_code") {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("session_id", "24f8bbf7-60d3-11ec-b71d-4857027601a0:1951416:2237006:2");
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("action", "register");
+                        json.put("phone", getFormattedPhone());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new Service(7) {
+                @Override
+                public void run(OkHttpClient client, Callback callback) {
+                    String formattedPhone = format(phone, "+7 (***) ***-**-**");
+
+                    client.newCall(new Request.Builder()
+                            .url("https://madrobots.ru/api/auth/register/")
+                            .post(new FormBody.Builder()
+                                    .add("name", getRussianName())
+                                    .add("lastName", getRussianName())
+                                    .add("phone", formattedPhone)
+                                    .add("email", getEmail())
+                                    .add("city", getRussianName())
+                                    .add("subscribe", "0")
+                                    .build())
+                            .build()).enqueue(new okhttp3.Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                            callback.onFailure(call, e);
+                        }
+
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                            client.newCall(new Request.Builder()
+                                    .url("https://madrobots.ru/api/auth/send-code/")
+                                    .post(new FormBody.Builder()
+                                            .add("identifier", formattedPhone)
+                                            .build())
+                                    .build()).enqueue(callback);
+                        }
+                    });
                 }
             }
     };
