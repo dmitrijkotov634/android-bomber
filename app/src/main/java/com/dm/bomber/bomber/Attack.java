@@ -3,6 +3,7 @@ package com.dm.bomber.bomber;
 import android.util.Log;
 
 import com.dm.bomber.services.Service;
+import com.dm.bomber.services.Services;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -53,7 +54,7 @@ public class Attack extends Thread {
 
     @Override
     public void run() {
-        List<Service> usableServices = Bomber.getUsableServices(phoneCode.isEmpty() ? 0 : Integer.parseInt(phoneCode));
+        List<Service> usableServices = Services.getUsableServices(phoneCode.isEmpty() ? 0 : Integer.parseInt(phoneCode));
 
         callback.onAttackStart(usableServices.size(), numberOfCycles);
         Log.i(TAG, String.format("Starting attack on +%s%s", phoneCode, phone));
