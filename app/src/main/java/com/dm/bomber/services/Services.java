@@ -6,6 +6,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -19,6 +21,27 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Services {
+
+    public static boolean contains(final int[] array, final int key) {
+        for (final int i : array) {
+            if (i == key) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static List<Service> getUsableServices(int countryCode) {
+        List<Service> usableServices = new ArrayList<>();
+
+        for (Service service : services) {
+            if (service.countryCodes == null || service.countryCodes.length == 0 || contains(service.countryCodes, countryCode))
+                usableServices.add(service);
+        }
+
+        return usableServices;
+    }
+
     public final static Service[] services = new Service[]{
             new Telegram(), new MTS(), new CarSmile(),
             new Eldorado(), new Tele2TV(),
@@ -626,7 +649,7 @@ public class Services {
                         }
 
                         @Override
-                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        public void onResponse(@NonNull Call call, @NonNull Response response) {
                             client.newCall(new Request.Builder()
                                     .url("https://madrobots.ru/api/auth/send-code/")
                                     .post(new FormBody.Builder()
@@ -635,6 +658,20 @@ public class Services {
                                     .build()).enqueue(callback);
                         }
                     });
+                }
+            },
+
+            new FormService("https://www.taximasters.ru/webapi?callback=jQuery191008792297336087607_1640186387131", 7) {
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("q", "get_activation_key");
+                    builder.add("phone", format(phone, "+7 (***) ***-**-**"));
+                    builder.add("way", "bysms");
+                    builder.add("groupid", "761323");
+                    builder.add("usertype", "employee");
+                    builder.add("lang", "ru-RU");
+                    builder.add("debuginfo", "GMT+0300+(Москва,+стандартное+время)+TZ-180+1366x768+https://www.taximasters.ru/cabinet/");
+                    builder.add("webClientVersion", "20210929110133");
                 }
             }
     };
