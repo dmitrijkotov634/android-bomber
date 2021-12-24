@@ -40,13 +40,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         repository = new MainRepository(this);
+        model = new ViewModelProvider(this,
+                new MainModelFactory(repository)).get(MainViewModel.class);
 
-        model = new ViewModelProvider(this, new MainModelFactory(repository)).get(MainViewModel.class);
-
-        model.getSelectedTheme().observe(this, theme -> {
-            AppCompatDelegate.setDefaultNightMode(theme);
-            settingsBinding.themeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
-        });
+        AppCompatDelegate.setDefaultNightMode(repository.getTheme());
 
         super.onCreate(savedInstanceState);
 
@@ -197,25 +194,21 @@ public class MainActivity extends AppCompatActivity {
 
         mainBinding.openMenu.setOnClickListener(view -> settings.show());
 
+        settingsBinding.themeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
         settingsBinding.themeTile.setOnClickListener(view -> {
             settings.cancel();
 
-            int mode = settingsBinding.themeTile.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
-
-            model.setTheme(mode);
+            setCurrentTheme(settingsBinding.themeTile.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
         });
 
         settingsBinding.themeTile.setOnLongClickListener(view -> {
             settings.cancel();
 
-            model.setTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            setCurrentTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
             return true;
         });
 
         settingsBinding.proxyTile.setOnCheckedChangeListener((button, checked) -> {
-            if (!button.isPressed())
-                return;
-
             if (checked) {
                 BottomSheetDialog proxy = new BottomSheetDialog(this);
 
@@ -249,6 +242,11 @@ public class MainActivity extends AppCompatActivity {
 
         mainBinding.phoneCode.setSelection(lastPhoneCode);
         mainBinding.phoneNumber.setText(repository.getLastPhone());
+    }
+
+    public void setCurrentTheme(int theme) {
+        AppCompatDelegate.setDefaultNightMode(theme);
+        repository.setTheme(theme);
     }
 
     @Override

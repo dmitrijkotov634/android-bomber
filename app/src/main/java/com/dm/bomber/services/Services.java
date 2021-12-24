@@ -673,6 +673,46 @@ public class Services {
                     builder.add("debuginfo", "GMT+0300+(Москва,+стандартное+время)+TZ-180+1366x768+https://www.taximasters.ru/cabinet/");
                     builder.add("webClientVersion", "20210929110133");
                 }
+            },
+
+            new FormService("https://alphasms.ua/ajax/test/") {
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("phone", "+" + getFormattedPhone());
+                }
+            },
+
+            new FormService("https://api.yarus.ru/reg", 7) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("X-API-KEY", "PELQTQN2mWfml8XVYsJwaB9Qi4t8XE");
+                    builder.addHeader("X-DEVICE-ID", "ID-1640362761453");
+                    builder.addHeader("X-APP", "3");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("phone", format(phone, "+7(***)+***-****"));
+                }
+            },
+
+            new FormService("https://orteka.ru/bitrix/services/main/ajax.php?mode=class&c=orteka:auth.registration&action=confirmPhone", 7) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("Cookie", "PHPSESSID=lakj7vcqijs9tpb3e2mstens6b; ABtestCart=261298; BITRIX_SM_SALE_UID=4daefd46dbc267e59b1bd566fe4c30e3; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A2%2C%22EXPIRE%22%3A1640379540%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; tracking=; ssaid=cf31d6b0-64de-11ec-9520-b133cea34249; __tld__=null; _userGUID=0:kxko2vjy:dwfdz3WqmnxkeyIxYM079_My9XvrFucY; k50uuid=4901ac77-8404-4bd9-9839-cc912ae34604; k50lastvisit=2be88ca4242c76e8253ac62474851065032d6833.da39a3ee5e6b4b0d3255bfef95601890afd80709.54b4f71d35b40b9bde5abe49d6744bc4caa2ebbf.da39a3ee5e6b4b0d3255bfef95601890afd80709.1640366867727; k50sid=fc9e4f6c-a04e-46d9-863b-dacfc75bc5a8; dSesn=4a23c994-2b9a-72ea-e365-5d13bc7b2bee; _dvs=0:kxko2vjy:gvnTKh7Lqf4~ZiAn1njx3nLEYrfRcrIE; __ar_v_id=0oDEExrKUIXsA0QGC-AWF3; __ar_d_id=e8ueNh1qpb8j3Tz3zo6k5Q; __ar_si=%7B%22t%22%3A%222021-12-24T17%3A27%3A49.295Z%22%2C%22c%22%3A1%2C%22p%22%3A%5B%5D%2C%22ct%22%3A%5B%5D%2C%22q%22%3A%22%22%7D");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("signedParameters", "");
+                    builder.add("query[phone]", format(phone, "+7 (***) ***-**-**"));
+                    builder.add("SITE_ID", "s1");
+                    builder.add("sessid", "3138322a7c84ed7650039e465ffd5908");
+                }
             }
     };
 }

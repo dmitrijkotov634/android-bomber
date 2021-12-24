@@ -20,7 +20,6 @@ public class MainViewModel extends ViewModel implements Callback {
 
     private MutableLiveData<Boolean> snowfallEnabled;
     private MutableLiveData<Boolean> proxyEnabled;
-    private MutableLiveData<Integer> selectedTheme;
     private MutableLiveData<Boolean> promotionShown;
 
     private MutableLiveData<Integer> currentProgress;
@@ -71,11 +70,6 @@ public class MainViewModel extends ViewModel implements Callback {
         proxyEnabled.setValue(enabled);
     }
 
-    public void setTheme(int theme) {
-        repository.setTheme(theme);
-        selectedTheme.setValue(theme);
-    }
-
     public void startAttack(int countryCode, String phoneNumber, int numberOfCyclesNum) {
         this.countryCode = countryCode;
         this.phoneNumber = phoneNumber;
@@ -87,7 +81,7 @@ public class MainViewModel extends ViewModel implements Callback {
     }
 
     public Boolean stopAttack() {
-        if (attackStatus.getValue())
+        if (attackStatus.getValue() != null && attackStatus.getValue())
             attack.interrupt();
 
         return attackStatus.getValue();
@@ -112,13 +106,6 @@ public class MainViewModel extends ViewModel implements Callback {
             proxyEnabled = new MutableLiveData<>(repository.isProxyEnabled());
 
         return proxyEnabled;
-    }
-
-    public LiveData<Integer> getSelectedTheme() {
-        if (selectedTheme == null)
-            selectedTheme = new MutableLiveData<>(repository.getTheme());
-
-        return selectedTheme;
     }
 
     public LiveData<Integer> getCurrentProgress() {
