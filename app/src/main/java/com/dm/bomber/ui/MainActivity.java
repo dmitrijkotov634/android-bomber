@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import androidx.annotation.AttrRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -222,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
 
                 DialogProxiesBinding dialog = DialogProxiesBinding.inflate(getLayoutInflater());
                 dialog.proxies.setText(repository.getRawProxy());
+                TooltipCompat.setTooltipText(dialog.save, getString(R.string.save));
                 dialog.save.setOnClickListener(view -> {
                     try {
                         repository.parseProxy(dialog.proxies.getText().toString());
@@ -229,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
                         proxy.cancel();
                     } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
-                        dialog.proxies.setError(getString(R.string.proxy_format_error));
+                        Snackbar.make(dialog.getRoot(), R.string.proxy_format_error, Snackbar.LENGTH_LONG).show();
                     }
                 });
 
