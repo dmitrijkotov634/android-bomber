@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Bomber" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Bomber" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/grey_300</item>
         <item name="colorPrimaryVariant">@color/grey_500</item>

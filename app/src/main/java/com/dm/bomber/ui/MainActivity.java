@@ -5,16 +5,20 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 
+import androidx.annotation.AttrRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.dm.bomber.MainRepository;
@@ -23,6 +27,8 @@ import com.dm.bomber.databinding.ActivityMainBinding;
 import com.dm.bomber.databinding.DialogProxiesBinding;
 import com.dm.bomber.databinding.DialogSettingsBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.color.DynamicColors;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -46,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(repository.getTheme());
 
         super.onCreate(savedInstanceState);
+        DynamicColors.applyIfAvailable(this);
 
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         settingsBinding = DialogSettingsBinding.inflate(getLayoutInflater());
@@ -242,6 +249,10 @@ public class MainActivity extends AppCompatActivity {
 
         mainBinding.phoneCode.setSelection(lastPhoneCode);
         mainBinding.phoneNumber.setText(repository.getLastPhone());
+
+        if (DynamicColors.isDynamicColorAvailable()) {
+            mainBinding.footer.setBackgroundColor(getThemeColor(R.attr.colorOnPrimary));
+        }
     }
 
     public void setCurrentTheme(int theme) {
@@ -263,5 +274,22 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (!model.stopAttack())
             super.onBackPressed();
+    }
+
+    public int getThemeColor(@AttrRes int attrRes) {
+        int materialColor = MaterialColors.getColor(this, attrRes, Color.BLUE);
+        if (materialColor< 0) {
+            return materialColor;
+        }
+
+        TypedValue resolvedAttr = new TypedValue();
+        getTheme().resolveAttribute(attrRes, resolvedAttr, true);
+        int colorRes;
+        if (resolvedAttr.resourceId != 0) {
+            colorRes = resolvedAttr.resourceId;
+        } else {
+            colorRes = resolvedAttr.data;
+        }
+        return ContextCompat.getColor(this, colorRes);
     }
 }
