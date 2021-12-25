@@ -32,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/country_code_pick"
+            android:popupBackground="?colorPrimary"
             android:padding="@dimen/paddings"
             app:layout_constraintBottom_toTopOf="@+id/start_attack"
             app:layout_constraintEnd_toStartOf="@+id/phone_number"

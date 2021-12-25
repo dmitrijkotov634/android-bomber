@@ -7,19 +7,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.dm.bomber.databinding.CountryCodeRowBinding;
+import com.google.android.material.color.DynamicColors;
 
 public class CountryCodeAdapter extends BaseAdapter {
 
     private final int[] flags;
     private final String[] countryCodes;
+    private final int textColor;
 
-    private final LayoutInflater inflter;
+    private final LayoutInflater inflater;
 
-    public CountryCodeAdapter(Activity context, int[] flags, String[] countryCodes) {
+    public CountryCodeAdapter(Activity context, int[] flags, String[] countryCodes, int textColor) {
         this.flags = flags;
         this.countryCodes = countryCodes;
+        this.textColor = textColor;
 
-        inflter = LayoutInflater.from(context);
+        inflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class CountryCodeAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (view == null) {
-            CountryCodeRowBinding binding = CountryCodeRowBinding.inflate(inflter);
+            CountryCodeRowBinding binding = CountryCodeRowBinding.inflate(inflater);
 
             view = binding.getRoot();
             view.setTag(holder = new ViewHolder(binding));
@@ -53,6 +56,10 @@ public class CountryCodeAdapter extends BaseAdapter {
 
         holder.binding.icon.setImageResource(flags[index]);
         holder.binding.code.setText(String.format("+%s", countryCodes[index]));
+
+        if (DynamicColors.isDynamicColorAvailable()) {
+            holder.binding.code.setTextColor(textColor);
+        }
 
         return view;
     }

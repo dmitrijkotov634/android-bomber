@@ -116,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
 
         CountryCodeAdapter adapter = new CountryCodeAdapter(this,
                 new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_all},
-                MainViewModel.phoneCodes);
+                MainViewModel.phoneCodes,
+                getThemeColor(R.attr.colorOnSecondary));
 
         String[] hints = getResources().getStringArray(R.array.hints);
         mainBinding.phoneNumber.setHint(hints[0]);
@@ -278,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
 
     public int getThemeColor(@AttrRes int attrRes) {
         int materialColor = MaterialColors.getColor(this, attrRes, Color.BLUE);
-        if (materialColor< 0) {
+        if (materialColor < 0) {
             return materialColor;
         }
 
