@@ -32,8 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/country_code_pick"
-            android:popupBackground="?colorPrimary"
             android:padding="@dimen/paddings"
+            android:popupBackground="?colorPrimary"
             app:layout_constraintBottom_toTopOf="@+id/start_attack"
             app:layout_constraintEnd_toStartOf="@+id/phone_number"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -45,6 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="4dp"
+            android:autofillHints="phone"
             android:background="@drawable/phone_input"
             android:inputType="number"
             android:maxLength="15"
@@ -53,7 +54,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/phone_code"
             app:layout_constraintEnd_toStartOf="@+id/cycles_count"
             app:layout_constraintStart_toEndOf="@+id/phone_code"
-            app:layout_constraintTop_toTopOf="@+id/phone_code" />
+            app:layout_constraintTop_toTopOf="@+id/phone_code"
+            tools:ignore="TextFields" />
 
         <EditText
             android:id="@+id/cycles_count"
@@ -62,6 +64,7 @@
             android:layout_marginStart="4dp"
             android:background="@drawable/cycles_count"
             android:hint="@string/number_of_cycles"
+            android:importantForAutofill="no"
             android:inputType="number"
             android:maxLength="2"
             android:padding="@dimen/paddings"
@@ -92,20 +95,11 @@
             android:padding="20dp"
             android:text="@string/footer_text"
             android:textColor="@color/grey_500"
+            android:textColorLink="?colorSecondary"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
-            android:id="@+id/open_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_more" />
 
         <ImageView
             android:id="@+id/bomb"
@@ -125,6 +119,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_baseline_settings_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -5,10 +5,13 @@
       <map>
         <entry key="app/src/main/res/drawable/country_code_pick.xml" value="0.11927083333333334" />
         <entry key="app/src/main/res/drawable/cycles_count.xml" value="0.11927083333333334" />
+        <entry key="app/src/main/res/drawable/ic_all.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_by.xml" value="0.2212962962962963" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.19074074074074074" />
         <entry key="app/src/main/res/drawable/ic_more.xml" value="0.19166666666666668" />
         <entry key="app/src/main/res/drawable/ic_night_theme.xml" value="0.19074074074074074" />
+        <entry key="app/src/main/res/drawable/ic_round_done_24.xml" value="0.14166666666666666" />
+        <entry key="app/src/main/res/drawable/ic_uk.xml" value="0.14166666666666666" />
         <entry key="app/src/main/res/drawable/phone_input.xml" value="0.11927083333333334" />
         <entry key="app/src/main/res/drawable/snowflake.xml" value="0.12864583333333332" />
         <entry key="app/src/main/res/drawable/toggle_tile.xml" value="0.19074074074074074" />
