@@ -22,12 +22,12 @@
         <item name="drawableTint">?colorOnPrimary</item>
     </style>
 
-    <style name="AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+    <style name="AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/NegativeButtonStyle</item>
     </style>
 
-    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
+    <style name="NegativeButtonStyle" parent="Widget.Material3.Button.TextButton">
         <item name="android:textColor">?colorSecondary</item>
     </style>
 </resources>

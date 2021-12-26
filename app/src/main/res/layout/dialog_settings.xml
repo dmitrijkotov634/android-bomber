@@ -8,19 +8,19 @@
     <ToggleButton
         android:id="@+id/theme_tile"
         style="@style/ToggleTile"
-        android:drawableStart="@drawable/ic_night_theme"
+        android:drawableStart="@drawable/ic_baseline_invert_colors_24"
         android:text="@string/darktheme" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/donate_tile"
         style="@style/ActionTile"
-        android:drawableStart="@drawable/ic_donate"
+        android:drawableStart="@drawable/ic_baseline_coffee_24"
         android:text="@string/donate" />
 
     <ToggleButton
         android:id="@+id/proxy_tile"
         style="@style/ToggleTile"
-        android:drawableStart="@drawable/ic_proxy"
+        android:drawableStart="@drawable/ic_baseline_vpn_key_24"
         android:text="@string/proxy" />
 
     <FrameLayout

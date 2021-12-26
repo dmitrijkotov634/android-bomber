@@ -58,6 +58,24 @@ public class MainActivity extends AppCompatActivity {
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         settingsBinding = DialogSettingsBinding.inflate(getLayoutInflater());
 
+        DialogProxiesBinding proxyBinding = DialogProxiesBinding.inflate(getLayoutInflater());
+        proxyBinding.proxies.setText(repository.getRawProxy());
+
+        BottomSheetDialog proxyDialog = new BottomSheetDialog(this);
+        proxyDialog.setContentView(proxyBinding.getRoot());
+        proxyBinding.save.setOnClickListener(view -> {
+            try {
+                repository.parseProxy(proxyBinding.proxies.getText().toString());
+                repository.setRawProxy(proxyBinding.proxies.getText().toString());
+
+                proxyDialog.cancel();
+            } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
+                Snackbar.make(proxyBinding.getRoot(), R.string.proxy_format_error, Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        TooltipCompat.setTooltipText(proxyBinding.save, getString(R.string.save));
+
         setContentView(mainBinding.getRoot());
 
         model.isSnowfallEnabled().observe(this, enabled -> {
@@ -201,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
         BottomSheetDialog settings = new BottomSheetDialog(this);
         settings.setContentView(settingsBinding.getRoot());
 
-        mainBinding.openMenu.setOnClickListener(view -> settings.show());
+        mainBinding.settings.setOnClickListener(view -> settings.show());
 
         settingsBinding.themeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
         settingsBinding.themeTile.setOnClickListener(view -> {
@@ -218,26 +236,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         settingsBinding.proxyTile.setOnCheckedChangeListener((button, checked) -> {
+            if (!button.isPressed())
+                return;
+
             if (checked) {
-                BottomSheetDialog proxy = new BottomSheetDialog(this);
-
-                DialogProxiesBinding dialog = DialogProxiesBinding.inflate(getLayoutInflater());
-                dialog.proxies.setText(repository.getRawProxy());
-                TooltipCompat.setTooltipText(dialog.save, getString(R.string.save));
-                dialog.save.setOnClickListener(view -> {
-                    try {
-                        repository.parseProxy(dialog.proxies.getText().toString());
-                        repository.setRawProxy(dialog.proxies.getText().toString());
-
-                        proxy.cancel();
-                    } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
-                        Snackbar.make(dialog.getRoot(), R.string.proxy_format_error, Snackbar.LENGTH_LONG).show();
-                    }
-                });
-
-                proxy.setContentView(dialog.getRoot());
-                proxy.show();
-
+                proxyDialog.show();
                 settings.cancel();
             }
 
@@ -281,18 +284,14 @@ public class MainActivity extends AppCompatActivity {
 
     public int getThemeColor(@AttrRes int attrRes) {
         int materialColor = MaterialColors.getColor(this, attrRes, Color.BLUE);
-        if (materialColor < 0) {
+
+        if (materialColor < 0)
             return materialColor;
-        }
 
         TypedValue resolvedAttr = new TypedValue();
         getTheme().resolveAttribute(attrRes, resolvedAttr, true);
-        int colorRes;
-        if (resolvedAttr.resourceId != 0) {
-            colorRes = resolvedAttr.resourceId;
-        } else {
-            colorRes = resolvedAttr.data;
-        }
-        return ContextCompat.getColor(this, colorRes);
+
+        return ContextCompat.getColor(this,
+                resolvedAttr.resourceId == 0 ? resolvedAttr.data : resolvedAttr.resourceId);
     }
 }
