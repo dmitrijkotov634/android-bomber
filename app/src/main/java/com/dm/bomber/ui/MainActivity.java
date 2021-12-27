@@ -256,9 +256,8 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.phoneCode.setSelection(lastPhoneCode);
         mainBinding.phoneNumber.setText(repository.getLastPhone());
 
-        if (DynamicColors.isDynamicColorAvailable()) {
+        if (DynamicColors.isDynamicColorAvailable())
             mainBinding.footer.setBackgroundColor(getThemeColor(R.attr.colorOnPrimary));
-        }
     }
 
     public void setCurrentTheme(int theme) {

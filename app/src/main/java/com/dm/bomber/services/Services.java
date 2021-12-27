@@ -713,6 +713,73 @@ public class Services {
                     builder.add("SITE_ID", "s1");
                     builder.add("sessid", "3138322a7c84ed7650039e465ffd5908");
                 }
+            },
+
+            new FormService("https://lk.ab-club.ru/register/send-code", 7) {
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("phone", format(phone, "8 (***) *** ** **"));
+                }
+            },
+
+            new Service(380) {
+                @Override
+                public void run(OkHttpClient client, Callback callback) {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("msisdn", getFormattedPhone());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    client.newCall(new Request.Builder()
+                            .url("https://mnp.lifecell.ua/mnp/get-token/")
+                            .post(RequestBody.create(json.toString(), MediaType.parse("application/json")))
+                            .build()).enqueue(new okhttp3.Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                            try {
+                                JSONObject req = new JSONObject(response.body().string());
+
+                                JSONObject json = new JSONObject();
+                                json.put("contact", getFormattedPhone());
+                                json.put("otp_type", "standart");
+
+                                client.newCall(new Request.Builder()
+                                        .url("https://mnp.lifecell.ua/mnp/otp/send/")
+                                        .header("authorization", "Token " + req.getString("token"))
+                                        .post(RequestBody.create(json.toString(), MediaType.parse("application/json")))
+                                        .build()).enqueue(callback);
+
+                            } catch (JSONException | NullPointerException e) {
+                                callback.onError(e);
+                            }
+                        }
+                    });
+                }
+            },
+
+            new FormService("https://planetazdorovo.ru/ajax/phone_auth.php", 7) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("Cookie", "help_phone=8%20%28495%29%20369-33-00; order_phone=8%20%28495%29%20145-99-33; region=117; timezone=3; info_schedule=%D0%BA%D1%80%D1%83%D0%B3%D0%BB%D0%BE%D1%81%D1%83%D1%82%D0%BE%D1%87%D0%BD%D0%BE; PHPSESSID=HnHjhDx5FqMp7KhYd6nG6phDtA9Uc4iC; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A58%2C%22EXPIRE%22%3A1640631540%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("token", "");
+                    builder.add("action", "");
+                    builder.add("phone", format(phone, "+7 (***) ***-****"));
+                    builder.add("Login", "");
+                }
             }
     };
 }
