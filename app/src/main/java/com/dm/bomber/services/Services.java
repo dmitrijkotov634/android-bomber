@@ -780,6 +780,44 @@ public class Services {
                     builder.add("phone", format(phone, "+7 (***) ***-****"));
                     builder.add("Login", "");
                 }
+            },
+
+            new FormService("https://uss.rozetka.com.ua/session/auth/signup-phone", 380) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("Cookie", "ab-cart-se=new; xab_segment=123; slang=ru; uid=rB4eDGHMb00wHeQls7l4Ag==; visitor_city=1; _uss-csrf=zfILVt2Lk9ea1KoFpg6LVnxCivNV1mff+ZDbpC0kSK9c/K/5; ussat_exp=1640830991; ussat=8201437cececef15030d16966efa914d.ua-a559ca63edf16a11f148038356f6ac94.1640830991; ussrt=6527028eb43574da97a51f66ef50c5d0.ua-a559ca63edf16a11f148038356f6ac94.1643379791; ussapp=u3-u_ZIf2pBPN8Y6oGYIQZLBN4LUkQgplA_Dy2IX; uss_evoid_cascade=no");
+                    builder.addHeader("Csrf-Token", "zfILVt2Lk9ea1KoFpg6LVnxCivNV1mff+ZDbpC0kSK9c/K/5");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    String name = getRussianName();
+
+                    builder.add("title", name);
+                    builder.add("first_name", name);
+                    builder.add("last_name", getRussianName());
+                    builder.add("password", getUserName() + "A123");
+                    builder.add("email", getEmail());
+                    builder.add("phone", phone);
+                    builder.add("request_token", "rB4eDGHMb00wHeQls7l4Ag==");
+                }
+            },
+
+            new JsonService("https://lkdr.nalog.ru/api/v1/auth/challenge/sms/start") {
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone", getFormattedPhone());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
             }
     };
 }
