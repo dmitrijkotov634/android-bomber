@@ -878,6 +878,23 @@ public class Services {
                     builder.add("_csrf", "53IJ_79daaQ5KJrnY7Bi0AOnxQ37z1CVy1NSI-WYWzDfE2TNzyhRzm1P7YQK0TrhWun8IJW7F_CGHQt0lsEcfg==");
                     builder.add("phone", format(phone, "+7+(***)+***-**-**"));
                 }
+            },
+
+            new ParamsService("https://www.sportmaster.ua/?module=users&action=SendSMSReg", 380) {
+                @Override
+                public void buildParams(HttpUrl.Builder builder) {
+                    builder.addQueryParameter("phone", getFormattedPhone());
+                }
+            },
+
+            new FormService("https://yaro.ua/assets/components/office/action.php", 380) {
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("action", "authcustom/formRegister");
+                    builder.add("mobilephone", getFormattedPhone());
+                    builder.add("pageId", "116");
+                    builder.add("csrf", "b1618ecce3d6e49833f9d9c8c93f9c53");
+                }
             }
     };
 }
