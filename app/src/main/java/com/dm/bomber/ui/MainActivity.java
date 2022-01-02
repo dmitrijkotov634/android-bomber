@@ -78,11 +78,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(mainBinding.getRoot());
 
-        model.isSnowfallEnabled().observe(this, enabled -> {
-            if (enabled)
-                mainBinding.snowfall.setVisibility(View.VISIBLE);
-        });
-
         model.isPromotionShown().observe(this, shown -> {
             if (!shown)
                 new MaterialAlertDialogBuilder(this)
@@ -188,11 +183,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .start());
-
-        mainBinding.bomb.setOnLongClickListener(view -> {
-            model.enableSnowfall();
-            return true;
-        });
 
         mainBinding.phoneNumber.setOnLongClickListener(view -> {
             if (mainBinding.phoneNumber.getText().toString().isEmpty() &&
