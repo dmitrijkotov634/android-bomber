@@ -118,12 +118,13 @@
             android:id="@+id/settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginEnd="10dp"
             android:clickable="true"
             android:focusable="true"
             app:fabSize="mini"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/footer"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/footer"
             app:srcCompat="@drawable/ic_baseline_settings_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
