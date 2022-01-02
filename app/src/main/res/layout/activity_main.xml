@@ -114,12 +114,6 @@
             app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/logo" />
 
-        <com.jetradarmobile.snowfall.SnowfallView
-            android:id="@+id/snowfall"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/settings"
             android:layout_width="wrap_content"

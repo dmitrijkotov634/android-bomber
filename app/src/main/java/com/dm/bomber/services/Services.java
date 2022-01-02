@@ -818,6 +818,66 @@ public class Services {
 
                     return json.toString();
                 }
+            },
+
+            new FormService("https://happywear.ru/index.php?route=module/registerformbox/ajaxCheckEmail", 7) {
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("email", getEmail());
+                    builder.add("telephone", format(phone, "7(***)***-**-**"));
+                    builder.add("password", "qVVwa6QwcaCPP2s");
+                    builder.add("confirm", "qVVwa6QwcaCPP2s");
+                }
+            },
+
+            new JsonService("https://api.vipavenue.ru/v2/user/authNew/", 7) {
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone", format(phone, "+7 *** *******"));
+                        json.put("step", 1);
+                        json.put("type", "phone");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new JsonService("https://www.italbazar.ru/api/v1/auth/send_otp/", 7) {
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("source", format(phone, "+7(***)***-**-**"));
+                        json.put("type", "phone");
+                        json.put("phoneChanged", false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new FormService("https://food.vkusvill.ru/auth/send-sms", 7) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("Cookie", "FOOD_PHPSESSID=760548358859898e1233fca87e2cd6ab; _csrf=d4f0e3fb53ae7c820bbd827c102bc3c4125f96d1de14b84dc2131cbee6953bc5a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%228am2pu8jTgwciaX1YN9-ntGeMNYWsYGN%22%3B%7D; session_start=true; first_session_start=true");
+                    builder.addHeader("X-CSRF-Token", "53IJ_79daaQ5KJrnY7Bi0AOnxQ37z1CVy1NSI-WYWzDfE2TNzyhRzm1P7YQK0TrhWun8IJW7F_CGHQt0lsEcfg==");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("_csrf", "53IJ_79daaQ5KJrnY7Bi0AOnxQ37z1CVy1NSI-WYWzDfE2TNzyhRzm1P7YQK0TrhWun8IJW7F_CGHQt0lsEcfg==");
+                    builder.add("phone", format(phone, "+7+(***)+***-**-**"));
+                }
             }
     };
 }

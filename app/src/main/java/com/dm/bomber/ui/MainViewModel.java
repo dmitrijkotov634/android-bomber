@@ -18,7 +18,6 @@ public class MainViewModel extends ViewModel implements Callback {
     private int countryCode;
     private String phoneNumber;
 
-    private MutableLiveData<Boolean> snowfallEnabled;
     private MutableLiveData<Boolean> proxyEnabled;
     private MutableLiveData<Boolean> promotionShown;
 
@@ -53,10 +52,6 @@ public class MainViewModel extends ViewModel implements Callback {
         currentProgress.postValue(progress);
     }
 
-    public void enableSnowfall() {
-        snowfallEnabled.setValue(true);
-    }
-
     public void showPromotion() {
         promotionShown.setValue(true);
     }
@@ -85,13 +80,6 @@ public class MainViewModel extends ViewModel implements Callback {
             attack.interrupt();
 
         return attackStatus.getValue();
-    }
-
-    public LiveData<Boolean> isSnowfallEnabled() {
-        if (snowfallEnabled == null)
-            snowfallEnabled = new MutableLiveData<>(false);
-
-        return snowfallEnabled;
     }
 
     public LiveData<Boolean> isPromotionShown() {
