@@ -18,6 +18,7 @@ public class MainRepository {
     private static final String LAST_PHONE = "last_phone";
     private static final String LAST_PHONECODE = "last_phonecode";
     private static final String PROMOTION_SHOWN = "promotion_shown";
+    private static final String SNOWFALL_ENABLED = "snowfall_enabled";
     private static final String PROXY = "proxy";
     private static final String PROXY_ENABLED = "proxy_enabled";
 
@@ -87,5 +88,13 @@ public class MainRepository {
 
     public boolean isProxyEnabled() {
         return prefs.getBoolean(PROXY_ENABLED, false);
+    }
+
+    public void setSnowfallEnabled(boolean enabled) {
+        prefs.edit().putBoolean(SNOWFALL_ENABLED, enabled).apply();
+    }
+
+    public boolean isSnowfallEnabled() {
+        return prefs.getBoolean(SNOWFALL_ENABLED, false);
     }
 }

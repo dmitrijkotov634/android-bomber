@@ -97,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
         model.getCurrentProgress().observe(this, progress -> mainBinding.progress.setProgress(progress));
         model.getMaxProgress().observe(this, maxProgress -> mainBinding.progress.setMax(maxProgress));
 
+        model.isSnowfallEnabled().observe(this, enabled -> {
+            mainBinding.snowfall.setVisibility(enabled ? View.VISIBLE : View.GONE);
+        });
+
         model.getAttackStatus().observe(this, attackStatus -> {
             if (attackStatus) {
                 mainBinding.main.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -204,6 +208,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             return false;
+        });
+
+        mainBinding.bomb.setOnLongClickListener(view -> {
+            model.switchSnowfall();
+            return true;
         });
 
         BottomSheetDialog settings = new BottomSheetDialog(this);
