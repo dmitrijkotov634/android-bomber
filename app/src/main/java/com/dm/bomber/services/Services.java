@@ -895,6 +895,63 @@ public class Services {
                     builder.add("pageId", "116");
                     builder.add("csrf", "b1618ecce3d6e49833f9d9c8c93f9c53");
                 }
+            },
+
+            new JsonService("https://api.01.hungrygator.ru/web/auth/webotp", 7) {
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("userLogin", format(phone, "+7 (***) ***-**-**"));
+                        json.put("fu", "bar");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new JsonService("https://admin.growfood.pro/api/personal-cabinet/v2_0/authentication/send-sms", 7) {
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("client", new JSONObject()
+                                .put("phone", format(phone, "*** *** ** **")));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new JsonService("https://api.mikafood.ru/") {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("x-stigma-storefront-access-token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiJjanoxOHBoYW4wMDV3MDc2OXVhdTM0cG9mIn0.e1fREfFnOVvKrEHyvPhvA3mfsEeDxIWQ5Tyn_PKYiQg");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("operationName", "authBySms");
+                        json.put("query", "mutation authBySms($phone: PhoneNumber!) {  authBySms(phone: $phone)}");
+                        json.put("variables", new JSONObject()
+                                .put("phone", "+" + getFormattedPhone()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
             }
     };
 }
