@@ -1,0 +1,15 @@
+ ​<?​xml​ version​=​"​1.0​"​ encoding​=​"​utf-8​"​?> 
+ ​<​resources​> 
+ ​    <​string​ ​name​=​"​start_attack​"​>攻撃開始</​string​> 
+ ​    <​string​ ​name​=​"​number_of_cycles​"​>繰り返し回数</string> 
+ ​    <​string​ ​name​=​"​phone_error​"​>無効な電話番号形式</​string> 
+ ​    <​string​ ​name​=​"​darktheme​"​>ダークテーマ</​string​> 
+ ​    <​string​ ​name​=​"​donate​"​>寄付金</​string​> 
+ ​    <​string​ ​name​=​"​information​"​>情報</​string​> 
+ ​    <​string​ ​name​=​"​promotion​"​>あなたは、更新や開発に従いたいですか？ 私たちの電報チャンネルを購読する</​string​> 
+ ​    <​string​ ​name​=​"​open​"​>オープン</​string​> 
+ ​    <​string​ ​name​=​"​close​"​>閉じる</​string​> 
+ ​    <​string​ ​name​=​"​proxy​"​>プロキシ</​string​> 
+ ​    <​string​ ​name​=​"​proxy_format_error​"​>無効なプロキシ形式</​string​> 
+ ​    <​string​ ​name​=​"​save​"​>保存</​string​> 
+ ​</​resources​>
