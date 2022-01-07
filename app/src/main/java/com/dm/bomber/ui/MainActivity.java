@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         model.isPromotionShown().observe(this, shown -> {
             if (!shown)
                 new MaterialAlertDialogBuilder(this)
+                        .setIcon(R.drawable.ic_baseline_perm_device_information_24)
                         .setTitle(R.string.information)
                         .setMessage(R.string.promotion)
                         .setCancelable(false)
