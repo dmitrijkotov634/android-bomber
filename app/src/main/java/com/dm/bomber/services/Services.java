@@ -952,6 +952,30 @@ public class Services {
 
                     return json.toString();
                 }
+            },
+
+            new JsonService("https://api.farfor.ru/v3/842b03f5-7db9-4850-9cb1-407f894abf5e/msk/auth/request_code/") {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("X-CSRFTOKEN", "IhRcNZn7227SDnP9jMOyYY7417wCGBtSo2OO0O3kNtEvLNgF4v8D0ckRBuFlZscE");
+                    builder.addHeader("Cookie", "_ym_uid=16277474121051730478; _ym_d=1627747412; csrftoken2=IhRcNZn7227SDnP9jMOyYY7417wCGBtSo2OO0O3kNtEvLNgF4v8D0ckRBuFlZscE; site_version=desktop; carrotquest_device_guid=3cd4fc77-f1a5-4df5-b53b-386e634f3da8; amp_f3662d=mGl6vB3OYTEQS_8JOMhL_V...1foq4p8kt.1foq4ppe9.8.2.a; cityId=49; sessionid=2wxoi55xqk7oeh6hxmpy3p6xduq1gam0");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone", getFormattedPhone());
+                        json.put("ui_element", "login");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
             }
     };
 }
