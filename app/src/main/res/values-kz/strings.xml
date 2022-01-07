@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_attack">Шабуылды бастау</string>
+    <string name="number_of_cycles">Қайталау саны</string>
+    <string name="phone_error">Нөмір пішімі қате</string>
+    <string name="darktheme">Қараңғы тақырып</string>
+    <string name="donate">Қайырымдылық</string>
+    <string name="information">Ақпарат</string>
+    <string name="promotion">Жаңартулар мен дамуды бақылағыңыз келе ме? Біздің Telegram каналына жазылыңыз</string>
+    <string name="open">Ашу</string>
+    <string name="close">Жабу</string>
+    <string name="proxy">Прокси</string>
+    <string name="proxy_format_error">Прокси пішімі дұрыс емес</string>
+    <string name="save">Сақтау</string>
+</resources>
