@@ -26,7 +26,7 @@ public class MainViewModel extends ViewModel implements Callback {
     private MutableLiveData<Integer> maxProgress;
     private MutableLiveData<Boolean> attackStatus;
 
-    public static final String[] phoneCodes = {"7", "380", ""};
+    public static final String[] countryCodes = {"7", "380", ""};
 
     public MainViewModel(MainRepository preferences) {
         this.repository = preferences;
@@ -36,7 +36,7 @@ public class MainViewModel extends ViewModel implements Callback {
     public void onAttackEnd() {
         attackStatus.postValue(false);
 
-        repository.setLastPhoneCode(countryCode);
+        repository.setLastCountryCode(countryCode);
         repository.setLastPhone(phoneNumber);
     }
 
@@ -59,6 +59,7 @@ public class MainViewModel extends ViewModel implements Callback {
 
     public void closePromotion() {
         repository.setPromotionShown(true);
+        showPromotion();
     }
 
     public void switchSnowfall() {
@@ -77,7 +78,7 @@ public class MainViewModel extends ViewModel implements Callback {
         this.countryCode = countryCode;
         this.phoneNumber = phoneNumber;
 
-        attack = new Attack(this, phoneCodes[countryCode], phoneNumber, numberOfCyclesNum,
+        attack = new Attack(this, countryCodes[countryCode], phoneNumber, numberOfCyclesNum,
                 repository.isProxyEnabled() ? repository.getProxy() : new ArrayList<>());
 
         attack.start();

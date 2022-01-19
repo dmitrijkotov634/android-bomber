@@ -26,7 +26,7 @@ public class Citydrive extends JsonService {
         try {
             json.put("os", "android");
             json.put("phone", phone);
-            json.put("phone_code", phoneCode);
+            json.put("phone_code", countryCode);
             json.put("token", "null");
             json.put("token_type", "fcm");
             json.put("vendor_id", "null");

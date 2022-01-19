@@ -23,7 +23,7 @@ public class TikTok extends JsonService {
 
             json.put("slideVerify", "0");
             json.put("language", "ru");
-            json.put("PhoneRegionCode", phoneCode);
+            json.put("PhoneRegionCode", countryCode);
             json.put("Mobile", phone);
             json.put("page", page);
         } catch (JSONException e) {

