@@ -16,7 +16,7 @@ public class TeaRU extends JsonService {
 
         try {
             json.put("phone", phone);
-            json.put("countryCode", phoneCode);
+            json.put("countryCode", countryCode);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -6,7 +6,7 @@ import okhttp3.OkHttpClient;
 
 public abstract class Service {
 
-    public String phoneCode;
+    public String countryCode;
     public String phone;
 
     public int[] countryCodes;
@@ -43,12 +43,7 @@ public abstract class Service {
 
         int index = 0;
         for (char symbol : mask.toCharArray()) {
-            if (symbol == '*') {
-                formattedPhone.append(phone.charAt(index));
-                index++;
-            } else {
-                formattedPhone.append(symbol);
-            }
+            formattedPhone.append(symbol == '*' ? phone.charAt(index++) : symbol);
         }
 
         return formattedPhone.toString();
@@ -59,13 +54,13 @@ public abstract class Service {
         countryCodes = new int[]{Integer.parseInt(countryCode)};
     }
 
-    public void prepare(String phoneCode, String phone) {
-        this.phoneCode = phoneCode;
+    public void prepare(String countryCode, String phone) {
+        this.countryCode = countryCode;
         this.phone = phone;
     }
 
     public String getFormattedPhone() {
-        return phoneCode + phone;
+        return countryCode + phone;
     }
 
     public abstract void run(OkHttpClient client, Callback callback);
