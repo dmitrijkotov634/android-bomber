@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name" translatable="false">Bomber</string>
+    <string name="footer_text" translatable="false">Made by <a href="https://github.com/dmitrijkotov634">wavecat</a> with ❤️</string>
+    <string name="start_attack">Démarrer l\'attaque</string>
+    <string name="number_of_cycles">Nombre de répétitions</string>
+    <string name="phone_error">Le format du numéro est invalide</string>
+    <string name="darktheme">Thème obscur</string>
+    <string name="donate">Faire un don</string>
+    <string name="information">Information</string>
+    <string name="promotion">Désirez vous suivre les mises à jour et le développement? Abonnez-vous à notre canal Telegram</string>
+    <string name="open">Ouvrir</string>
+    <string name="close">Fermer</string>
+    <string name="proxy">Mandataire</string>
+    <string name="proxy_format_error">Le format du mandataire est incorrect</string>
+    <string name="save">Sauvegarder</string>
+
+    <string-array name="hints">
+        <item>912 345-67-89</item>
+        <item>50 123 4567</item>
+        <item>1 202-555-0135</item>
+    </string-array>
+</resources>
