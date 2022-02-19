@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         proxyDialog.setContentView(proxyBinding.getRoot());
         proxyBinding.save.setOnClickListener(view -> {
             try {
-                repository.parseProxy(proxyBinding.proxies.getText().toString());
+                repository.parseProxy(proxyBinding.proxies.getText() == null ? "" : proxyBinding.proxies.getText().toString());
                 repository.setRawProxy(proxyBinding.proxies.getText().toString());
 
                 proxyDialog.cancel();
@@ -98,39 +97,38 @@ public class MainActivity extends AppCompatActivity {
         model.getCurrentProgress().observe(this, progress -> mainBinding.progress.setProgress(progress));
         model.getMaxProgress().observe(this, maxProgress -> mainBinding.progress.setMax(maxProgress));
 
-        model.isSnowfallEnabled().observe(this, enabled -> {
-            mainBinding.snowfall.setVisibility(enabled ? View.VISIBLE : View.GONE);
-        });
-
         model.getAttackStatus().observe(this, attackStatus -> {
             if (attackStatus) {
-                mainBinding.main.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        Blurry.with(MainActivity.this)
-                                .radius(20)
-                                .sampling(1)
-                                .async()
-                                .capture(mainBinding.main)
-                                .getAsync(bitmap -> {
-                                    mainBinding.blur.setImageBitmap(bitmap);
+                mainBinding.main
+                        .getViewTreeObserver()
+                        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                Blurry.with(MainActivity.this)
+                                        .radius(20)
+                                        .sampling(1)
+                                        .async()
+                                        .capture(mainBinding.main)
+                                        .getAsync(bitmap -> {
+                                            mainBinding.blur.setImageBitmap(bitmap);
 
-                                    mainBinding.blur.setVisibility(View.VISIBLE);
-                                    mainBinding.main.setVisibility(View.INVISIBLE);
+                                            mainBinding.blur.setVisibility(View.VISIBLE);
+                                            mainBinding.main.setVisibility(View.INVISIBLE);
 
-                                    mainBinding.attack.setVisibility(View.VISIBLE);
-                                });
+                                            mainBinding.attack.setVisibility(View.VISIBLE);
+                                        });
 
-                        mainBinding.main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
-                });
+                                mainBinding.main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            }
+                        });
 
                 mainBinding.main.requestLayout();
-            } else {
-                mainBinding.main.setVisibility(View.VISIBLE);
-                mainBinding.blur.setVisibility(View.GONE);
-                mainBinding.attack.setVisibility(View.GONE);
+                return;
             }
+
+            mainBinding.main.setVisibility(View.VISIBLE);
+            mainBinding.blur.setVisibility(View.GONE);
+            mainBinding.attack.setVisibility(View.GONE);
         });
 
         CountryCodeAdapter adapter = new CountryCodeAdapter(this,
@@ -140,8 +138,6 @@ public class MainActivity extends AppCompatActivity {
 
         String[] hints = getResources().getStringArray(R.array.hints);
         mainBinding.phoneNumber.setHint(hints[0]);
-
-        mainBinding.footer.setMovementMethod(LinkMovementMethod.getInstance());
 
         mainBinding.phoneCode.setAdapter(adapter);
         mainBinding.phoneCode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -199,11 +195,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        mainBinding.bomb.setOnLongClickListener(view -> {
-            model.switchSnowfall();
-            return true;
-        });
-
         BottomSheetDialog settings = new BottomSheetDialog(this);
         settings.setContentView(settingsBinding.getRoot());
 
@@ -235,14 +226,14 @@ public class MainActivity extends AppCompatActivity {
             model.setProxyEnabled(checked);
         });
 
+        settingsBinding.sourceCodeTile.setOnClickListener(view -> startActivity(
+                new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dmitrijkotov634/android-bomber/"))));
+
         settingsBinding.donateTile.setOnClickListener(view -> startActivity(
                 new Intent(Intent.ACTION_VIEW, Uri.parse("https://telegra.ph/donate-01-19-2"))));
 
         mainBinding.phoneCode.setSelection(repository.getLastCountryCode());
         mainBinding.phoneNumber.setText(repository.getLastPhone());
-
-        if (DynamicColors.isDynamicColorAvailable())
-            mainBinding.footer.setBackgroundColor(getThemeColor(R.attr.colorOnPrimary));
 
         Intent intent = getIntent();
         if (intent != null && Intent.ACTION_DIAL.equals(intent.getAction()))
@@ -288,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
     }
 
-    public int getThemeColor(@AttrRes int attrRes) {
+    private int getThemeColor(@AttrRes int attrRes) {
         int materialColor = MaterialColors.getColor(this, attrRes, Color.BLUE);
 
         if (materialColor < 0)

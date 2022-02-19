@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="start_attack">Почати атаку</string>
     <string name="number_of_cycles">Кількість повторів</string>
+    <string name="start_attack">Почати атаку</string>
+
     <string name="phone_error">Невірний формат номера</string>
+
     <string name="darktheme">Темна тема</string>
     <string name="donate">Пожертвування</string>
+    <string name="proxy">Проксi</string>
+    <string name="source_code">Вихідний код</string>
+
+    <string name="save">Зберегти</string>
+    <string name="proxy_format_error">Невірний формат проксі</string>
+
     <string name="information">Інформація</string>
     <string name="promotion">Хочеш стежити за оновленнями та розробкою? Підпишись на наш Telegram канал</string>
+
     <string name="open">Відкрити</string>
     <string name="close">Закрити</string>
-    <string name="proxy">Проксi</string>
-    <string name="proxy_format_error">Неверний формат проксі</string>
-    <string name="save">Зберегти</string>
 </resources>

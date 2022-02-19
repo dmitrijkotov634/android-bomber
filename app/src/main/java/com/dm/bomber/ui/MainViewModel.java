@@ -18,7 +18,6 @@ public class MainViewModel extends ViewModel implements Callback {
     private int countryCode;
     private String phoneNumber;
 
-    private MutableLiveData<Boolean> snowfallEnabled;
     private MutableLiveData<Boolean> proxyEnabled;
     private MutableLiveData<Boolean> promotionShown;
 
@@ -62,13 +61,6 @@ public class MainViewModel extends ViewModel implements Callback {
         showPromotion();
     }
 
-    public void switchSnowfall() {
-        if (snowfallEnabled.getValue() != null) {
-            snowfallEnabled.setValue(!snowfallEnabled.getValue());
-            repository.setSnowfallEnabled(snowfallEnabled.getValue());
-        }
-    }
-
     public void setProxyEnabled(boolean enabled) {
         repository.setProxyEnabled(enabled);
         proxyEnabled.setValue(enabled);
@@ -103,13 +95,6 @@ public class MainViewModel extends ViewModel implements Callback {
             proxyEnabled = new MutableLiveData<>(repository.isProxyEnabled());
 
         return proxyEnabled;
-    }
-
-    public LiveData<Boolean> isSnowfallEnabled() {
-        if (snowfallEnabled == null)
-            snowfallEnabled = new MutableLiveData<>(repository.isSnowfallEnabled());
-
-        return snowfallEnabled;
     }
 
     public LiveData<Integer> getCurrentProgress() {

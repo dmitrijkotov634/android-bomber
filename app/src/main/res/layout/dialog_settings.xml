@@ -23,16 +23,17 @@
         android:drawableStart="@drawable/ic_baseline_vpn_key_24"
         android:text="@string/proxy" />
 
-    <FrameLayout
-        android:id="@+id/placeholder"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/source_code_tile"
+        style="@style/ActionTile"
+        android:drawableStart="@drawable/ic_octocat_fill"
+        android:text="@string/source_code" />
 
     <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/flow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="theme_tile,donate_tile,proxy_tile,placeholder"
+        app:constraint_referenced_ids="theme_tile,donate_tile,proxy_tile,source_code_tile"
         app:flow_horizontalGap="8dp"
         app:flow_maxElementsWrap="2"
         app:flow_verticalGap="8dp"

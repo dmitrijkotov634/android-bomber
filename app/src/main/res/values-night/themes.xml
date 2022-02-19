@@ -15,6 +15,4 @@
 
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.Bomber.MaterialAlertDialog</item>
     </style>
-
-    <color name="footerColor">@color/grey_900</color>
 </resources>
