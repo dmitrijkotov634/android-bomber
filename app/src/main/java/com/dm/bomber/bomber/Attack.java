@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -29,6 +30,7 @@ public class Attack extends Thread {
     private CountDownLatch tasks;
 
     private static final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
+            .callTimeout(10, TimeUnit.SECONDS)
             .addInterceptor(chain -> {
                 Request request = chain.request();
                 Log.v(TAG, String.format("Sending request %s", request.url()));
@@ -60,17 +62,23 @@ public class Attack extends Thread {
 
         clientBuilder.proxy(null);
 
+        OkHttpClient client = null;
+
         for (int cycle = 0; cycle < numberOfCycles; cycle++) {
-            if (!proxies.isEmpty()) {
-                AuthProxy authProxy = proxies.get(cycle % proxies.size());
-                clientBuilder.proxy(authProxy)
-                        .proxyAuthenticator(authProxy);
-            }
-
-            OkHttpClient client = clientBuilder.build();
-
             Log.i(TAG, String.format("Started cycle %s", cycle));
             tasks = new CountDownLatch(usableServices.size());
+
+            if (!proxies.isEmpty()) {
+                AuthProxy authProxy = proxies.get(cycle % proxies.size());
+
+                clientBuilder.proxy(authProxy)
+                        .proxyAuthenticator(authProxy);
+
+                client = clientBuilder.build();
+            }
+
+            if (client == null)
+                client = clientBuilder.build();
 
             for (Service service : usableServices) {
                 try {

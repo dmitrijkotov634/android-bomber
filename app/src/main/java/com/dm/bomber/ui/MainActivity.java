@@ -2,6 +2,7 @@ package com.dm.bomber.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -268,8 +269,12 @@ public class MainActivity extends AppCompatActivity {
         if (hasFocus) {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
-            if (clipboard.hasPrimaryClip())
-                clipText = clipboard.getPrimaryClip().getItemAt(0).coerceToText(this).toString();
+            if (clipboard.hasPrimaryClip()) {
+                ClipData clipData = clipboard.getPrimaryClip();
+
+                if (clipData != null)
+                    clipText = clipData.getItemAt(0).coerceToText(this).toString();
+            }
         }
     }
 
