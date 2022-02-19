@@ -21,8 +21,7 @@ public class MainRepository {
     private static final String DARKMODE = "darkmode";
     private static final String LAST_PHONE = "last_phone";
     private static final String LAST_COUNTRYCODE = "last_countrycode";
-    private static final String PROMOTION_SHOWN = "promotion_shown2";
-    private static final String SNOWFALL_ENABLED = "snowfall_enabled";
+    private static final String PROMOTION_SHOWN = "promotion_shown3";
     private static final String PROXY = "proxy";
     private static final String PROXY_ENABLED = "proxy_enabled";
 
@@ -104,13 +103,5 @@ public class MainRepository {
 
     public boolean isProxyEnabled() {
         return preferences.getBoolean(PROXY_ENABLED, false);
-    }
-
-    public void setSnowfallEnabled(boolean enabled) {
-        preferences.edit().putBoolean(SNOWFALL_ENABLED, enabled).apply();
-    }
-
-    public boolean isSnowfallEnabled() {
-        return preferences.getBoolean(SNOWFALL_ENABLED, false);
     }
 }

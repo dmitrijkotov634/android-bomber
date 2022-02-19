@@ -3,6 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/country_code_pick.xml" value="0.1235" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/cycles_count.xml" value="0.1235" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/footer.xml" value="0.1235" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_all.xml" value="0.2535" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.1" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_baseline_vpn_key_24.xml" value="0.1" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_octocat_fill_svgrepo_com.xml" value="0.1265" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_round_done_24.xml" value="0.2535" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_ru.xml" value="0.2535" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_uk.xml" value="0.2535" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/phone_input.xml" value="0.2535" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/country_code_row.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/dialog_settings.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/drawable/country_code_pick.xml" value="0.11927083333333334" />
         <entry key="app/src/main/res/drawable/cycles_count.xml" value="0.11927083333333334" />
         <entry key="app/src/main/res/drawable/ic_all.xml" value="0.1" />
@@ -26,7 +40,8 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

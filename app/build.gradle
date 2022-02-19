@@ -1,9 +1,12 @@
 plugins {
     id 'com.android.application'
+
+    id 'com.google.gms.google-services' apply(true)
+    id 'com.google.firebase.crashlytics' apply(true)
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
     buildToolsVersion "30.0.3"
 
     buildFeatures {
@@ -13,9 +16,9 @@ android {
     defaultConfig {
         applicationId "com.dm.bomber"
         minSdkVersion 21
-        targetSdkVersion 31
-        versionCode 13
-        versionName "1.9"
+        targetSdkVersion 32
+        versionCode 14
+        versionName "1.10"
     }
 
     buildTypes {
@@ -32,10 +35,14 @@ android {
 }
 
 dependencies {
+    implementation platform('com.google.firebase:firebase-bom:29.1.0')
+
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
+
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.preference:preference:1.1.1'
-    implementation 'com.google.android.material:material:1.6.0-alpha01'
+    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'com.google.android.material:material:1.6.0-alpha02'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
-    implementation 'jp.wasabeef:blurry:4.0.0'
-    implementation 'com.github.jetradarmobile:android-snowfall:1.2.1'
+    implementation 'jp.wasabeef:blurry:4.0.1'
 }
