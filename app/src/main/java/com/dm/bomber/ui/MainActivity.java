@@ -21,14 +21,13 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.work.WorkManager;
 
-import com.dm.bomber.MainRepository;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
 import com.dm.bomber.databinding.DialogProxiesBinding;
 import com.dm.bomber.databinding.DialogSettingsBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.color.DynamicColors;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -48,10 +47,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         repository = new MainRepository(this);
         model = new ViewModelProvider(this,
-                new MainModelFactory(repository)).get(MainViewModel.class);
+                new MainModelFactory(repository, WorkManager.getInstance(this))).get(MainViewModel.class);
 
         AppCompatDelegate.setDefaultNightMode(repository.getTheme());
-        DynamicColors.applyIfAvailable(this);
 
         super.onCreate(savedInstanceState);
 
@@ -100,8 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         model.getAttackStatus().observe(this, attackStatus -> {
             if (attackStatus) {
-                mainBinding.main
-                        .getViewTreeObserver()
+                mainBinding.main.getViewTreeObserver()
                         .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
                             public void onGlobalLayout() {
@@ -113,9 +110,7 @@ public class MainActivity extends AppCompatActivity {
                                         .getAsync(bitmap -> {
                                             mainBinding.blur.setImageBitmap(bitmap);
 
-                                            mainBinding.blur.setVisibility(View.VISIBLE);
                                             mainBinding.main.setVisibility(View.INVISIBLE);
-
                                             mainBinding.attack.setVisibility(View.VISIBLE);
                                         });
 
@@ -128,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             mainBinding.main.setVisibility(View.VISIBLE);
-            mainBinding.blur.setVisibility(View.GONE);
             mainBinding.attack.setVisibility(View.GONE);
         });
 
@@ -280,8 +274,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!model.stopAttack())
-            super.onBackPressed();
+        model.stopAttack();
+
+        if (mainBinding.attack.getVisibility() != View.VISIBLE)
+            finish();
     }
 
     private int getThemeColor(@AttrRes int attrRes) {
