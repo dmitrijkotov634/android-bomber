@@ -1,4 +1,4 @@
-package com.dm.bomber;
+package com.dm.bomber.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
-import com.dm.bomber.bomber.AuthProxy;
+import com.dm.bomber.workers.AuthProxy;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -82,15 +82,15 @@ public class MainRepository {
             String credential = null;
 
             if (proxy.contains(" ")) {
-                String[] data = proxy.split(" ");
-                String[] loginData = data[1].split(":");
+                String[] data = proxy.split(" ", 2);
+                String[] loginData = data[1].split(":", 2);
 
                 credential = Credentials.basic(loginData[0], loginData[1]);
 
                 proxy = data[0];
             }
 
-            String[] proxyData = proxy.split(":");
+            String[] proxyData = proxy.split(":", 2);
             proxies.add(new AuthProxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyData[0], Integer.parseInt(proxyData[1])), credential));
         }
 

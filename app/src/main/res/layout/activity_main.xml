@@ -113,13 +113,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
-        android:id="@+id/blur"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        tools:ignore="ContentDescription" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/attack"
         android:layout_width="match_parent"
@@ -128,6 +121,12 @@
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/progress"
         app:layout_constraintStart_toStartOf="@+id/progress">
+
+        <ImageView
+            android:id="@+id/blur"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="ContentDescription" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progress"

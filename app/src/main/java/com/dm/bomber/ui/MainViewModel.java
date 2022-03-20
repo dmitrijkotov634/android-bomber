@@ -3,53 +3,57 @@ package com.dm.bomber.ui;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
-import com.dm.bomber.MainRepository;
-import com.dm.bomber.bomber.Attack;
-import com.dm.bomber.bomber.Callback;
+import com.dm.bomber.workers.AttackWorker;
 
-import java.util.ArrayList;
+import java.util.UUID;
 
-public class MainViewModel extends ViewModel implements Callback {
+public class MainViewModel extends ViewModel {
     private final MainRepository repository;
+    private final WorkManager workManager;
 
-    private Attack attack;
+    private UUID currentAttackId;
 
-    private int countryCode;
-    private String phoneNumber;
+    private final MutableLiveData<Boolean> proxyEnabled;
+    private final MutableLiveData<Boolean> promotionShown;
 
-    private MutableLiveData<Boolean> proxyEnabled;
-    private MutableLiveData<Boolean> promotionShown;
+    private final MutableLiveData<Integer> currentProgress = new MutableLiveData<>(0);
+    private final MutableLiveData<Integer> maxProgress = new MutableLiveData<>(0);
+    private final MutableLiveData<Boolean> attackStatus = new MutableLiveData<>(false);
 
-    private MutableLiveData<Integer> currentProgress;
-    private MutableLiveData<Integer> maxProgress;
-    private MutableLiveData<Boolean> attackStatus;
-
+    private static final String ATTACK = "attack";
     public static final String[] countryCodes = {"7", "380", ""};
 
-    public MainViewModel(MainRepository preferences) {
+    public MainViewModel(MainRepository preferences, WorkManager workManager) {
         this.repository = preferences;
-    }
+        this.workManager = workManager;
 
-    @Override
-    public void onAttackEnd() {
-        attackStatus.postValue(false);
+        promotionShown = new MutableLiveData<>(repository.getPromotionShown());
+        proxyEnabled = new MutableLiveData<>(repository.isProxyEnabled());
 
-        repository.setLastCountryCode(countryCode);
-        repository.setLastPhone(phoneNumber);
-    }
+        workManager.getWorkInfosByTagLiveData(ATTACK).observeForever(workInfos -> {
+            if (workInfos.isEmpty()) {
+                return;
+            }
 
-    @Override
-    public void onAttackStart(int serviceCount, int numberOfCycles) {
-        attackStatus.postValue(true);
+            for (WorkInfo workInfo : workInfos)
+                if (workInfo.getId().equals(currentAttackId)) {
+                    if (workInfo.getState().isFinished()) {
+                        attackStatus.setValue(false);
+                    }
 
-        maxProgress.postValue(serviceCount * numberOfCycles);
-        currentProgress.postValue(0);
-    }
+                    Data data = workInfo.getProgress();
 
-    @Override
-    public void onProgressChange(int progress) {
-        currentProgress.postValue(progress);
+                    currentProgress.setValue(data.getInt(AttackWorker.KEY_PROGRESS, 0));
+                    maxProgress.setValue(data.getInt(AttackWorker.KEY_MAX_PROGRESS, 0));
+                }
+        });
     }
 
     public void showPromotion() {
@@ -66,55 +70,49 @@ public class MainViewModel extends ViewModel implements Callback {
         proxyEnabled.setValue(enabled);
     }
 
-    public void startAttack(int countryCode, String phoneNumber, int numberOfCyclesNum) {
-        this.countryCode = countryCode;
-        this.phoneNumber = phoneNumber;
-
-        attack = new Attack(this, countryCodes[countryCode], phoneNumber, numberOfCyclesNum,
-                repository.isProxyEnabled() ? repository.getProxy() : new ArrayList<>());
-
-        attack.start();
-    }
-
-    public Boolean stopAttack() {
-        if (attackStatus.getValue() != null && attackStatus.getValue())
-            attack.interrupt();
-
-        return attackStatus.getValue();
-    }
-
     public LiveData<Boolean> isPromotionShown() {
-        if (promotionShown == null)
-            promotionShown = new MutableLiveData<>(repository.getPromotionShown());
-
         return promotionShown;
     }
 
     public LiveData<Boolean> isProxyEnabled() {
-        if (proxyEnabled == null)
-            proxyEnabled = new MutableLiveData<>(repository.isProxyEnabled());
-
         return proxyEnabled;
     }
 
     public LiveData<Integer> getCurrentProgress() {
-        if (currentProgress == null)
-            currentProgress = new MutableLiveData<>(0);
-
         return currentProgress;
     }
 
     public LiveData<Integer> getMaxProgress() {
-        if (maxProgress == null)
-            maxProgress = new MutableLiveData<>(0);
-
         return maxProgress;
     }
 
     public LiveData<Boolean> getAttackStatus() {
-        if (attackStatus == null)
-            attackStatus = new MutableLiveData<>(false);
-
         return attackStatus;
+    }
+
+    public void startAttack(int countryCode, String phoneNumber, int numberOfCyclesNum) {
+        Data inputData = new Data.Builder()
+                .putString(AttackWorker.KEY_COUNTRY_CODE, countryCodes[countryCode])
+                .putString(AttackWorker.KEY_PHONE, phoneNumber)
+                .putInt(AttackWorker.KEY_NUMBER_OF_CYCLES, numberOfCyclesNum)
+                .putBoolean(AttackWorker.KEY_PROXY_ENABLED, repository.isProxyEnabled())
+                .build();
+
+        OneTimeWorkRequest attack = new OneTimeWorkRequest.Builder(AttackWorker.class)
+                .addTag(ATTACK)
+                .setInputData(inputData)
+                .setConstraints(new Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build())
+                .build();
+
+        currentAttackId = attack.getId();
+        attackStatus.setValue(true);
+
+        workManager.enqueue(attack);
+    }
+
+    public void stopAttack() {
+        workManager.cancelWorkById(currentAttackId);
     }
 }

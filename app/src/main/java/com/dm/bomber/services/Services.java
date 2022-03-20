@@ -22,7 +22,7 @@ import okhttp3.Response;
 
 public class Services {
 
-    public static boolean contains(final int[] array, final int key) {
+    private static boolean contains(final int[] array, final int key) {
         for (final int i : array) {
             if (i == key) {
                 return true;
@@ -44,25 +44,16 @@ public class Services {
     }
 
     public final static Service[] services = new Service[]{
-            new Telegram(), new MTS(), new CarSmile(), new Eldorado(), new Tele2TV(),
-            new Ukrzoloto(), new Olltv(), new ProstoTV(),
-            new Zdravcity(), new Robocredit(), new Tinder(), new Groshivsim(),
-            new Dolyame(), new Tinkoff(), new FoodBand(), new Gosuslugi(),
-            new Citimobil(), new TikTok(), new Multiplex(),
-            new Ozon(), new OK(), new VKWorki(), new SberZvuk(),
-            new BApteka(), new Evotor(), new Sportmaster(),
-            new GoldApple(), new FriendsClub(), new ChestnyZnak(),
-            new MoeZdorovie(), new Discord(), new Metro(),
-            new Mozen(), new MosMetro(), new BCS(), new TochkaBank(),
+            new Telegram(), new Tele2TV(),
+            new Ukrzoloto(), new Olltv(), new ProstoTV(), new Groshivsim(),
+            new Dolyame(), new Tinkoff(), new Gosuslugi(), new Multiplex(), new Evotor(), new MosMetro(), new BCS(),
             new Uchiru(), new Biua(), new MdFashion(), new RiveGauche(),
             new XtraTV(), new AlloUa(), new Rulybka(),
-            new Technopark(), new Call2Friends(), new Ievaphone(), new Tele2(), new Profi(),
-            new BeriZaryad(), new PrivetMir(), new CardsMobile(), new Labirint(),
-            new CallMyPhone(), new SberMobile(), new Choco(),
-            new AptekaOtSklada(), new AutoRu(), new SatUa(), new VapeZone(),
-            new Melzdrav(), new Fonbet(), new Grilnica(), new Aitu(), new Pizzaman(),
+            new Technopark(), new Call2Friends(), new Profi(),
+            new BeriZaryad(), new CardsMobile(), new Labirint(), new SberMobile(), new AutoRu(), new SatUa(),
+            new Melzdrav(), new Fonbet(), new Grilnica(),
             new Soscredit(), new ChernovtsyRabota(), new Eva(), new Apteka(),
-            new Kari(), new Modulebank(),
+            new Kari(),
 
             new ParamsService("https://findclone.ru/register") {
                 @Override
@@ -145,30 +136,6 @@ public class Services {
                 }
             },
 
-            new JsonService("https://www.vprok.ru/as_send_pin") {
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("Cookie", "split_segment=8; split_segment_amount=10; XSRF-TOKEN=eyJpdiI6ImpnRVJoY0swSEVPSWtsa2JMWTJPVnc9PSIsInZhbHVlIjoiOXp0V3c4WTdUbE82U2czTTZ3dkpoNVd1T1J0YkpTNWI0c3JZdG10bVZKTFBPMmZ2a1F4Mjl5b2RETWl5ZjZvYzFkU1wvMkw1T2pPMjV0NVZYV1pYSk9BPT0iLCJtYWMiOiJiYTg1MjM2ZWQ0NGVjOTUyOTgyNzcyMDU3ZDY5MjY5NmYyNzgwNTQ0MmI1Y2Y1NzNiMmVhMWQ5ZjFmOTllMDRhIn0%3D; region=8; shop=2671; noHouse=0; fcf=3; _dy_ses_load_seq=17826%3A1638380585139; _dy_c_exps=; _dy_c_att_exps=; isUserAgreeCookiesPolicy=true; suuid=bcb02b51-0827-4b04-9723-8c80419b120b; aid=eyJpdiI6Im9PdUtnOUs4eEFncTBvRHB5R0oxS1E9PSIsInZhbHVlIjoiM0Vxa2xCd1dYeERhNVJBaE04TVlYQWVwTzlIYndHQ3ZsWFFxMjRZclg4RWlFeDBmQVwvUFdmUXBsTlNtS1VmWEFkSFJ6SXM5QVZNNmwzeGRwNk1PbEJRPT0iLCJtYWMiOiJkODE2MjBlMTI4MTIxNDRkYTVhM2NmMjYyMWUyNTFkNDQzYWM0ZTQ4MDZhYjNhYmM3NDNhMmJkODZjMjUwY2JkIn0%3D; luuid=bcb02b51-0827-4b04-9723-8c80419b120b; _dy_csc_ses=t; splitVar=test01-A");
-                    builder.addHeader("X-CSRF-TOKEN", "QPhHmWEtMAoBeuKgULCeLtejbfvKD2n4yMKylL3T");
-                    builder.addHeader("X-XSRF-TOKEN", "eyJpdiI6IjhJQkhaWWh6VEJ1SVhsZERPVk53eWc9PSIsInZhbHVlIjoiNzFsUjVOZFwvTVYrY0gxdzI4MklcL1FMS1FZUGh3OUZOcUZDdkZIQUJiOUZ5Q1VHMXd6SWptaTNQNmhCbnduT0NqVklhRFBDbXcrOG10ejVjZXIxK3RWZz09IiwibWFjIjoiZWU0NGFlYzVmZTQwOWMyYjkzNTlkNmQ0YzUxYjc4NmY3MTZiYzgwZjZlMmVlNWM5MzA2YmY1MDcxNmZkNzdkYyJ9");
-
-                    return super.buildRequest(builder);
-                }
-
-                @Override
-                public String buildJson() {
-                    JSONObject json = new JSONObject();
-
-                    try {
-                        json.put("phone", getFormattedPhone());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return json.toString();
-                }
-            },
-
             new FormService("https://chuck-family.ru/s/get-registration-confirm-code.json", 7) {
                 @Override
                 public void buildBody(FormBody.Builder builder) {
@@ -225,21 +192,6 @@ public class Services {
                 }
             },
 
-            new JsonService("https://blanc.ru/api/sso/entrance/login") {
-                @Override
-                public String buildJson() {
-                    JSONObject json = new JSONObject();
-
-                    try {
-                        json.put("phoneNumber", getFormattedPhone());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return json.toString();
-                }
-            },
-
             new JsonService("https://api.sunlight.net/v3/customers/authorization/") {
                 @Override
                 public String buildJson() {
@@ -271,103 +223,12 @@ public class Services {
                 }
             },
 
-            new FormService("https://telephony.jivosite.com/api/1/sites/900909/widgets/OVHsL3W8hY/clients/17314/telephony/callback") {
-                @Override
-                public void buildBody(FormBody.Builder builder) {
-                    builder.add("phone", getFormattedPhone());
-                    builder.add("invitation_text", "");
-                }
-            },
-
-            new ParamsService("https://oapi.raiffeisen.ru/api/sms-auth/public/v1.0/phone/code") {
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0");
-                    builder.addHeader("Referer", "https://www.raiffeisen.ru/promo/500/?utm_campaign=perfluence%7cpr:dc%7csp:cashback%7ctype:referral%7cgeo:russia%7cmodel:issue%7coffer:private%7caud:AAAAAEazJzK_u9lCZcabcA&utm_medium=affiliate&utm_source=perfluence&utm_content=PF13516&utm_term=f56cb6d037db79233e3ff66fbe70b375");
-
-                    return super.buildRequest(builder);
-                }
-
-                @Override
-                public void buildParams(HttpUrl.Builder builder) {
-                    builder.addQueryParameter("number", getFormattedPhone());
-                }
-            },
-
             new FormService("https://www.traektoria.ru/local/ajax/authorize.php?action=2", 7) {
                 @Override
                 public void buildBody(FormBody.Builder builder) {
                     builder.add("phone", getFormattedPhone());
                     builder.add("bxsessid", "68eb9e074e9677e3a7a3b4620abdff29");
                     builder.add("lid", "tr");
-                }
-            },
-
-            new JsonService("https://api.magonline.ru/api/graphql") {
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("token", "3a4711a14672e7a56b2072f1e06f10f3a578e8d1-d697b32f5a10ee16e71d407721f181ca63b78931");
-
-                    return super.buildRequest(builder);
-                }
-
-                @Override
-                public String buildJson() {
-                    JSONObject json = new JSONObject();
-
-                    try {
-                        json.put("query", "  mutation ($input: RequestPhoneVerificationInput!) {    requestSignInPhoneVerificationCode (input: $input) {  count  maxCount  resendTime  lifetime  isVerified}  }");
-                        json.put("variables", new JSONObject().put("input", new JSONObject()
-                                .put("phone", "+" + getFormattedPhone())
-                                .put("force", false)));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return json.toString();
-                }
-            },
-
-            new JsonService("https://kos-mart.ru/send_code.json?code_iso3=RUS") {
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("X-CSRF-Token", "346f6048925a05eed2bb00f6f2638c8698835b6b210d8008dd52434c9d3fd6db");
-                    builder.addHeader("Cookie", "visitor=hAj8xSk%2BWTqzWzIVzg9YKxQC24hQ%2BovUq%2FINA%2FhzRcrK%2BDpmrxGgHS0YuXy8Vc2KhZncrn4A6eD4tWPPgeXAbbxpLgX8eiftIu6oW6nAMf4etxH12h%2Fkc3cSKHNYXyGqhplGMABzIWS%2BYhM2Yr4XOv78GGZ1--WklonPFjDt9ZXN1y--ft3u0Hj4RfSK%2BlicU8bHjw%3D%3D; csrf_token=hRtO1GjeLhMOne47Kqv55g1tOY0f81YZp6jDXqnsLCNAEVA5FQ3nu6EYSgTnhNqufOZ6PWAhYPokQX007NWP2P6v8sy0%2FibcO6Bpb2znkRE%2FVsWoLWpifQdUV1TQwn%2FDlFxdvHMYkM0SylJGyKCwUgp05X1TViDNmxxjihjFgRDu1jKNdv2a5TrRvqa%2BBIvg0s5vXvxOh7%2FiKzPAV2Ppl%2Fo%3D--%2FaKP69e2yjH62Z06--nePoBJumFNoxCckoj73AJQ%3D%3D");
-
-                    return super.buildRequest(builder);
-                }
-
-                @Override
-                public String buildJson() {
-                    JSONObject json = new JSONObject();
-
-                    try {
-                        json.put("csrf_token", "346f6048925a05eed2bb00f6f2638c8698835b6b210d8008dd52434c9d3fd6db");
-                        json.put("login", "+" + getFormattedPhone());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return json.toString();
-                }
-            },
-
-            new FormService("https://www.meloman.kz/loyalty/customer/createConfirm/", 7) {
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("Cookie", "PHPSESSID=vpqcv1o4psr14aripnt2a728ao; region_id=541; region_just_set=1; _dyjsession=audqfsd8yyfd75iqwvk8j32eqtqo1vfa; dy_fs_page=www.meloman.kz%2Fcustomer%2Faccount%2Flogin%2Freferer%2Fahr0chm6ly93d3cubwvsb21hbi5rei9jdxn0b21lci9hy2nvdw50l2luzgv4lw%252c%252c; _dy_csc_ses=audqfsd8yyfd75iqwvk8j32eqtqo1vfa; _dy_c_exps=; _dy_soct=362831.602231.1639410140*398001.680451.1639410143.audqfsd8yyfd75iqwvk8j32eqtqo1vfa*477267.869366.1639410143; mage-cache-storage=%7B%7D; mage-cache-storage-section-invalidation=%7B%7D; form_key=b2SMIQBgbkQmR4FF; mage-cache-sessid=true; mage-messages=; recently_viewed_product=%7B%7D; recently_viewed_product_previous=%7B%7D; recently_compared_product=%7B%7D; recently_compared_product_previous=%7B%7D; product_data_storage=%7B%7D; section_data_ids=%7B%22customer%22%3A1639410141%2C%22cart%22%3A1639410141%2C%22gtm%22%3A1639410141%7D");
-
-                    return super.buildRequest(builder);
-                }
-
-                @Override
-                public void buildBody(FormBody.Builder builder) {
-                    builder.add("form_key", "b2SMIQBgbkQmR4FF");
-                    builder.add("success_url", "");
-                    builder.add("error_url", "");
-                    builder.add("un_approved_mobile", format(phone, "+7(***)***-**-**"));
-                    builder.add("confirm_mobile_code", "");
-                    builder.add("terms", "on");
                 }
             },
 
@@ -396,13 +257,6 @@ public class Services {
                     }
 
                     return json.toString();
-                }
-            },
-
-            new ParamsService("https://cvety.kz/ajax/actions/get-auth-phone.php", 7) {
-                @Override
-                public void buildParams(HttpUrl.Builder builder) {
-                    builder.addQueryParameter("phone", format(phone, "+7 *** ***-**-**"));
                 }
             },
 
@@ -459,13 +313,6 @@ public class Services {
                                     .build()).enqueue(callback);
                         }
                     });
-                }
-            },
-
-            new FormService("https://alphasms.ua/ajax/test/") {
-                @Override
-                public void buildBody(FormBody.Builder builder) {
-                    builder.add("phone", "+" + getFormattedPhone());
                 }
             },
 
@@ -552,21 +399,6 @@ public class Services {
                 }
             },
 
-            new JsonService("https://lkdr.nalog.ru/api/v1/auth/challenge/sms/start") {
-                @Override
-                public String buildJson() {
-                    JSONObject json = new JSONObject();
-
-                    try {
-                        json.put("phone", getFormattedPhone());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return json.toString();
-                }
-            },
-
             new FormService("https://happywear.ru/index.php?route=module/registerformbox/ajaxCheckEmail", 7) {
                 @Override
                 public void buildBody(FormBody.Builder builder) {
@@ -574,23 +406,6 @@ public class Services {
                     builder.add("telephone", format(phone, "7(***)***-**-**"));
                     builder.add("password", "qVVwa6QwcaCPP2s");
                     builder.add("confirm", "qVVwa6QwcaCPP2s");
-                }
-            },
-
-            new JsonService("https://www.italbazar.ru/api/v1/auth/send_otp/", 7) {
-                @Override
-                public String buildJson() {
-                    JSONObject json = new JSONObject();
-
-                    try {
-                        json.put("source", format(phone, "+7(***)***-**-**"));
-                        json.put("type", "phone");
-                        json.put("phoneChanged", false);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return json.toString();
                 }
             },
 
@@ -627,62 +442,6 @@ public class Services {
                 }
             },
 
-            new JsonService("https://admin.growfood.pro/api/personal-cabinet/v2_0/authentication/send-sms", 7) {
-                @Override
-                public String buildJson() {
-                    JSONObject json = new JSONObject();
-
-                    try {
-                        json.put("client", new JSONObject()
-                                .put("phone", format(phone, "*** *** ** **")));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return json.toString();
-                }
-            },
-
-            new JsonService("https://api.mikafood.ru/") {
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("x-stigma-storefront-access-token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiJjanoxOHBoYW4wMDV3MDc2OXVhdTM0cG9mIn0.e1fREfFnOVvKrEHyvPhvA3mfsEeDxIWQ5Tyn_PKYiQg");
-
-                    return super.buildRequest(builder);
-                }
-
-                @Override
-                public String buildJson() {
-                    JSONObject json = new JSONObject();
-
-                    try {
-                        json.put("operationName", "authBySms");
-                        json.put("query", "mutation authBySms($phone: PhoneNumber!) {  authBySms(phone: $phone)}");
-                        json.put("variables", new JSONObject()
-                                .put("phone", "+" + getFormattedPhone()));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return json.toString();
-                }
-            },
-
-            new FormService("https://pronto24.ru/user/generate-password", 7) {
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("Cookie", "upkvartal-frontend=2prs0qopa4s3ekkmk6dtj0j5gt; _csrf-frontend=f890e8cd433864caea0d0baa2f01eab3a95cf55e47f2cd3e053028c99701270fa%3A2%3A%7Bi%3A0%3Bs%3A14%3A%22_csrf-frontend%22%3Bi%3A1%3Bs%3A32%3A%22N8lxSf8EIRP90jtz4afbJ_06737Vg_YI%22%3B%7D");
-
-                    return super.buildRequest(builder);
-                }
-
-                @Override
-                public void buildBody(FormBody.Builder builder) {
-                    builder.add("phone", format(phone, "+7 (***) ***-**-**"));
-                    builder.add("_csrf-frontend", "rSOZhIxsuT6l1No0nhA7VwpteG4A57Dl4cVllaFtZxTjG_X83wqBe-yGig2uek8tPgweDEq4gNPW9lLDxjI-XQ==");
-                }
-            },
-
             new FormService("https://feelka.kz/profile/login/send") {
                 @Override
                 public Request buildRequest(Request.Builder builder) {
@@ -701,44 +460,17 @@ public class Services {
             new FormService("https://coffeemania.ru/login", 7) {
                 @Override
                 public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("Cookie", "advanced-frontend=ac7d4d086890f8a29099c5a22e5e12bb; usertoken=8eaf2f690636a09b6d1e9d7368a0b317b96b435f4bb38b78281dcf717d2f4a02a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22usertoken%22%3Bi%3A1%3Bs%3A20%3A%22qKHqFK7jvSly0StThkNG%22%3B%7D; _csrf-frontend=a779c6e25139b13f071babdf513c4c21b58a9ae58ea099c96c929a00bb7ea524a%3A2%3A%7Bi%3A0%3Bs%3A14%3A%22_csrf-frontend%22%3Bi%3A1%3Bs%3A32%3A%22ooZZFy-WoJd52qCzuoSLcooLLUawtD0H%22%3B%7D");
-                    builder.addHeader("X-CSRF-Token", "6kUb5YARW8xNOsjBUE6e4OuTFB6DTqVt6ckOsR240VOFKkG_xmh2myJwrPRiP92anvxHUuAhyiGlnG_GafzhGw==");
+                    builder.addHeader("Cookie", "advanced-frontend=249af0fec8eba234a5073a8b2b4b669c; usertoken=0dd71cf26a60cde974fccea7cbf4b1cc7fef6b42f5ae1a90931ab02a97f634f9a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22usertoken%22%3Bi%3A1%3Bs%3A20%3A%22BUgLuZWPOYpqpTzfedEY%22%3B%7D; _csrf-frontend=8ec96385efe9d0b6692a0e20f48242093099e01e8c3e6421880f123f0c0c3c1aa%3A2%3A%7Bi%3A0%3Bs%3A14%3A%22_csrf-frontend%22%3Bi%3A1%3Bs%3A32%3A%22aHlaJkh2k2DM8fPsDxNfearHyYM7a-EF%22%3B%7D;");
+                    builder.addHeader("X-CSRF-Token", "oRDK7RaJ4l1phEUjnxKBTVWBOMthFfRRMHQu12jdFrHAWKaMXOKKbwK2AW6ndNE-Efl2rQR0hhlJLWPgCfBT9w==");
 
                     return super.buildRequest(builder);
                 }
 
                 @Override
                 public void buildBody(FormBody.Builder builder) {
-                    builder.add("_csrf-frontend", "Ve-rX626vGjdimmAJBTVHskpQnydy2GUWKHAfZ0wZCA6gPEF68ORP7LADbUWZZZkvEYRMP6kDtgU9KEK6XRUaA==");
+                    builder.add("_csrf-frontend", "ErLX8KCUbLFIDYTf3Mc9ZA2mgNEXIC4iUNuFeTeFuxtz-ruR6v8EgyM_wJLkoW0XSd7Ot3JBXGopgshOVqj-XQ==");
                     builder.add("LoginForm[phone]", format(phone, "+7(***)***-**-**"));
                     builder.add("LoginForm[type]", "");
-                }
-            },
-
-            new JsonService("https://new-api.delikateska.ru/graphql") {
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("Cookie", "SERVERIDN=srv-nbe-03|YeQqC|YeQoz; _def_ne_deli=38129790841; uid=a98eab61-5a9c-47b9-b465-fef97dbcd522; cAuth_People_id=1321615; cAuth_People_time=1642342632408; cAuth_People_key=d6979f8e5ac17a3727d948f93d024e8f");
-
-                    return super.buildRequest(builder);
-                }
-
-                @Override
-                public String buildJson() {
-                    JSONObject json = new JSONObject();
-
-                    try {
-                        json.put("query", "    mutation loginOrRegisterBySms($phone: String!, $code: Int, $action: PeopleSmsAction, $partnerId: Int){      loginOrRegisterBySms(phone: $phone, code: $code, partnerId: $partnerId, action: $action) {        success        info        people {          id          email          cookie_id          cartCookieId          status_id          settingsItem {            epp_catalog            catalog_sorting          }        }        error        errorCode      }    }  ");
-                        json.put("variables", new JSONObject()
-                                .put("action", "LOGIN")
-                                .put("code", null)
-                                .put("partnerId", null)
-                                .put("phone", getFormattedPhone()));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return json.toString();
                 }
             },
 
@@ -758,6 +490,7 @@ public class Services {
                 @Override
                 public void buildParams(HttpUrl.Builder builder) {
                     builder.addQueryParameter("number", format(phone, "7(***)***-**-**"));
+                    builder.addQueryParameter("_", "1646757906656");
                 }
             },
 
@@ -767,38 +500,6 @@ public class Services {
                     builder.add("user_tel", format(phone, "+7 (***) ***-**-**"));
                     builder.add("user_password", getUserName());
                     builder.add("do", "reg");
-                }
-            },
-
-            new FormService("https://defile.ru/") {
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("Cookie", "PHPSESSID=oj08huc3bh74otl9tci0707mpl; was101120_2=true; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A10%2C%22EXPIRE%22%3A1642539540%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D");
-
-                    return super.buildRequest(builder);
-                }
-
-                @Override
-                public void buildBody(FormBody.Builder builder) {
-                    builder.add("component", "bxmaker.authuserphone.login");
-                    builder.add("sessid", "f07348fa8faef83c25c3b1a3d54f4678");
-                    builder.add("method", "sendCode");
-                    builder.add("phone", getFormattedPhone());
-                }
-            },
-
-            new JsonService("https://api.raketaapp.com/v1/auth/otps?ngsw-bypass=true") {
-                @Override
-                public String buildJson() {
-                    JSONObject json = new JSONObject();
-
-                    try {
-                        json.put("phone", getFormattedPhone());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return json.toString();
                 }
             },
 
@@ -921,42 +622,6 @@ public class Services {
                 }
             },
 
-            new Service(7) {
-                @Override
-                public void run(OkHttpClient client, Callback callback) {
-                    client.newCall(new Request.Builder()
-                            .url("https://mirage.ru/api/ajax.php")
-                            .post(RequestBody.create("------WebKitFormBoundarylD2tjgLGIApyeAbe\n" +
-                                    "Content-Disposition: form-data; name=\"phone\"\n\n" +
-                                    format(phone, "+7 (***) ***-**-**") +
-                                    "\n------WebKitFormBoundarylD2tjgLGIApyeAbe\n" +
-                                    "Content-Disposition: form-data; name=\"func\"\n\n" +
-                                    "auth_send_code\n" +
-                                    "------WebKitFormBoundarylD2tjgLGIApyeAbe\n" +
-                                    "Content-Disposition: form-data; name=\"module\"\n\n" +
-                                    "cabinet\n" +
-                                    "------WebKitFormBoundarylD2tjgLGIApyeAbe--", MediaType.parse("multipart/form-data; boundary=----WebKitFormBoundarylD2tjgLGIApyeAbe")))
-                            .build()).enqueue(callback);
-                }
-            },
-
-            new FormService("https://avilon.ru/ajax/modal/auth.php", 7) {
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36 Edg/98.0.1108.43");
-
-                    return super.buildRequest(builder);
-                }
-
-                @Override
-                public void buildBody(FormBody.Builder builder) {
-                    builder.add("action", "1");
-                    builder.add("step", "1");
-                    builder.add("template", "mobile");
-                    builder.add("phone", format(phone, "+7 *** *** ** **"));
-                }
-            },
-
             new ParamsService("https://fe.dominospizza.ru/api/authentication/sendVerificationSms", "POST", 7) {
                 @Override
                 public Request buildRequest(Request.Builder builder) {
@@ -968,28 +633,6 @@ public class Services {
                 @Override
                 public void buildParams(HttpUrl.Builder builder) {
                     builder.addQueryParameter("phoneNumber", phone);
-                }
-            },
-
-            new JsonService("https://beloris.ru/ajax/users/send_sms_login", 7) {
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("x-csrf-token", "");
-
-                    return super.buildRequest(builder);
-                }
-
-                @Override
-                public String buildJson() {
-                    JSONObject json = new JSONObject();
-
-                    try {
-                        json.put("phone", format(phone, "+7(***) ***-****"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return json.toString();
                 }
             },
 
@@ -1096,21 +739,6 @@ public class Services {
                 }
             },
 
-            new ParamsService("https://www.farpost.ru/sign/code/4f4fa7e19e3ba823af9bfc8af95bfd3d/send") {
-                @Override
-                public void buildParams(HttpUrl.Builder builder) {
-                    builder.addQueryParameter("sign", getFormattedPhone());
-                    builder.addQueryParameter("return", "/");
-                }
-
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("Cookie", "ring=09090bc822948c9b09190782e129530d; _gid=GA1.2.1845397233.1644852398; PHPSESSID=09090bc822948c9b09190782e129530d; _ga_G0RWKN84TQ=GS1.1.1644942896.3.1.1644942996.0; _gat=1; _ga=GA1.1.228350603.1644852398");
-
-                    return super.buildRequest(builder);
-                }
-            },
-
             new FormService("https://client.taximaxim.com/ru-RU/site/send-code/?tax-id=yFL33BWu8yOEhqH0C0bV8BfGWKFjFba7Sxdwcdfppe71sHd4uxidkbS5%2B%2BYzBsW%2BiAH1yXFh2Na5bJdvZaNNTNRa6w%2BY1xpwqd1XUGEIcJc%3D") {
                 @Override
                 public void buildBody(FormBody.Builder builder) {
@@ -1129,30 +757,6 @@ public class Services {
                     builder.addHeader("X-CSRF-Token", "kxA-oV0mlFWdBCIB7ILw3rimGOLKolF08U3T-xRAHODhR27nE3LDANN1Flmt27uT7tZVpqHsJhCmAJ-OLAMurw==");
 
                     return super.buildRequest(builder);
-                }
-            },
-
-            new JsonService("https://www.kolesa-darom.ru/ajax/user/register") {
-                @Override
-                public Request buildRequest(Request.Builder builder) {
-                    builder.addHeader("X-Bitrix-Csrf-Token", "80d2bb6c5a485281fede4066666273ab");
-
-                    return super.buildRequest(builder);
-                }
-
-                @Override
-                public String buildJson() {
-                    JSONObject json = new JSONObject();
-
-                    try {
-                        json.put("approveRule", true);
-                        json.put("phoneNumber", getFormattedPhone());
-                        json.put("step", new JSONObject().put("requestCode", "requestCode"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    return json.toString();
                 }
             },
 
