@@ -38,9 +38,21 @@
         app:flow_maxElementsWrap="2"
         app:flow_verticalGap="8dp"
         app:flow_wrapMode="chain"
+        app:layout_constraintBottom_toTopOf="@+id/tasks"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tasks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/flow" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

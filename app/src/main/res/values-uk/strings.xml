@@ -9,6 +9,7 @@
     <string name="donate">Пожертвування</string>
     <string name="proxy">Проксi</string>
     <string name="source_code">Вихідний код</string>
+    <string name="waiting">Очікування</string>
 
     <string name="save">Зберегти</string>
     <string name="proxy_format_error">Невірний формат проксі</string>

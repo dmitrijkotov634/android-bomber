@@ -9,6 +9,7 @@
     <string name="donate">Пожертвование</string>
     <string name="proxy">Прокси</string>
     <string name="source_code">Исходный код</string>
+    <string name="waiting">Ожидание</string>
 
     <string name="save">Сохранить</string>
     <string name="proxy_format_error">Неверный формат прокси</string>

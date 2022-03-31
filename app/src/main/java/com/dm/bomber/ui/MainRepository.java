@@ -21,7 +21,7 @@ public class MainRepository {
     private static final String DARKMODE = "darkmode";
     private static final String LAST_PHONE = "last_phone";
     private static final String LAST_COUNTRYCODE = "last_countrycode";
-    private static final String PROMOTION_SHOWN = "promotion_shown3";
+    private static final String PROMOTION_SHOWN = "promotion_shown4";
     private static final String PROXY = "proxy";
     private static final String PROXY_ENABLED = "proxy_enabled";
 

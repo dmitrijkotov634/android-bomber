@@ -2,6 +2,8 @@ package com.dm.bomber.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
@@ -21,16 +23,24 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
+import androidx.work.WorkQuery;
 
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
 import com.dm.bomber.databinding.DialogProxiesBinding;
 import com.dm.bomber.databinding.DialogSettingsBinding;
+import com.dm.bomber.ui.adapters.BomberWorkAdapter;
+import com.dm.bomber.ui.adapters.CountryCodeAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Arrays;
+import java.util.Calendar;
 
 import jp.wasabeef.blurry.Blurry;
 
@@ -45,9 +55,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        WorkManager workManager = WorkManager.getInstance(this);
+
         repository = new MainRepository(this);
         model = new ViewModelProvider(this,
-                new MainModelFactory(repository, WorkManager.getInstance(this))).get(MainViewModel.class);
+                new MainModelFactory(repository, workManager)).get(MainViewModel.class);
 
         AppCompatDelegate.setDefaultNightMode(repository.getTheme());
 
@@ -126,7 +138,17 @@ public class MainActivity extends AppCompatActivity {
             mainBinding.attack.setVisibility(View.GONE);
         });
 
-        CountryCodeAdapter adapter = new CountryCodeAdapter(this,
+        BomberWorkAdapter bomberWorkAdapter = new BomberWorkAdapter(this, workManager.getWorkInfosLiveData(
+                WorkQuery.Builder.fromStates(Arrays.asList(
+                        WorkInfo.State.RUNNING,
+                        WorkInfo.State.ENQUEUED
+                )).build()),
+                workInfo -> workManager.cancelWorkById(workInfo.getId()));
+
+        settingsBinding.tasks.setLayoutManager(new LinearLayoutManager(this));
+        settingsBinding.tasks.setAdapter(bomberWorkAdapter);
+
+        CountryCodeAdapter countryCodeAdapter = new CountryCodeAdapter(this,
                 new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_all},
                 MainViewModel.countryCodes,
                 getThemeColor(R.attr.colorOnSecondary));
@@ -134,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         String[] hints = getResources().getStringArray(R.array.hints);
         mainBinding.phoneNumber.setHint(hints[0]);
 
-        mainBinding.phoneCode.setAdapter(adapter);
+        mainBinding.phoneCode.setAdapter(countryCodeAdapter);
         mainBinding.phoneCode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
@@ -145,6 +167,9 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+
+        BottomSheetDialog settings = new BottomSheetDialog(this);
+        settings.setContentView(settingsBinding.getRoot());
 
         mainBinding.startAttack.setOnClickListener(view -> {
             InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -158,12 +183,45 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            int numberOfCyclesNum = numberOfCycles.isEmpty() ? 1 : Integer.parseInt(numberOfCycles);
+            repository.setLastCountryCode(mainBinding.phoneCode.getSelectedItemPosition());
+            repository.setLastPhone(phoneNumber);
 
-            if (numberOfCyclesNum > 30)
-                numberOfCyclesNum = 10;
+            model.startAttack(mainBinding.phoneCode.getSelectedItemPosition(), phoneNumber,
+                    numberOfCycles.isEmpty() ? 1 : Integer.parseInt(numberOfCycles));
+        });
 
-            model.startAttack(mainBinding.phoneCode.getSelectedItemPosition(), phoneNumber, numberOfCyclesNum);
+        mainBinding.startAttack.setOnLongClickListener(view -> {
+            String phoneNumber = mainBinding.phoneNumber.getText().toString();
+            String numberOfCycles = mainBinding.cyclesCount.getText().toString();
+
+            if (phoneNumber.length() < 7) {
+                Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
+                return true;
+            }
+
+            final Calendar currentDate = Calendar.getInstance();
+            final Calendar date = Calendar.getInstance();
+
+            new DatePickerDialog(MainActivity.this, (datePicker, year, monthOfYear, dayOfMonth) -> {
+                date.set(year, monthOfYear, dayOfMonth);
+
+                new TimePickerDialog(MainActivity.this, (timePicker, hourOfDay, minute) -> {
+                    date.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    date.set(Calendar.MINUTE, minute);
+
+                    model.scheduleAttack(mainBinding.phoneCode.getSelectedItemPosition(), phoneNumber,
+                            numberOfCycles.isEmpty() ? 1 : Integer.parseInt(numberOfCycles),
+                            date.getTimeInMillis() - currentDate.getTimeInMillis());
+
+                    repository.setLastCountryCode(mainBinding.phoneCode.getSelectedItemPosition());
+                    repository.setLastPhone(phoneNumber);
+
+                    settings.show();
+                }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), true).show();
+
+            }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
+
+            return true;
         });
 
         mainBinding.bomb.setOnClickListener(view -> view.animate()
@@ -189,9 +247,6 @@ public class MainActivity extends AppCompatActivity {
 
             return false;
         });
-
-        BottomSheetDialog settings = new BottomSheetDialog(this);
-        settings.setContentView(settingsBinding.getRoot());
 
         mainBinding.settings.setOnClickListener(view -> settings.show());
 
