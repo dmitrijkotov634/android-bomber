@@ -9,6 +9,7 @@
     <string name="donate">Қайырымдылық</string>
     <string name="proxy">Прокси</string>
     <string name="source_code">Дереккөз</string>
+    <string name="waiting">Күту</string>
 
     <string name="save">Сақтау</string>
     <string name="proxy_format_error">Прокси пішімі дұрыс емес</string>

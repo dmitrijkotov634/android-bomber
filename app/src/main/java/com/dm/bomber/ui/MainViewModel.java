@@ -9,10 +9,13 @@ import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
+import androidx.work.WorkQuery;
 
 import com.dm.bomber.workers.AttackWorker;
 
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class MainViewModel extends ViewModel {
     private final MainRepository repository;
@@ -27,7 +30,6 @@ public class MainViewModel extends ViewModel {
     private final MutableLiveData<Integer> maxProgress = new MutableLiveData<>(0);
     private final MutableLiveData<Boolean> attackStatus = new MutableLiveData<>(false);
 
-    private static final String ATTACK = "attack";
     public static final String[] countryCodes = {"7", "380", ""};
 
     public MainViewModel(MainRepository preferences, WorkManager workManager) {
@@ -37,16 +39,20 @@ public class MainViewModel extends ViewModel {
         promotionShown = new MutableLiveData<>(repository.getPromotionShown());
         proxyEnabled = new MutableLiveData<>(repository.isProxyEnabled());
 
-        workManager.getWorkInfosByTagLiveData(ATTACK).observeForever(workInfos -> {
-            if (workInfos.isEmpty()) {
+        workManager.getWorkInfosLiveData(
+                WorkQuery.Builder.fromStates(Arrays.asList(WorkInfo.State.RUNNING,
+                        WorkInfo.State.CANCELLED,
+                        WorkInfo.State.SUCCEEDED,
+                        WorkInfo.State.FAILED
+                )).build()).observeForever(workInfos -> {
+
+            if (workInfos.isEmpty())
                 return;
-            }
 
             for (WorkInfo workInfo : workInfos)
                 if (workInfo.getId().equals(currentAttackId)) {
-                    if (workInfo.getState().isFinished()) {
+                    if (workInfo.getState().isFinished())
                         attackStatus.setValue(false);
-                    }
 
                     Data data = workInfo.getProgress();
 
@@ -90,7 +96,7 @@ public class MainViewModel extends ViewModel {
         return attackStatus;
     }
 
-    public void startAttack(int countryCode, String phoneNumber, int numberOfCyclesNum) {
+    public void scheduleAttack(int countryCode, String phoneNumber, int numberOfCyclesNum, long delay) {
         Data inputData = new Data.Builder()
                 .putString(AttackWorker.KEY_COUNTRY_CODE, countryCodes[countryCode])
                 .putString(AttackWorker.KEY_PHONE, phoneNumber)
@@ -98,18 +104,25 @@ public class MainViewModel extends ViewModel {
                 .putBoolean(AttackWorker.KEY_PROXY_ENABLED, repository.isProxyEnabled())
                 .build();
 
-        OneTimeWorkRequest attack = new OneTimeWorkRequest.Builder(AttackWorker.class)
-                .addTag(ATTACK)
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(AttackWorker.class)
+                .addTag("+" + countryCodes[countryCode] + phoneNumber)
+                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
                 .setInputData(inputData)
                 .setConstraints(new Constraints.Builder()
                         .setRequiredNetworkType(NetworkType.CONNECTED)
                         .build())
                 .build();
 
-        currentAttackId = attack.getId();
-        attackStatus.setValue(true);
+        if (delay == 0) {
+            currentAttackId = workRequest.getId();
+            attackStatus.setValue(true);
+        }
 
-        workManager.enqueue(attack);
+        workManager.enqueue(workRequest);
+    }
+
+    public void startAttack(int countryCode, String phoneNumber, int numberOfCyclesNum) {
+        scheduleAttack(countryCode, phoneNumber, numberOfCyclesNum, 0);
     }
 
     public void stopAttack() {

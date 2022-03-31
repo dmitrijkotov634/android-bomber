@@ -1,4 +1,4 @@
-package com.dm.bomber.ui;
+package com.dm.bomber.ui.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
