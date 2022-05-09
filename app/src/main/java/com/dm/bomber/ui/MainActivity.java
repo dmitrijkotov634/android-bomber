@@ -8,22 +8,19 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 
-import androidx.annotation.AttrRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.TooltipCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import androidx.work.WorkQuery;
@@ -35,7 +32,6 @@ import com.dm.bomber.databinding.DialogSettingsBinding;
 import com.dm.bomber.ui.adapters.BomberWorkAdapter;
 import com.dm.bomber.ui.adapters.CountryCodeAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -45,6 +41,7 @@ import java.util.Calendar;
 import jp.wasabeef.blurry.Blurry;
 
 public class MainActivity extends AppCompatActivity {
+
     private ActivityMainBinding mainBinding;
     private DialogSettingsBinding settingsBinding;
 
@@ -85,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         TooltipCompat.setTooltipText(proxyBinding.save, getString(R.string.save));
+        TooltipCompat.setTooltipText(settingsBinding.donateTile, getString(R.string.donate));
+        TooltipCompat.setTooltipText(settingsBinding.proxyTile, getString(R.string.proxy));
+        TooltipCompat.setTooltipText(settingsBinding.sourceCodeTile, getString(R.string.source_code));
 
         setContentView(mainBinding.getRoot());
 
@@ -110,32 +110,12 @@ public class MainActivity extends AppCompatActivity {
 
         model.getAttackStatus().observe(this, attackStatus -> {
             if (attackStatus) {
-                mainBinding.main.getViewTreeObserver()
-                        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                Blurry.with(MainActivity.this)
-                                        .radius(20)
-                                        .sampling(1)
-                                        .async()
-                                        .capture(mainBinding.main)
-                                        .getAsync(bitmap -> {
-                                            mainBinding.blur.setImageBitmap(bitmap);
-
-                                            mainBinding.main.setVisibility(View.INVISIBLE);
-                                            mainBinding.attack.setVisibility(View.VISIBLE);
-                                        });
-
-                                mainBinding.main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                            }
-                        });
-
                 mainBinding.main.requestLayout();
-                return;
+                mainBinding.main.getViewTreeObserver().addOnGlobalLayoutListener(new BlurListener());
+            } else {
+                mainBinding.main.setVisibility(View.VISIBLE);
+                mainBinding.attackScreen.setVisibility(View.GONE);
             }
-
-            mainBinding.main.setVisibility(View.VISIBLE);
-            mainBinding.attack.setVisibility(View.GONE);
         });
 
         BomberWorkAdapter bomberWorkAdapter = new BomberWorkAdapter(this, workManager.getWorkInfosLiveData(
@@ -145,13 +125,20 @@ public class MainActivity extends AppCompatActivity {
                 )).build()),
                 workInfo -> workManager.cancelWorkById(workInfo.getId()));
 
+        bomberWorkAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                settingsBinding.empty.setVisibility(bomberWorkAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+                super.onChanged();
+            }
+        });
+
         settingsBinding.tasks.setLayoutManager(new LinearLayoutManager(this));
         settingsBinding.tasks.setAdapter(bomberWorkAdapter);
 
         CountryCodeAdapter countryCodeAdapter = new CountryCodeAdapter(this,
                 new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_all},
-                MainViewModel.countryCodes,
-                getThemeColor(R.attr.colorOnSecondary));
+                MainViewModel.countryCodes);
 
         String[] hints = getResources().getStringArray(R.array.hints);
         mainBinding.phoneNumber.setHint(hints[0]);
@@ -176,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
             input.hideSoftInputFromWindow(mainBinding.getRoot().getWindowToken(), 0);
 
             String phoneNumber = mainBinding.phoneNumber.getText().toString();
-            String numberOfCycles = mainBinding.cyclesCount.getText().toString();
+            String repeats = mainBinding.repeats.getText().toString();
 
             if (phoneNumber.length() < 7) {
                 Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
@@ -187,12 +174,12 @@ public class MainActivity extends AppCompatActivity {
             repository.setLastPhone(phoneNumber);
 
             model.startAttack(mainBinding.phoneCode.getSelectedItemPosition(), phoneNumber,
-                    numberOfCycles.isEmpty() ? 1 : Integer.parseInt(numberOfCycles));
+                    repeats.isEmpty() ? 1 : Integer.parseInt(repeats));
         });
 
         mainBinding.startAttack.setOnLongClickListener(view -> {
             String phoneNumber = mainBinding.phoneNumber.getText().toString();
-            String numberOfCycles = mainBinding.cyclesCount.getText().toString();
+            String repeats = mainBinding.repeats.getText().toString();
 
             if (phoneNumber.length() < 7) {
                 Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
@@ -210,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                     date.set(Calendar.MINUTE, minute);
 
                     model.scheduleAttack(mainBinding.phoneCode.getSelectedItemPosition(), phoneNumber,
-                            numberOfCycles.isEmpty() ? 1 : Integer.parseInt(numberOfCycles),
+                            repeats.isEmpty() ? 1 : Integer.parseInt(repeats),
                             date.getTimeInMillis() - currentDate.getTimeInMillis());
 
                     repository.setLastCountryCode(mainBinding.phoneCode.getSelectedItemPosition());
@@ -327,24 +314,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class BlurListener implements ViewTreeObserver.OnGlobalLayoutListener {
+        @Override
+        public void onGlobalLayout() {
+            Blurry.with(MainActivity.this)
+                    .radius(20)
+                    .sampling(1)
+                    .async()
+                    .capture(mainBinding.getRoot())
+                    .getAsync(bitmap -> {
+                        mainBinding.blur.setImageBitmap(bitmap);
+
+                        mainBinding.main.setVisibility(View.GONE);
+                        mainBinding.attackScreen.setVisibility(View.VISIBLE);
+                    });
+
+            mainBinding.main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         model.stopAttack();
 
-        if (mainBinding.attack.getVisibility() != View.VISIBLE)
+        if (mainBinding.attackScreen.getVisibility() != View.VISIBLE)
             finish();
-    }
-
-    private int getThemeColor(@AttrRes int attrRes) {
-        int materialColor = MaterialColors.getColor(this, attrRes, Color.BLUE);
-
-        if (materialColor < 0)
-            return materialColor;
-
-        TypedValue resolvedAttr = new TypedValue();
-        getTheme().resolveAttribute(attrRes, resolvedAttr, true);
-
-        return ContextCompat.getColor(this,
-                resolvedAttr.resourceId == 0 ? resolvedAttr.data : resolvedAttr.resourceId);
     }
 }

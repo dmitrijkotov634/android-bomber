@@ -8,51 +8,59 @@
     <ToggleButton
         android:id="@+id/theme_tile"
         style="@style/ToggleTile"
-        android:drawableStart="@drawable/ic_baseline_invert_colors_24"
-        android:text="@string/darktheme" />
+        android:drawableTop="@drawable/ic_baseline_invert_colors_24" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/donate_tile"
         style="@style/ActionTile"
-        android:drawableStart="@drawable/ic_baseline_coffee_24"
-        android:text="@string/donate" />
+        app:icon="@drawable/ic_baseline_coffee_24" />
 
     <ToggleButton
         android:id="@+id/proxy_tile"
         style="@style/ToggleTile"
-        android:drawableStart="@drawable/ic_baseline_vpn_key_24"
-        android:text="@string/proxy" />
+        android:drawableTop="@drawable/ic_baseline_vpn_key_24" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/source_code_tile"
         style="@style/ActionTile"
-        android:drawableStart="@drawable/ic_octocat_fill"
-        android:text="@string/source_code" />
+        app:icon="@drawable/ic_octocat_fill" />
 
     <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/flow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="theme_tile,donate_tile,proxy_tile,source_code_tile"
+        app:constraint_referenced_ids="theme_tile,proxy_tile,donate_tile,source_code_tile"
         app:flow_horizontalGap="8dp"
-        app:flow_maxElementsWrap="2"
+        app:flow_maxElementsWrap="4"
         app:flow_verticalGap="8dp"
         app:flow_wrapMode="chain"
-        app:layout_constraintBottom_toTopOf="@+id/tasks"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/empty" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tasks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/empty"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tasks"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/no_scheduled_attacks"
+        app:layout_constraintBottom_toTopOf="@+id/flow"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/flow" />
+        app:layout_constraintTop_toBottomOf="@+id/tasks" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

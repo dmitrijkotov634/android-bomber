@@ -96,11 +96,11 @@ public class MainViewModel extends ViewModel {
         return attackStatus;
     }
 
-    public void scheduleAttack(int countryCode, String phoneNumber, int numberOfCyclesNum, long delay) {
+    public void scheduleAttack(int countryCode, String phoneNumber, int repeats, long delay) {
         Data inputData = new Data.Builder()
                 .putString(AttackWorker.KEY_COUNTRY_CODE, countryCodes[countryCode])
                 .putString(AttackWorker.KEY_PHONE, phoneNumber)
-                .putInt(AttackWorker.KEY_NUMBER_OF_CYCLES, numberOfCyclesNum)
+                .putInt(AttackWorker.KEY_REPEATS, Math.min(repeats, 10))
                 .putBoolean(AttackWorker.KEY_PROXY_ENABLED, repository.isProxyEnabled())
                 .build();
 

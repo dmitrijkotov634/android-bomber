@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="number_of_cycles">Қайталау саны</string>
+    <string name="repeats">Қайталаулар</string>
     <string name="start_attack">Шабуылды бастау</string>
 
     <string name="phone_error">Нөмір пішімі қате</string>
 
-    <string name="darktheme">Қараңғы тақырып</string>
+    <string name="no_scheduled_attacks">Жоспарланған шабуылдар жоқ</string>
+
     <string name="donate">Қайырымдылық</string>
     <string name="proxy">Прокси</string>
     <string name="source_code">Дереккөз</string>
@@ -19,4 +20,7 @@
 
     <string name="open">Ашу</string>
     <string name="close">Жабу</string>
+
+    <string name="channel_description">Шабуыл барысы</string>
+    <string name="attack">Шабуыл</string>
 </resources>

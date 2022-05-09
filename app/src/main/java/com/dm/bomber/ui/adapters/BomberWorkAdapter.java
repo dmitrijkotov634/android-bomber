@@ -12,7 +12,7 @@ import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkInfo;
 
-import com.dm.bomber.databinding.WorkItemBinding;
+import com.dm.bomber.databinding.AttackWorkRowBinding;
 import com.dm.bomber.workers.AttackWorker;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
     private List<WorkInfo> workInfos;
 
     private final Context context;
-    public Callback callback;
+    public final Callback callback;
 
     @SuppressLint("NotifyDataSetChanged")
     public BomberWorkAdapter(LifecycleOwner context, LiveData<List<WorkInfo>> data, Callback callback) {
@@ -38,7 +38,7 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        WorkItemBinding rowItem = WorkItemBinding.inflate(LayoutInflater.from(context), parent, false);
+        AttackWorkRowBinding rowItem = AttackWorkRowBinding.inflate(LayoutInflater.from(context), parent, false);
         return new ViewHolder(rowItem);
     }
 
@@ -68,26 +68,24 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
         return workInfos.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
-        public final WorkItemBinding binding;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public final AttackWorkRowBinding binding;
 
-        public ViewHolder(WorkItemBinding binding) {
+        public ViewHolder(AttackWorkRowBinding binding) {
             super(binding.getRoot());
 
             this.binding = binding;
 
-            binding.getRoot().setOnLongClickListener(this);
+            binding.stopAttack.setOnClickListener(this);
         }
 
         @Override
-        public boolean onLongClick(View view) {
-            callback.onItemLongClicked(workInfos.get(getLayoutPosition()));
-
-            return true;
+        public void onClick(View view) {
+            callback.onTaskStopClicked(workInfos.get(getLayoutPosition()));
         }
     }
 
     public interface Callback {
-        void onItemLongClicked(WorkInfo workInfo);
+        void onTaskStopClicked(WorkInfo workInfo);
     }
 }

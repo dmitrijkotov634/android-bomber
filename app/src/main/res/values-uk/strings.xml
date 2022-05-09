@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="number_of_cycles">Кількість повторів</string>
+    <string name="repeats">Повтори</string>
     <string name="start_attack">Почати атаку</string>
 
     <string name="phone_error">Невірний формат номера</string>
 
-    <string name="darktheme">Темна тема</string>
+    <string name="no_scheduled_attacks">Немає запланованих атак</string>
+
     <string name="donate">Пожертвування</string>
     <string name="proxy">Проксi</string>
     <string name="source_code">Вихідний код</string>
@@ -19,4 +20,7 @@
 
     <string name="open">Відкрити</string>
     <string name="close">Закрити</string>
+
+    <string name="channel_description">Прогрес атаки</string>
+    <string name="attack">Атака</string>
 </resources>
