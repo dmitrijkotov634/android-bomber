@@ -1,147 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
+    <TextView
+        android:id="@+id/app_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:text="@string/app_name"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@+id/phone_code"
+        app:layout_constraintEnd_toStartOf="@+id/bomb"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
-        <TextView
-            android:id="@+id/app_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
-            android:text="@string/app_name"
-            android:textColor="?android:textColor"
-            android:textSize="35sp"
-            app:layout_constraintBottom_toTopOf="@+id/phone_code"
-            app:layout_constraintEnd_toStartOf="@+id/bomb"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+    <Spinner
+        android:id="@+id/phone_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/start_attack"
+        app:layout_constraintEnd_toStartOf="@+id/phone_number"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_title" />
 
-        <Spinner
-            android:id="@+id/phone_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/country_code_pick"
-            android:padding="@dimen/paddings"
-            android:popupBackground="?colorPrimary"
-            app:layout_constraintBottom_toTopOf="@+id/start_attack"
-            app:layout_constraintEnd_toStartOf="@+id/phone_number"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/app_title" />
+    <EditText
+        android:id="@+id/phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints="phone"
+        android:background="@null"
+        android:inputType="number"
+        android:maxLength="14"
+        android:paddingStart="0dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/phone_code"
+        app:layout_constraintEnd_toStartOf="@+id/repeats"
+        app:layout_constraintStart_toEndOf="@+id/phone_code"
+        app:layout_constraintTop_toTopOf="@+id/phone_code"
+        tools:ignore="TextFields" />
 
-        <EditText
-            android:id="@+id/phone_number"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="4dp"
-            android:autofillHints="phone"
-            android:background="@drawable/phone_input"
-            android:inputType="number"
-            android:maxLength="15"
-            android:padding="@dimen/paddings"
-            android:textSize="@dimen/textSize"
-            app:layout_constraintBottom_toBottomOf="@+id/phone_code"
-            app:layout_constraintEnd_toStartOf="@+id/cycles_count"
-            app:layout_constraintStart_toEndOf="@+id/phone_code"
-            app:layout_constraintTop_toTopOf="@+id/phone_code"
-            tools:ignore="TextFields" />
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/cycles_count"
+        app:layout_constraintBottom_toBottomOf="@+id/phone_number"
+        app:layout_constraintEnd_toEndOf="@+id/phone_number"
+        app:layout_constraintStart_toStartOf="@+id/phone_code"
+        app:layout_constraintTop_toTopOf="@+id/phone_number">
 
-        <EditText
-            android:id="@+id/cycles_count"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="4dp"
-            android:background="@drawable/cycles_count"
-            android:hint="@string/number_of_cycles"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:maxLength="2"
-            android:padding="@dimen/paddings"
-            android:textSize="@dimen/textSize"
-            app:layout_constraintBottom_toBottomOf="@+id/phone_number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/phone_number"
-            app:layout_constraintTop_toTopOf="@+id/phone_number" />
+    </FrameLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/start_attack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/start_attack"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/cycles_count"
-            app:layout_constraintStart_toStartOf="@+id/phone_code"
-            app:layout_constraintTop_toBottomOf="@+id/phone_code" />
-
-        <ImageView
-            android:id="@+id/bomb"
-            android:layout_width="50dp"
-            android:layout_height="0dp"
-            android:scaleType="fitStart"
-            app:layout_constraintBottom_toBottomOf="@+id/app_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/app_title"
-            app:layout_constraintTop_toTopOf="@+id/app_title"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/logo" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_baseline_settings_24" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/attack"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <EditText
+        android:id="@+id/repeats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/cycles_count"
         android:gravity="center"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/progress"
-        app:layout_constraintStart_toStartOf="@+id/progress">
+        android:hint="@string/repeats"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:maxLength="2"
+        android:padding="16dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/phone_number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/phone_number"
+        app:layout_constraintTop_toTopOf="@+id/phone_number" />
 
-        <ImageView
-            android:id="@+id/blur"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:ignore="ContentDescription" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/start_attack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/start_attack"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/repeats"
+        app:layout_constraintStart_toStartOf="@+id/phone_code"
+        app:layout_constraintTop_toBottomOf="@+id/phone_code" />
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:indicatorColor="?colorSecondary"
-            app:indicatorSize="60dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:trackColor="?colorPrimary"
-            tools:layout_conversion_absoluteHeight="0dp"
-            tools:layout_conversion_absoluteWidth="0dp" />
+    <ImageView
+        android:id="@+id/bomb"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:contentDescription="@null"
+        android:scaleType="fitStart"
+        app:layout_constraintBottom_toBottomOf="@+id/app_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/app_title"
+        app:layout_constraintTop_toTopOf="@+id/app_title"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/logo" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:contentDescription="@null"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_settings_24" />
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/blur"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:indicatorSize="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/blur"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_absoluteHeight="0dp"
+        tools:layout_conversion_absoluteWidth="0dp" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="app_title,phone_code,phone_number,frame,repeats,start_attack,bomb,settings" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/attack_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="blur,progress" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

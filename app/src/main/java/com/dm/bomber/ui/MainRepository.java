@@ -15,13 +15,13 @@ import java.util.List;
 
 import okhttp3.Credentials;
 
-public class MainRepository {
+public class MainRepository implements Repository {
     private final SharedPreferences preferences;
 
-    private static final String DARKMODE = "darkmode";
+    private static final String THEME = "theme";
     private static final String LAST_PHONE = "last_phone";
-    private static final String LAST_COUNTRYCODE = "last_countrycode";
-    private static final String PROMOTION_SHOWN = "promotion_shown4";
+    private static final String LAST_COUNTRY_CODE = "last_country_code";
+    private static final String PROMOTION_SHOWN = "promotion_shown";
     private static final String PROXY = "proxy";
     private static final String PROXY_ENABLED = "proxy_enabled";
 
@@ -29,50 +29,62 @@ public class MainRepository {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    @Override
     public void setTheme(int mode) {
-        preferences.edit().putInt(DARKMODE, mode).apply();
+        preferences.edit().putInt(THEME, mode).apply();
     }
 
+    @Override
     public int getTheme() {
-        return preferences.getInt(DARKMODE, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        return preferences.getInt(THEME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
     }
 
+    @Override
     public void setLastPhone(String phoneNumber) {
         preferences.edit().putString(LAST_PHONE, phoneNumber).apply();
     }
 
+    @Override
     public String getLastPhone() {
         return preferences.getString(LAST_PHONE, "");
     }
 
+    @Override
     public void setLastCountryCode(int phoneCode) {
-        preferences.edit().putInt(LAST_COUNTRYCODE, phoneCode).apply();
+        preferences.edit().putInt(LAST_COUNTRY_CODE, phoneCode).apply();
     }
 
+    @Override
     public int getLastCountryCode() {
-        return preferences.getInt(LAST_COUNTRYCODE, 0);
+        return preferences.getInt(LAST_COUNTRY_CODE, 0);
     }
 
+    @Override
     public void setPromotionShown(boolean status) {
         preferences.edit().putBoolean(PROMOTION_SHOWN, status).apply();
     }
 
+    @Override
     public boolean getPromotionShown() {
         return preferences.getBoolean(PROMOTION_SHOWN, false);
     }
 
+    @Override
     public void setRawProxy(String proxyStrings) {
         preferences.edit().putString(PROXY, proxyStrings).apply();
     }
 
+    @Override
     public String getRawProxy() {
         return preferences.getString(PROXY, "");
     }
 
+    @Override
     public List<AuthProxy> getProxy() {
         return parseProxy(getRawProxy());
     }
 
+    @Override
     public List<AuthProxy> parseProxy(String proxyStrings) {
         if (proxyStrings.isEmpty())
             return new ArrayList<>();
@@ -97,10 +109,12 @@ public class MainRepository {
         return proxies;
     }
 
+    @Override
     public void setProxyEnabled(boolean enabled) {
         preferences.edit().putBoolean(PROXY_ENABLED, enabled).apply();
     }
 
+    @Override
     public boolean isProxyEnabled() {
         return preferences.getBoolean(PROXY_ENABLED, false);
     }

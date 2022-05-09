@@ -5,29 +5,21 @@
         <item name="android:background">@drawable/toggle_tile</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:padding">10dp</item>
     </style>
 
     <style name="ToggleTile" parent="Tile">
-        <item name="android:backgroundTint">@color/tile_color</item>
+        <item name="android:backgroundTint">@color/tile_color_selector</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:textOn">@null</item>
         <item name="android:textOff">@null</item>
-        <item name="android:textColor">@color/tile_content_color</item>
-        <item name="drawableTint">@color/tile_content_color</item>
+        <item name="android:textColor">@color/tile_icon_color</item>
+        <item name="android:paddingTop">18dp</item>
+        <item name="drawableTint">@color/tile_icon_color</item>
     </style>
 
     <style name="ActionTile" parent="Tile">
-        <item name="android:textColor">?colorOnPrimary</item>
         <item name="drawableTint">?colorOnPrimary</item>
-    </style>
-
-    <style name="ThemeOverlay.Bomber.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog.Centered">
-        <item name="buttonBarNegativeButtonStyle">@style/Widget.Bomber.Button</item>
-        <item name="buttonBarPositiveButtonStyle">@style/Widget.Bomber.Button</item>
-    </style>
-
-    <style name="Widget.Bomber.Button" parent="Widget.Material3.Button.TextButton">
-        <item name="android:textColor">?colorSecondary</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">0dp</item>
     </style>
 </resources>

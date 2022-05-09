@@ -4,19 +4,20 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="5dp">
+    android:padding="8dp">
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
+        android:contentDescription="@null"
         android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/textSize" />
+        android:textSize="16sp" />
 
 </LinearLayout>
