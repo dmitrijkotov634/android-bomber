@@ -7,10 +7,10 @@ import androidx.work.WorkManager;
 
 public class MainModelFactory extends ViewModelProvider.NewInstanceFactory {
 
-    private final MainRepository repository;
+    private final Repository repository;
     private final WorkManager workManager;
 
-    public MainModelFactory(MainRepository preferences, WorkManager workManager) {
+    public MainModelFactory(Repository preferences, WorkManager workManager) {
         super();
         this.repository = preferences;
         this.workManager = workManager;

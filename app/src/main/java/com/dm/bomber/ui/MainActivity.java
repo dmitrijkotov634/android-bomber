@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private DialogSettingsBinding settingsBinding;
 
     private MainViewModel model;
-    private MainRepository repository;
+    private Repository repository;
 
     private String clipText;
 
@@ -196,14 +196,17 @@ public class MainActivity extends AppCompatActivity {
                     date.set(Calendar.HOUR_OF_DAY, hourOfDay);
                     date.set(Calendar.MINUTE, minute);
 
+                    if (date.getTimeInMillis() < currentDate.getTimeInMillis()) {
+                        Snackbar.make(view, R.string.time_is_incorrect, Snackbar.LENGTH_LONG).show();
+                        return;
+                    }
+
                     model.scheduleAttack(mainBinding.phoneCode.getSelectedItemPosition(), phoneNumber,
                             repeats.isEmpty() ? 1 : Integer.parseInt(repeats),
                             date.getTimeInMillis() - currentDate.getTimeInMillis());
 
-                    repository.setLastCountryCode(mainBinding.phoneCode.getSelectedItemPosition());
-                    repository.setLastPhone(phoneNumber);
-
                     settings.show();
+
                 }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), true).show();
 
             }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
