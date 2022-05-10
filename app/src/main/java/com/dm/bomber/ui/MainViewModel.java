@@ -18,7 +18,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class MainViewModel extends ViewModel {
-    private final MainRepository repository;
+    private final Repository repository;
     private final WorkManager workManager;
 
     private UUID currentAttackId;
@@ -32,7 +32,7 @@ public class MainViewModel extends ViewModel {
 
     public static final String[] countryCodes = {"7", "380", ""};
 
-    public MainViewModel(MainRepository preferences, WorkManager workManager) {
+    public MainViewModel(Repository preferences, WorkManager workManager) {
         this.repository = preferences;
         this.workManager = workManager;
 

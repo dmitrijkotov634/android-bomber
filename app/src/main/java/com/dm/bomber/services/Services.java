@@ -922,5 +922,22 @@ public class Services {
                     return super.buildRequest(builder);
                 }
             },
+
+            new FormService("https://new-tel.net/ajax/a_api.php?type=reg", 7) {
+                @Override
+                public void buildBody(FormBody.Builder builder) {
+                    builder.add("phone_nb", format(phone, "+7 (***) ***-****"));
+                    builder.add("phone_number", "Хочу номер");
+                    builder.add("token", "'03AGdBq26wF9vypkRRBWWA2uEFxzuYUhrdmyPDZhexuQ1OfK5uC3Taz-57K9Xg3AzTfnqZ8Mh6S0LLB816L-o5fAzH75pq7ukCPCTmypRVtVOF9s3SY-E-KJJtfuPLm5SgovqUQB2XASVHcdb13UEiCmUK5nPeVZ-l3EfxbsPV1ClYcHJVds9p4plFO277bYF1Plsm85g_oeYiw9nJif0ehee7FiPHvqAzmTmjTiSNSrodGQt52qEBkLQt1Y8wfGVq2J-BlWYz4j8OBiy7I_1yXMy-UZLMj4JTtDAqJB8oubTMzxHRVGPgW-bd-y_0QgOaHUYNQ3HWmp0OZcOzLciK_IW7JRI_fRArRWdkVq62bfq-yYhP5dwz4y_EHdg4ZnRusGODw0jEmt9HMWA0EaTXVfanN2sa-oU0NM8ttRdWQmgSPKJtF3sJm0WdjzkHfjquORz82dCctbXz");
+                }
+
+                @Override
+                public Request buildRequest(Request.Builder builder) {
+                    builder.header("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 YaBrowser/19.6.1.153 Yowser/2.5 Safari/537.36");
+                    builder.header("x-requested-with", "XMLHttpRequest");
+
+                    return super.buildRequest(builder);
+                }
+            }
     };
 }

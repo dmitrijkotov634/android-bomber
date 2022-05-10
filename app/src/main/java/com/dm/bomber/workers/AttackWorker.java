@@ -1,5 +1,6 @@
 package com.dm.bomber.workers;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -21,10 +22,16 @@ import com.dm.bomber.ui.MainRepository;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -50,7 +57,25 @@ public class AttackWorker extends Worker {
     private CountDownLatch tasks;
     private boolean stopped;
 
-    private static OkHttpClient client = new OkHttpClient.Builder()
+    @SuppressLint({"CustomX509TrustManager", "TrustAllX509TrustManager"})
+    private TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                }
+
+                @Override
+                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                }
+
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new java.security.cert.X509Certificate[]{};
+                }
+            }
+    };
+
+    private static final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
             .callTimeout(7, TimeUnit.SECONDS)
             .addInterceptor(chain -> {
                 Request request = chain.request();
@@ -61,7 +86,7 @@ public class AttackWorker extends Worker {
                         response.request().url(), response.code()));
 
                 return response;
-            }).build();
+            });
 
     public AttackWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -75,6 +100,20 @@ public class AttackWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
+
+        try {
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            clientBuilder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0]);
+            clientBuilder.hostnameVerifier((hostname, session) -> true);
+
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        OkHttpClient client = clientBuilder.build();
+
         List<AuthProxy> proxies = getInputData().getBoolean(KEY_PROXY_ENABLED, false) ?
                 new MainRepository(getApplicationContext()).getProxy() : new ArrayList<>();
 
