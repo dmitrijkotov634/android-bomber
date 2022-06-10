@@ -17,8 +17,8 @@ android {
         applicationId "com.dm.bomber"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 21
-        versionName "1.12"
+        versionCode 23
+        versionName "1.13"
     }
 
     buildTypes {
@@ -40,11 +40,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
 
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.work:work-runtime:2.7.1'
 
-    implementation 'com.google.android.material:material:1.7.0-alpha01'
+    implementation 'com.google.android.material:material:1.7.0-alpha02'
 
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.5'
     implementation 'jp.wasabeef:blurry:4.0.1'

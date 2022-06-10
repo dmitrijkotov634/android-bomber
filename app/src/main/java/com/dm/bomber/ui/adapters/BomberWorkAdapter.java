@@ -15,10 +15,12 @@ import androidx.work.WorkInfo;
 import com.dm.bomber.databinding.AttackWorkRowBinding;
 import com.dm.bomber.workers.AttackWorker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.ViewHolder> {
-    private List<WorkInfo> workInfos;
+
+    private List<WorkInfo> workInfos = new ArrayList<>();
 
     private final Context context;
     public final Callback callback;
@@ -56,7 +58,7 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
         }
 
         for (String tag : workInfo.getTags()) {
-            if (tag.startsWith("com"))
+            if (tag.startsWith(context.getPackageName()))
                 continue;
 
             holder.binding.taskTitle.setText(tag);

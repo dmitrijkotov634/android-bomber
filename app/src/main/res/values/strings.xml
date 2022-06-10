@@ -19,6 +19,7 @@
 
     <string name="information">Information</string>
     <string name="promotion">Want to keep up with updates and developments? Subscribe to our Telegram Channel</string>
+    <string name="do_not_show_again">Don\'t show again</string>
 
     <string name="open">Open</string>
     <string name="close">Close</string>
@@ -27,8 +28,8 @@
     <string name="attack">Attack</string>
 
     <string-array name="hints" translatable="false">
-        <item>912 345-67-89</item>
+        <item>912 345 67 89</item>
         <item>50 123 4567</item>
-        <item>1 202-555-0135</item>
+        <item>1 202 555 0135</item>
     </string-array>
 </resources>

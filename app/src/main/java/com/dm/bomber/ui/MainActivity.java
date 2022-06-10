@@ -4,10 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -27,6 +29,7 @@ import androidx.work.WorkQuery;
 
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
+import com.dm.bomber.databinding.DialogPromotionBinding;
 import com.dm.bomber.databinding.DialogProxiesBinding;
 import com.dm.bomber.databinding.DialogSettingsBinding;
 import com.dm.bomber.ui.adapters.BomberWorkAdapter;
@@ -89,18 +92,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(mainBinding.getRoot());
 
         model.isPromotionShown().observe(this, shown -> {
-            if (!shown)
+            if (!shown) {
+                DialogPromotionBinding promotionBinding = DialogPromotionBinding.inflate(getLayoutInflater());
+
                 new MaterialAlertDialogBuilder(this)
                         .setIcon(R.drawable.ic_baseline_perm_device_information_24)
                         .setTitle(R.string.information)
                         .setMessage(R.string.promotion)
                         .setCancelable(false)
+                        .setView(promotionBinding.getRoot())
                         .setPositiveButton(R.string.open, (dialogInterface, i) -> {
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/androidsmsbomber")));
-                            model.closePromotion();
+                            model.closePromotion(promotionBinding.doNotShowAgain.isChecked());
                         })
-                        .setNegativeButton(R.string.close, (dialogInterface, i) -> model.showPromotion())
+                        .setNegativeButton(R.string.close, (dialogInterface, i) ->
+                                model.closePromotion(promotionBinding.doNotShowAgain.isChecked()))
                         .show();
+            }
         });
 
         model.isProxyEnabled().observe(this, enabled -> settingsBinding.proxyTile.setChecked(enabled));
@@ -266,11 +274,21 @@ public class MainActivity extends AppCompatActivity {
             model.setProxyEnabled(checked);
         });
 
-        settingsBinding.sourceCodeTile.setOnClickListener(view -> startActivity(
-                new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dmitrijkotov634/android-bomber/"))));
+        settingsBinding.sourceCodeTile.setOnClickListener(view -> {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dmitrijkotov634/android-bomber/")));
+            } catch (ActivityNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
 
-        settingsBinding.donateTile.setOnClickListener(view -> startActivity(
-                new Intent(Intent.ACTION_VIEW, Uri.parse("https://telegra.ph/donate-01-19-2"))));
+        settingsBinding.donateTile.setOnClickListener(view -> {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://telegra.ph/donate-01-19-2")));
+            } catch (ActivityNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
 
         mainBinding.phoneCode.setSelection(repository.getLastCountryCode());
         mainBinding.phoneNumber.setText(repository.getLastPhone());
@@ -309,28 +327,37 @@ public class MainActivity extends AppCompatActivity {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
             if (clipboard.hasPrimaryClip()) {
-                ClipData clipData = clipboard.getPrimaryClip();
+                try {
+                    ClipData clipData = clipboard.getPrimaryClip();
 
-                if (clipData != null)
-                    clipText = clipData.getItemAt(0).coerceToText(this).toString();
+                    if (clipData != null)
+                        clipText = clipData.getItemAt(0).coerceToText(this).toString();
+
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
     }
 
     private class BlurListener implements ViewTreeObserver.OnGlobalLayoutListener {
         @Override
         public void onGlobalLayout() {
-            Blurry.with(MainActivity.this)
-                    .radius(20)
-                    .sampling(1)
-                    .async()
-                    .capture(mainBinding.getRoot())
-                    .getAsync(bitmap -> {
-                        mainBinding.blur.setImageBitmap(bitmap);
+            try {
+                Bitmap bitmap = Blurry.with(MainActivity.this)
+                        .radius(20)
+                        .sampling(1)
+                        .capture(mainBinding.getRoot())
+                        .get();
 
-                        mainBinding.main.setVisibility(View.GONE);
-                        mainBinding.attackScreen.setVisibility(View.VISIBLE);
-                    });
+                mainBinding.blur.setImageBitmap(bitmap);
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+
+            mainBinding.main.setVisibility(View.GONE);
+            mainBinding.attackScreen.setVisibility(View.VISIBLE);
 
             mainBinding.main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         }

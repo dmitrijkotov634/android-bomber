@@ -10,6 +10,7 @@
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.1" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_baseline_coffee_24.xml" value="0.1" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_baseline_contrast_24.xml" value="0.1" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_baseline_delete_outline_24.xml" value="0.1" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_baseline_invert_colors_24.xml" value="0.156" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_baseline_perm_device_information_24.xml" value="0.1" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.1" />
@@ -25,6 +26,7 @@
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/activity_main.xml" value="0.2838541666666667" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/attack_work_row.xml" value="0.264" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/country_code_row.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/dialog_promotion.xml" value="0.264" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/dialog_proxies.xml" value="0.264" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/dialog_settings.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/task_item.xml" value="0.2" />

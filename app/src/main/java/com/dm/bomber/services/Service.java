@@ -34,8 +34,7 @@ public abstract class Service {
     }
 
     public static String getEmail() {
-        Random random = new Random();
-        return getUserName() + "@" + new String[]{"gmail.com", "mail.ru", "yandex.ru"}[random.nextInt(3)];
+        return getUserName() + "@" + new String[]{"gmail.com", "mail.ru", "yandex.ru"}[new Random().nextInt(3)];
     }
 
     public static String format(String phone, String mask) {
