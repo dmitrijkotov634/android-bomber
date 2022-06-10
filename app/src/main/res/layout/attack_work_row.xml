@@ -1,54 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:background="@drawable/work_item_background"
-    android:padding="6dp">
+    android:layout_marginBottom="8dp">
 
-    <TextView
-        android:id="@+id/task_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/task_progress"
-        app:layout_constraintEnd_toStartOf="@+id/task_progress"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp">
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/task_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:indicatorColor="?colorPrimary"
-        app:indicatorSize="30dp"
-        app:layout_constraintEnd_toStartOf="@+id/task_time"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/task_title"
-        app:layout_constraintTop_toTopOf="parent"
-        app:trackColor="?colorOnPrimaryContainer" />
+        <TextView
+            android:id="@+id/task_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:typeface="monospace"
+            app:layout_constraintBottom_toBottomOf="@+id/task_progress"
+            app:layout_constraintEnd_toStartOf="@+id/task_progress"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/task_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="@string/waiting"
-        app:layout_constraintBottom_toBottomOf="@+id/task_progress"
-        app:layout_constraintEnd_toStartOf="@+id/stop_attack"
-        app:layout_constraintTop_toTopOf="@+id/task_progress" />
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/task_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            app:indicatorColor="?colorPrimary"
+            app:indicatorSize="30dp"
+            app:layout_constraintEnd_toStartOf="@+id/task_time"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/task_title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:trackColor="?colorOnPrimaryContainer" />
 
-    <ImageView
-        android:id="@+id/stop_attack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@null"
-        app:layout_constraintBottom_toBottomOf="@+id/task_progress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/task_progress"
-        app:srcCompat="@drawable/ic_baseline_close_24" />
+        <TextView
+            android:id="@+id/task_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/waiting"
+            app:layout_constraintBottom_toBottomOf="@+id/task_progress"
+            app:layout_constraintEnd_toStartOf="@+id/stop_attack"
+            app:layout_constraintTop_toTopOf="@+id/task_progress" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/stop_attack"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@null"
+            app:layout_constraintBottom_toBottomOf="@+id/task_progress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/task_progress"
+            app:srcCompat="@drawable/ic_baseline_delete_outline_24" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

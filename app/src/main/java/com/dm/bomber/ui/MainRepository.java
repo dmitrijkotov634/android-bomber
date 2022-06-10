@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
-import com.dm.bomber.workers.AuthProxy;
+import com.dm.bomber.workers.AuthableProxy;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -21,7 +21,7 @@ public class MainRepository implements Repository {
     private static final String THEME = "theme";
     private static final String LAST_PHONE = "last_phone";
     private static final String LAST_COUNTRY_CODE = "last_country_code";
-    private static final String PROMOTION_SHOWN = "promotion_shown";
+    private static final String PROMOTION_SHOWN = "promotion_shown_2";
     private static final String PROXY = "proxy";
     private static final String PROXY_ENABLED = "proxy_enabled";
 
@@ -80,16 +80,16 @@ public class MainRepository implements Repository {
     }
 
     @Override
-    public List<AuthProxy> getProxy() {
+    public List<AuthableProxy> getProxy() {
         return parseProxy(getRawProxy());
     }
 
     @Override
-    public List<AuthProxy> parseProxy(String proxyStrings) {
+    public List<AuthableProxy> parseProxy(String proxyStrings) {
         if (proxyStrings.isEmpty())
             return new ArrayList<>();
 
-        List<AuthProxy> proxies = new ArrayList<>();
+        List<AuthableProxy> proxies = new ArrayList<>();
         for (String proxy : proxyStrings.split("\n")) {
             String credential = null;
 
@@ -103,7 +103,7 @@ public class MainRepository implements Repository {
             }
 
             String[] proxyData = proxy.split(":", 2);
-            proxies.add(new AuthProxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyData[0], Integer.parseInt(proxyData[1])), credential));
+            proxies.add(new AuthableProxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyData[0], Integer.parseInt(proxyData[1])), credential));
         }
 
         return proxies;

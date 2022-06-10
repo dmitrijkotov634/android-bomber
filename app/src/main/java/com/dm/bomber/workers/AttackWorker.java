@@ -58,7 +58,7 @@ public class AttackWorker extends Worker {
     private boolean stopped;
 
     @SuppressLint({"CustomX509TrustManager", "TrustAllX509TrustManager"})
-    private TrustManager[] trustAllCerts = new TrustManager[]{
+    private final TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
                 @Override
                 public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
@@ -114,7 +114,7 @@ public class AttackWorker extends Worker {
 
         OkHttpClient client = clientBuilder.build();
 
-        List<AuthProxy> proxies = getInputData().getBoolean(KEY_PROXY_ENABLED, false) ?
+        List<AuthableProxy> proxies = getInputData().getBoolean(KEY_PROXY_ENABLED, false) ?
                 new MainRepository(getApplicationContext()).getProxy() : new ArrayList<>();
 
         String countryCode = getInputData().getString(KEY_COUNTRY_CODE);
@@ -152,11 +152,11 @@ public class AttackWorker extends Worker {
             tasks = new CountDownLatch(usableServices.size());
 
             if (!proxies.isEmpty()) {
-                AuthProxy authProxy = proxies.get(cycle % proxies.size());
+                AuthableProxy authableProxy = proxies.get(cycle % proxies.size());
 
                 client = client.newBuilder()
-                        .proxy(authProxy)
-                        .proxyAuthenticator(authProxy)
+                        .proxy(authableProxy)
+                        .proxyAuthenticator(authableProxy)
                         .build();
             }
 
@@ -190,7 +190,6 @@ public class AttackWorker extends Worker {
                                         .setStyle(new NotificationCompat.BigTextStyle())
                                         .setSmallIcon(R.drawable.logo)
                                         .build();
-
 
                                 notificationManager.notify(getId().hashCode(), notification);
 

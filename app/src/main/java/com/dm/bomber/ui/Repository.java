@@ -1,6 +1,6 @@
 package com.dm.bomber.ui;
 
-import com.dm.bomber.workers.AuthProxy;
+import com.dm.bomber.workers.AuthableProxy;
 
 import java.util.List;
 
@@ -25,9 +25,9 @@ public interface Repository {
 
     String getRawProxy();
 
-    List<AuthProxy> getProxy();
+    List<AuthableProxy> getProxy();
 
-    List<AuthProxy> parseProxy(String proxyStrings);
+    List<AuthableProxy> parseProxy(String proxyStrings);
 
     void setProxyEnabled(boolean enabled);
 

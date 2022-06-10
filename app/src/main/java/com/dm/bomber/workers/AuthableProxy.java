@@ -11,10 +11,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.Route;
 
-public class AuthProxy extends Proxy implements Authenticator {
+public class AuthableProxy extends Proxy implements Authenticator {
+
     private final String credential;
 
-    public AuthProxy(Proxy.Type type, InetSocketAddress sa, String credential) {
+    public AuthableProxy(Proxy.Type type, InetSocketAddress sa, String credential) {
         super(type, sa);
 
         this.credential = credential;

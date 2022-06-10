@@ -18,13 +18,14 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class MainViewModel extends ViewModel {
+
     private final Repository repository;
     private final WorkManager workManager;
 
     private UUID currentAttackId;
 
     private final MutableLiveData<Boolean> proxyEnabled;
-    private final MutableLiveData<Boolean> promotionShown;
+    private final MutableLiveData<Boolean> promotionOpen;
 
     private final MutableLiveData<Integer> currentProgress = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> maxProgress = new MutableLiveData<>(0);
@@ -36,7 +37,7 @@ public class MainViewModel extends ViewModel {
         this.repository = preferences;
         this.workManager = workManager;
 
-        promotionShown = new MutableLiveData<>(repository.getPromotionShown());
+        promotionOpen = new MutableLiveData<>(repository.getPromotionShown());
         proxyEnabled = new MutableLiveData<>(repository.isProxyEnabled());
 
         workManager.getWorkInfosLiveData(
@@ -45,10 +46,6 @@ public class MainViewModel extends ViewModel {
                         WorkInfo.State.SUCCEEDED,
                         WorkInfo.State.FAILED
                 )).build()).observeForever(workInfos -> {
-
-            if (workInfos.isEmpty())
-                return;
-
             for (WorkInfo workInfo : workInfos)
                 if (workInfo.getId().equals(currentAttackId)) {
                     if (workInfo.getState().isFinished())
@@ -62,13 +59,9 @@ public class MainViewModel extends ViewModel {
         });
     }
 
-    public void showPromotion() {
-        promotionShown.setValue(true);
-    }
-
-    public void closePromotion() {
-        repository.setPromotionShown(true);
-        showPromotion();
+    public void closePromotion(boolean doNotShowAgain) {
+        repository.setPromotionShown(doNotShowAgain);
+        promotionOpen.setValue(true);
     }
 
     public void setProxyEnabled(boolean enabled) {
@@ -77,7 +70,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public LiveData<Boolean> isPromotionShown() {
-        return promotionShown;
+        return promotionOpen;
     }
 
     public LiveData<Boolean> isProxyEnabled() {
