@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.TooltipCompat;
+import androidx.core.view.WindowCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
                 new MainModelFactory(repository, workManager)).get(MainViewModel.class);
 
         AppCompatDelegate.setDefaultNightMode(repository.getTheme());
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
+
 
         super.onCreate(savedInstanceState);
 
