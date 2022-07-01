@@ -42,7 +42,8 @@ public abstract class Service {
 
         int index = 0;
         for (char symbol : mask.toCharArray())
-            formattedPhone.append(symbol == '*' ? phone.charAt(index++) : symbol);
+            if (index < phone.length())
+                formattedPhone.append(symbol == '*' ? phone.charAt(index++) : symbol);
 
         return formattedPhone.toString();
     }

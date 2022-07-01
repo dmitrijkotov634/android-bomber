@@ -4,12 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -30,13 +28,11 @@ import androidx.work.WorkQuery;
 
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
-import com.dm.bomber.databinding.DialogPromotionBinding;
 import com.dm.bomber.databinding.DialogProxiesBinding;
 import com.dm.bomber.databinding.DialogSettingsBinding;
 import com.dm.bomber.ui.adapters.BomberWorkAdapter;
 import com.dm.bomber.ui.adapters.CountryCodeAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Arrays;
@@ -66,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
 
-
         super.onCreate(savedInstanceState);
 
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -94,26 +89,6 @@ public class MainActivity extends AppCompatActivity {
         TooltipCompat.setTooltipText(settingsBinding.sourceCodeTile, getString(R.string.source_code));
 
         setContentView(mainBinding.getRoot());
-
-        model.isPromotionShown().observe(this, shown -> {
-            if (!shown) {
-                DialogPromotionBinding promotionBinding = DialogPromotionBinding.inflate(getLayoutInflater());
-
-                new MaterialAlertDialogBuilder(this)
-                        .setIcon(R.drawable.ic_baseline_perm_device_information_24)
-                        .setTitle(R.string.information)
-                        .setMessage(R.string.promotion)
-                        .setCancelable(false)
-                        .setView(promotionBinding.getRoot())
-                        .setPositiveButton(R.string.open, (dialogInterface, i) -> {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/androidsmsbomber")));
-                            model.closePromotion(promotionBinding.doNotShowAgain.isChecked());
-                        })
-                        .setNegativeButton(R.string.close, (dialogInterface, i) ->
-                                model.closePromotion(promotionBinding.doNotShowAgain.isChecked()))
-                        .show();
-            }
-        });
 
         model.isProxyEnabled().observe(this, enabled -> settingsBinding.proxyTile.setChecked(enabled));
 
@@ -278,21 +253,14 @@ public class MainActivity extends AppCompatActivity {
             model.setProxyEnabled(checked);
         });
 
-        settingsBinding.sourceCodeTile.setOnClickListener(view -> {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dmitrijkotov634/android-bomber/")));
-            } catch (ActivityNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
+        settingsBinding.sourceCodeTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dmitrijkotov634/android-bomber/"))));
 
-        settingsBinding.donateTile.setOnClickListener(view -> {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://telegra.ph/donate-01-19-2")));
-            } catch (ActivityNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
+        settingsBinding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://telegra.ph/donate-01-19-2"))));
+
+        View.OnClickListener telegram = (view) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/androidsmsbomber")));
+
+        mainBinding.telegramUrl.setOnClickListener(telegram);
+        mainBinding.telegramIcon.setOnClickListener(telegram);
 
         mainBinding.phoneCode.setSelection(repository.getLastCountryCode());
         mainBinding.phoneNumber.setText(repository.getLastPhone());
@@ -342,20 +310,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
     }
 
     private class BlurListener implements ViewTreeObserver.OnGlobalLayoutListener {
         @Override
         public void onGlobalLayout() {
             try {
-                Bitmap bitmap = Blurry.with(MainActivity.this)
+                mainBinding.blur.setImageBitmap(Blurry.with(MainActivity.this)
                         .radius(20)
                         .sampling(1)
                         .capture(mainBinding.getRoot())
-                        .get();
-
-                mainBinding.blur.setImageBitmap(bitmap);
+                        .get());
             } catch (RuntimeException e) {
                 e.printStackTrace();
             }

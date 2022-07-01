@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     buildFeatures {
@@ -16,9 +16,9 @@ android {
     defaultConfig {
         applicationId "com.dm.bomber"
         minSdkVersion 21
-        targetSdkVersion 32
-        versionCode 23
-        versionName "1.13"
+        targetSdkVersion 33
+        versionCode 26
+        versionName "1.14"
     }
 
     buildTypes {

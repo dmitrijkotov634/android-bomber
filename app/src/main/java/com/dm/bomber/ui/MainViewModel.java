@@ -25,7 +25,6 @@ public class MainViewModel extends ViewModel {
     private UUID currentAttackId;
 
     private final MutableLiveData<Boolean> proxyEnabled;
-    private final MutableLiveData<Boolean> promotionOpen;
 
     private final MutableLiveData<Integer> currentProgress = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> maxProgress = new MutableLiveData<>(0);
@@ -37,7 +36,6 @@ public class MainViewModel extends ViewModel {
         this.repository = preferences;
         this.workManager = workManager;
 
-        promotionOpen = new MutableLiveData<>(repository.getPromotionShown());
         proxyEnabled = new MutableLiveData<>(repository.isProxyEnabled());
 
         workManager.getWorkInfosLiveData(
@@ -59,18 +57,9 @@ public class MainViewModel extends ViewModel {
         });
     }
 
-    public void closePromotion(boolean doNotShowAgain) {
-        repository.setPromotionShown(doNotShowAgain);
-        promotionOpen.setValue(true);
-    }
-
     public void setProxyEnabled(boolean enabled) {
         repository.setProxyEnabled(enabled);
         proxyEnabled.setValue(enabled);
-    }
-
-    public LiveData<Boolean> isPromotionShown() {
-        return promotionOpen;
     }
 
     public LiveData<Boolean> isProxyEnabled() {

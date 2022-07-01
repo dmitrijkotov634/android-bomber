@@ -8,10 +8,10 @@ import okhttp3.Call;
 
 public interface Callback extends okhttp3.Callback {
 
-    void onError(Exception e);
+    void onError(@NonNull Call call, @NonNull Exception e);
 
     @Override
     default void onFailure(@NonNull Call call, @NonNull IOException e) {
-        onError(e);
+        onError(call, e);
     }
 }

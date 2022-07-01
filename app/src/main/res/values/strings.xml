@@ -17,15 +17,10 @@
     <string name="save">Save</string>
     <string name="proxy_format_error">Invalid proxy format</string>
 
-    <string name="information">Information</string>
-    <string name="promotion">Want to keep up with updates and developments? Subscribe to our Telegram Channel</string>
-    <string name="do_not_show_again">Don\'t show again</string>
-
-    <string name="open">Open</string>
-    <string name="close">Close</string>
-
     <string name="channel_description">Attack progress</string>
     <string name="attack">Attack</string>
+
+    <string name="telegram_link" translatable="false">t.me/androidsmsbomber</string>
 
     <string-array name="hints" translatable="false">
         <item>912 345 67 89</item>
