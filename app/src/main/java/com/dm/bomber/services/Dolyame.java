@@ -51,7 +51,7 @@ public class Dolyame extends Service {
                                     .build())
                             .build()).enqueue(callback);
                 } catch (JSONException | NullPointerException e) {
-                    callback.onError(e);
+                    callback.onError(call, e);
                 }
             }
         });

@@ -17,10 +17,6 @@ public interface Repository {
 
     int getLastCountryCode();
 
-    void setPromotionShown(boolean status);
-
-    boolean getPromotionShown();
-
     void setRawProxy(String proxyStrings);
 
     String getRawProxy();
