@@ -4,30 +4,36 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public abstract class MultipartService extends SimpleBaseService {
+public abstract class MultipartService extends Service {
+
+    protected String url;
+    protected String method;
+
+    protected Request.Builder request;
+    protected MultipartBody.Builder builder;
 
     public MultipartService(String url, String method, int... countryCodes) {
-        super(url, method, countryCodes);
+        super(countryCodes);
+
+        this.url = url;
+        this.method = method;
     }
 
     public MultipartService(String url, int... countryCodes) {
-        super(url, "POST", countryCodes);
+        this(url, "POST", countryCodes);
     }
 
-    public MultipartService() {
+    public void run(OkHttpClient client, Callback callback, Phone phone) {
+        request = new Request.Builder();
+        builder = new MultipartBody.Builder();
+
+        buildBody(phone);
+
+        request.url(url);
+        request.method(method, builder.build());
+
+        client.newCall(request.build()).enqueue(callback);
     }
 
-    public void run(OkHttpClient client, Callback callback) {
-        Request.Builder requestBuilder = new Request.Builder();
-
-        MultipartBody.Builder formBuilder = new MultipartBody.Builder();
-        buildBody(formBuilder);
-
-        requestBuilder.url(url);
-        requestBuilder.method(method, formBuilder.build());
-
-        client.newCall(buildRequest(requestBuilder)).enqueue(callback);
-    }
-
-    public abstract void buildBody(MultipartBody.Builder builder);
+    public abstract void buildBody(Phone phone);
 }

@@ -25,6 +25,7 @@
     <string-array name="hints" translatable="false">
         <item>912 345 67 89</item>
         <item>50 123 4567</item>
+        <item>172 745317</item>
         <item>1 202 555 0135</item>
     </string-array>
 </resources>

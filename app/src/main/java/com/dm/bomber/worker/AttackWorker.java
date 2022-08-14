@@ -1,4 +1,4 @@
-package com.dm.bomber.workers;
+package com.dm.bomber.worker;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -16,6 +16,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.dm.bomber.R;
+import com.dm.bomber.services.Phone;
 import com.dm.bomber.services.Service;
 import com.dm.bomber.services.Services;
 import com.dm.bomber.ui.MainRepository;
@@ -41,6 +42,8 @@ import okhttp3.Response;
 public class AttackWorker extends Worker {
 
     private static final String TAG = "Attack";
+
+    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.53 Safari/537.36 Edg/103.0.1264.37";
 
     public static final String KEY_COUNTRY_CODE = "country_code";
     public static final String KEY_PHONE = "phone";
@@ -77,6 +80,7 @@ public class AttackWorker extends Worker {
 
     private static final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
             .callTimeout(7, TimeUnit.SECONDS)
+            .addInterceptor(new UserAgentInterceptor(USER_AGENT))
             .addInterceptor(chain -> {
                 Request request = chain.request();
                 Log.v(TAG, String.format("Sending request %s", request.url()));
@@ -164,7 +168,6 @@ public class AttackWorker extends Worker {
                     break attack;
                 }
 
-                service.prepare(countryCode, phone);
                 service.run(client, new com.dm.bomber.services.Callback() {
                     @Override
                     public void onError(@NotNull Call call, @NotNull Exception e) {
@@ -201,7 +204,7 @@ public class AttackWorker extends Worker {
 
                         tasks.countDown();
                     }
-                });
+                }, new Phone(countryCode, phone));
 
                 try {
                     Thread.sleep(1000);

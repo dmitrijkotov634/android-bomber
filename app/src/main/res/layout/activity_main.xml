@@ -30,7 +30,8 @@
         app:layout_constraintEnd_toStartOf="@+id/phone_number"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_title" />
+        app:layout_constraintTop_toBottomOf="@+id/app_title"
+        tools:listitem="@layout/country_code_row" />
 
     <EditText
         android:id="@+id/phone_number"
@@ -49,7 +50,8 @@
         app:layout_constraintEnd_toStartOf="@+id/repeats"
         app:layout_constraintStart_toEndOf="@+id/phone_code"
         app:layout_constraintTop_toTopOf="@+id/phone_code"
-        tools:ignore="LabelFor,TextFields" />
+        tools:ignore="LabelFor,TextFields"
+        tools:text="9123456789" />
 
     <FrameLayout
         android:id="@+id/frame"

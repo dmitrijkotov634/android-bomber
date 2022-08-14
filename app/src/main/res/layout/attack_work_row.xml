@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp">
@@ -34,7 +35,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/task_title"
             app:layout_constraintTop_toTopOf="parent"
-            app:trackColor="?colorOnPrimaryContainer" />
+            app:trackColor="?colorOnPrimaryContainer"
+            tools:visibility="invisible" />
 
         <TextView
             android:id="@+id/task_time"

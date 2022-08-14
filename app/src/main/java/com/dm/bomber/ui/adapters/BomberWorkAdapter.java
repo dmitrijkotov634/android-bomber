@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkInfo;
 
 import com.dm.bomber.databinding.AttackWorkRowBinding;
-import com.dm.bomber.workers.AttackWorker;
+import com.dm.bomber.worker.AttackWorker;
 
 import java.util.ArrayList;
 import java.util.List;
