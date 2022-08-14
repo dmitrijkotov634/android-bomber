@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
-import com.dm.bomber.workers.AuthableProxy;
+import com.dm.bomber.worker.AuthableProxy;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;

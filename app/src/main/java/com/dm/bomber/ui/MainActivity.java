@@ -58,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
         model = new ViewModelProvider(this,
                 new MainModelFactory(repository, workManager)).get(MainViewModel.class);
 
-        AppCompatDelegate.setDefaultNightMode(repository.getTheme());
-
         WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
 
         super.onCreate(savedInstanceState);
@@ -124,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         settingsBinding.tasks.setAdapter(bomberWorkAdapter);
 
         CountryCodeAdapter countryCodeAdapter = new CountryCodeAdapter(this,
-                new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_all},
+                new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_kz, R.drawable.ic_all},
                 MainViewModel.countryCodes);
 
         String[] hints = getResources().getStringArray(R.array.hints);
@@ -152,7 +150,8 @@ public class MainActivity extends AppCompatActivity {
             String phoneNumber = mainBinding.phoneNumber.getText().toString();
             String repeats = mainBinding.repeats.getText().toString();
 
-            if (phoneNumber.length() < 7) {
+            int length = MainViewModel.phoneLength[mainBinding.phoneCode.getSelectedItemPosition()];
+            if (phoneNumber.length() != length && length != 0) {
                 Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
                 return;
             }
@@ -168,9 +167,10 @@ public class MainActivity extends AppCompatActivity {
             String phoneNumber = mainBinding.phoneNumber.getText().toString();
             String repeats = mainBinding.repeats.getText().toString();
 
-            if (phoneNumber.length() < 7) {
+            int length = MainViewModel.phoneLength[mainBinding.phoneCode.getSelectedItemPosition()];
+            if (phoneNumber.length() != length && length != 0) {
                 Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
-                return true;
+                return false;
             }
 
             final Calendar currentDate = Calendar.getInstance();
@@ -220,7 +220,10 @@ public class MainActivity extends AppCompatActivity {
 
         mainBinding.phoneNumber.setOnLongClickListener(view -> {
             if (mainBinding.phoneNumber.getText().toString().isEmpty() && clipText != null)
-                processText(clipText);
+                if (!processText(clipText)) {
+                    mainBinding.phoneCode.setSelection(repository.getLastCountryCode());
+                    mainBinding.phoneNumber.setText(repository.getLastPhone());
+                }
 
             return false;
         });
@@ -254,7 +257,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         settingsBinding.sourceCodeTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dmitrijkotov634/android-bomber/"))));
-
         settingsBinding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://telegra.ph/donate-01-19-2"))));
 
         View.OnClickListener telegram = (view) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/androidsmsbomber")));
@@ -262,15 +264,12 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.telegramUrl.setOnClickListener(telegram);
         mainBinding.telegramIcon.setOnClickListener(telegram);
 
-        mainBinding.phoneCode.setSelection(repository.getLastCountryCode());
-        mainBinding.phoneNumber.setText(repository.getLastPhone());
-
         Intent intent = getIntent();
         if (intent != null && Intent.ACTION_DIAL.equals(intent.getAction()))
             processText(intent.getData().getSchemeSpecificPart());
     }
 
-    private void processText(String data) {
+    private boolean processText(String data) {
         if (data.matches("(8|\\+(7|380))([0-9()\\-\\s])*")) {
 
             if (data.startsWith("8"))
@@ -282,10 +281,12 @@ public class MainActivity extends AppCompatActivity {
                     mainBinding.phoneCode.setSelection(i);
                     mainBinding.phoneNumber.setText(data.substring(MainViewModel.countryCodes[i].length()).replaceAll("[^\\d.]", ""));
 
-                    break;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     private void setCurrentTheme(int theme) {

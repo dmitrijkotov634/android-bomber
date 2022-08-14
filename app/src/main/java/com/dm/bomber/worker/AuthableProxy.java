@@ -1,4 +1,4 @@
-package com.dm.bomber.workers;
+package com.dm.bomber.worker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

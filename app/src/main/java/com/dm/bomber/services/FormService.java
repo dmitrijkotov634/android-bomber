@@ -4,30 +4,36 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public abstract class FormService extends SimpleBaseService {
+public abstract class FormService extends Service {
+
+    protected String url;
+    protected String method;
+
+    protected Request.Builder request;
+    protected FormBody.Builder builder;
 
     public FormService(String url, String method, int... countryCodes) {
-        super(url, method, countryCodes);
+        super(countryCodes);
+
+        this.url = url;
+        this.method = method;
     }
 
     public FormService(String url, int... countryCodes) {
-        super(url, "POST", countryCodes);
+        this(url, "POST", countryCodes);
     }
 
-    public FormService() {
+    public void run(OkHttpClient client, Callback callback, Phone phone) {
+        request = new Request.Builder();
+        builder = new FormBody.Builder();
+
+        buildBody(phone);
+
+        request.url(url);
+        request.method(method, builder.build());
+
+        client.newCall(request.build()).enqueue(callback);
     }
 
-    public void run(OkHttpClient client, Callback callback) {
-        Request.Builder requestBuilder = new Request.Builder();
-
-        FormBody.Builder formBuilder = new FormBody.Builder();
-        buildBody(formBuilder);
-
-        requestBuilder.url(url);
-        requestBuilder.method(method, formBuilder.build());
-
-        client.newCall(buildRequest(requestBuilder)).enqueue(callback);
-    }
-
-    public abstract void buildBody(FormBody.Builder builder);
+    public abstract void buildBody(Phone phone);
 }

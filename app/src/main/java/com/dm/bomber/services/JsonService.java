@@ -5,29 +5,35 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
-public abstract class JsonService extends SimpleBaseService {
+public abstract class JsonService extends Service {
+
+    protected String url;
+    protected String method;
+
+    protected Request.Builder request;
 
     public JsonService(String url, String method, int... countryCodes) {
-        super(url, method, countryCodes);
+        super(countryCodes);
+
+        this.url = url;
+        this.method = method;
     }
 
     public JsonService(String url, int... countryCodes) {
-        super(url, "POST", countryCodes);
+        this(url, "POST", countryCodes);
     }
 
-    public JsonService() {
-    }
+    public void run(OkHttpClient client, Callback callback, Phone phone) {
+        request = new Request.Builder();
 
-    public void run(OkHttpClient client, Callback callback) {
         RequestBody body = RequestBody.create(
-                buildJson(), MediaType.parse("application/json"));
+                buildJson(phone), MediaType.parse("application/json"));
 
-        Request.Builder requestBuilder = new Request.Builder();
-        requestBuilder.url(url);
-        requestBuilder.method(method, body);
+        request.url(url);
+        request.method(method, body);
 
-        client.newCall(buildRequest(requestBuilder)).enqueue(callback);
+        client.newCall(request.build()).enqueue(callback);
     }
 
-    public abstract String buildJson();
+    public abstract String buildJson(Phone phone);
 }

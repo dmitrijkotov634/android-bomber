@@ -1,6 +1,6 @@
 package com.dm.bomber.ui;
 
-import com.dm.bomber.workers.AuthableProxy;
+import com.dm.bomber.worker.AuthableProxy;
 
 import java.util.List;
 

@@ -11,7 +11,7 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import androidx.work.WorkQuery;
 
-import com.dm.bomber.workers.AttackWorker;
+import com.dm.bomber.worker.AttackWorker;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -30,7 +30,8 @@ public class MainViewModel extends ViewModel {
     private final MutableLiveData<Integer> maxProgress = new MutableLiveData<>(0);
     private final MutableLiveData<Boolean> attackStatus = new MutableLiveData<>(false);
 
-    public static final String[] countryCodes = {"7", "380", ""};
+    public static final String[] countryCodes = {"7", "380", "77", ""};
+    public static final int[] phoneLength = {10, 9, 9, 0};
 
     public MainViewModel(Repository preferences, WorkManager workManager) {
         this.repository = preferences;

@@ -15,6 +15,7 @@
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_baseline_perm_device_information_24.xml" value="0.1" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.1" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_baseline_vpn_key_24.xml" value="0.1" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_kz.xml" value="0.16" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_octocat_fill.xml" value="0.1" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_octocat_fill_svgrepo_com.xml" value="0.1265" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_round_done_24.xml" value="0.2535" />
@@ -22,14 +23,16 @@
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_telegram.xml" value="0.1" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/ic_uk.xml" value="0.2535" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/phone_input.xml" value="0.2535" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/switch_thumb.xml" value="0.1" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/switch_track.xml" value="0.1" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/toggle_tile.xml" value="0.156" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/drawable/work_item_background.xml" value="0.156" />
-        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/activity_main.xml" value="0.4" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/attack_work_row.xml" value="0.264" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/country_code_row.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/dialog_promotion.xml" value="0.264" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/dialog_proxies.xml" value="0.264" />
-        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/dialog_settings.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/dialog_settings.xml" value="0.25" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/task_item.xml" value="0.2" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/layout/work_item.xml" value="0.25" />
         <entry key="..\:/Users/Dmitry/StudioProjects/android-bomber/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1605" />

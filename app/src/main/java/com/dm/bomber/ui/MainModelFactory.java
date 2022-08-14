@@ -18,6 +18,7 @@ public class MainModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     @NonNull
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == MainViewModel.class)
             return (T) new MainViewModel(repository, workManager);
