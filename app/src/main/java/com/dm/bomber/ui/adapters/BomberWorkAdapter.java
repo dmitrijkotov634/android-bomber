@@ -15,24 +15,26 @@ import androidx.work.WorkInfo;
 import com.dm.bomber.databinding.AttackWorkRowBinding;
 import com.dm.bomber.worker.AttackWorker;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.ViewHolder> {
 
     private List<WorkInfo> workInfos = new ArrayList<>();
 
     private final Context context;
-    public final Callback callback;
+    private final Callback callback;
 
     @SuppressLint("NotifyDataSetChanged")
-    public BomberWorkAdapter(LifecycleOwner context, LiveData<List<WorkInfo>> data, Callback callback) {
-        this.context = (Context) context;
+    public BomberWorkAdapter(LifecycleOwner owner, Context context, LiveData<List<WorkInfo>> data, Callback callback) {
+        this.context = context;
         this.callback = callback;
 
-        data.observe(context, workInfosResult -> {
+        data.observe(owner, workInfosResult -> {
             workInfos = workInfosResult;
-
             notifyDataSetChanged();
         });
     }
@@ -57,11 +59,17 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
             holder.binding.taskProgress.setProgress(workInfo.getProgress().getInt(AttackWorker.KEY_PROGRESS, 0));
         }
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+
         for (String tag : workInfo.getTags()) {
             if (tag.startsWith(context.getPackageName()))
                 continue;
 
-            holder.binding.taskTitle.setText(tag);
+            String[] parts = tag.split(";");
+
+            holder.binding.taskTitle.setText(parts[0]);
+            if (parts.length == 2)
+                holder.binding.taskTime.setText(dateFormat.format(new Date(Long.parseLong(parts[1]))));
         }
     }
 

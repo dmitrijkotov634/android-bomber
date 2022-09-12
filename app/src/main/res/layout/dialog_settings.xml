@@ -6,12 +6,20 @@
     android:layout_height="match_parent"
     android:padding="8dp">
 
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:id="@+id/drag_handle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/tasks"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
     <ToggleButton
         android:id="@+id/theme_tile"
         style="@style/ToggleTile"
         android:drawableTop="@drawable/ic_baseline_contrast_24" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/donate_tile"
         style="@style/ActionTile"
         app:icon="@drawable/ic_baseline_coffee_24" />
@@ -21,7 +29,7 @@
         style="@style/ToggleTile"
         android:drawableTop="@drawable/ic_baseline_vpn_key_24" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/source_code_tile"
         style="@style/ActionTile"
         app:icon="@drawable/ic_octocat_fill" />
@@ -49,8 +57,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toBottomOf="@+id/drag_handle"
         tools:itemCount="3"
         tools:listitem="@layout/attack_work_row" />
 

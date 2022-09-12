@@ -19,6 +19,10 @@
 
     <string name="channel_description">Attack progress</string>
     <string name="attack">Attack</string>
+    <string name="stop">Stop</string>
+
+    <string name="update_available">Update available</string>
+    <string name="download">Download</string>
 
     <string name="telegram_link" translatable="false">t.me/androidsmsbomber</string>
 

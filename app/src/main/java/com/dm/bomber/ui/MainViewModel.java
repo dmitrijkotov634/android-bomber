@@ -14,6 +14,7 @@ import androidx.work.WorkQuery;
 import com.dm.bomber.worker.AttackWorker;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +30,8 @@ public class MainViewModel extends ViewModel {
     private final MutableLiveData<Integer> currentProgress = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> maxProgress = new MutableLiveData<>(0);
     private final MutableLiveData<Boolean> attackStatus = new MutableLiveData<>(false);
+
+    private final LiveData<List<WorkInfo>> scheduledAttacks;
 
     public static final String[] countryCodes = {"7", "380", "77", ""};
     public static final int[] phoneLength = {10, 9, 9, 0};
@@ -56,6 +59,16 @@ public class MainViewModel extends ViewModel {
                     maxProgress.setValue(data.getInt(AttackWorker.KEY_MAX_PROGRESS, 0));
                 }
         });
+
+        scheduledAttacks = workManager.getWorkInfosLiveData(
+                WorkQuery.Builder.fromStates(Arrays.asList(
+                        WorkInfo.State.RUNNING,
+                        WorkInfo.State.ENQUEUED
+                )).build());
+    }
+
+    public LiveData<List<WorkInfo>> getScheduledAttacks() {
+        return scheduledAttacks;
     }
 
     public void setProxyEnabled(boolean enabled) {
@@ -79,7 +92,7 @@ public class MainViewModel extends ViewModel {
         return attackStatus;
     }
 
-    public void scheduleAttack(int countryCode, String phoneNumber, int repeats, long delay) {
+    public void scheduleAttack(int countryCode, String phoneNumber, int repeats, long date, long current) {
         Data inputData = new Data.Builder()
                 .putString(AttackWorker.KEY_COUNTRY_CODE, countryCodes[countryCode])
                 .putString(AttackWorker.KEY_PHONE, phoneNumber)
@@ -88,15 +101,15 @@ public class MainViewModel extends ViewModel {
                 .build();
 
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(AttackWorker.class)
-                .addTag("+" + countryCodes[countryCode] + phoneNumber)
-                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                .addTag("+" + countryCodes[countryCode] + phoneNumber + ";" + date)
+                .setInitialDelay(date - current, TimeUnit.MILLISECONDS)
                 .setInputData(inputData)
                 .setConstraints(new Constraints.Builder()
                         .setRequiredNetworkType(NetworkType.CONNECTED)
                         .build())
                 .build();
 
-        if (delay == 0) {
+        if (current == 0) {
             currentAttackId = workRequest.getId();
             attackStatus.setValue(true);
         }
@@ -105,7 +118,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void startAttack(int countryCode, String phoneNumber, int numberOfCyclesNum) {
-        scheduleAttack(countryCode, phoneNumber, numberOfCyclesNum, 0);
+        scheduleAttack(countryCode, phoneNumber, numberOfCyclesNum, 0, 0);
     }
 
     public void stopAttack() {
