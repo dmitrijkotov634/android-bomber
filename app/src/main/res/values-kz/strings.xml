@@ -18,4 +18,8 @@
 
     <string name="channel_description">Шабуыл барысы</string>
     <string name="attack">Шабуыл</string>
+    <string name="stop">Тоқта</string>
+
+    <string name="update_available">Жаңарту қолжетімді</string>
+    <string name="download">Жүктеп алу</string>
 </resources>

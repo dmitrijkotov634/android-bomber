@@ -4,8 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -18,8 +22,10 @@ import androidx.work.WorkerParameters;
 import com.dm.bomber.R;
 import com.dm.bomber.services.Phone;
 import com.dm.bomber.services.Service;
-import com.dm.bomber.services.Services;
+import com.dm.bomber.services.ServicesRepository;
+import com.dm.bomber.ui.MainActivity;
 import com.dm.bomber.ui.MainRepository;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -83,11 +89,10 @@ public class AttackWorker extends Worker {
             .addInterceptor(new UserAgentInterceptor(USER_AGENT))
             .addInterceptor(chain -> {
                 Request request = chain.request();
-                Log.v(TAG, String.format("Sending request %s", request.url()));
+                Log.v(TAG, "Sending request " + request.url());
 
                 Response response = chain.proceed(request);
-                Log.v(TAG, String.format("Received response for %s with status code %s",
-                        response.request().url(), response.code()));
+                Log.v(TAG, "Received response for " + response.request().url() + " with status code " + response.code());
 
                 return response;
             });
@@ -124,11 +129,17 @@ public class AttackWorker extends Worker {
 
         int repeats = getInputData().getInt(KEY_REPEATS, 1);
 
+        Bundle params = new Bundle();
+        params.putInt("repeats", repeats);
+        params.putString("phone_number", countryCode + phone);
+        FirebaseAnalytics.getInstance(getApplicationContext())
+                .logEvent("attack", params);
+
         assert countryCode != null;
         assert phone != null;
 
-        List<Service> usableServices = Services.getUsableServices(countryCode);
-        Log.i(TAG, String.format("Starting attack on +%s%s", countryCode, phone));
+        List<Service> usableServices = new ServicesRepository().getServices(countryCode);
+        Log.i(TAG, "Starting attack on +" + countryCode + phone);
 
         client = client.newBuilder()
                 .proxy(null)
@@ -150,7 +161,7 @@ public class AttackWorker extends Worker {
 
         attack:
         for (int cycle = 0; cycle < repeats; cycle++) {
-            Log.i(TAG, String.format("Started cycle %s", cycle));
+            Log.i(TAG, "Started cycle " + cycle);
             tasks = new CountDownLatch(usableServices.size());
 
             if (!proxies.isEmpty()) {
@@ -171,28 +182,34 @@ public class AttackWorker extends Worker {
                 service.run(client, new com.dm.bomber.services.Callback() {
                     @Override
                     public void onError(@NotNull Call call, @NotNull Exception e) {
-                        Log.e(TAG, String.format("%s returned error", service.getClass().getName()), e);
+                        Log.e(TAG, "An error occurred during the call " + call, e);
                         tasks.countDown();
                     }
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) {
-                        if (!response.isSuccessful()) {
-                            Log.i(TAG, String.format("%s returned an error HTTP code: %s",
-                                    response.request().url(), response.code()));
-                        }
-
                         if (!stopped) {
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.putExtra(MainActivity.TASK_ID, getId().toString());
+
+                            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                            stackBuilder.addParentStack(MainActivity.class);
+                            stackBuilder.addNextIntent(intent);
+
+                            PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
+                                    android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT);
+
                             Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                                     .setContentTitle(getApplicationContext().getString(R.string.attack))
                                     .setContentText("+" + countryCode + phone)
                                     .setProgress(usableServices.size() * repeats, progress, false)
-                                    .setStyle(new NotificationCompat.BigTextStyle())
-                                    .setOngoing(false)
+                                    .setOngoing(true)
                                     .setSmallIcon(R.drawable.logo)
+                                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                    .addAction(R.drawable.logo, getApplicationContext().getString(R.string.stop), pendingIntent)
                                     .build();
 
-                            notification.flags |= Notification.FLAG_NO_CLEAR;
+                            notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
                             notificationManager.notify(getId().hashCode(), notification);
 
@@ -201,7 +218,6 @@ public class AttackWorker extends Worker {
                                     .putInt(KEY_MAX_PROGRESS, usableServices.size() * repeats)
                                     .build());
                         }
-
                         tasks.countDown();
                     }
                 }, new Phone(countryCode, phone));
@@ -223,7 +239,7 @@ public class AttackWorker extends Worker {
         stopped = true;
         notificationManager.cancel(getId().hashCode());
 
-        Log.i(TAG, String.format("Attack on +%s%s ended", countryCode, phone));
+        Log.i(TAG, "Attack ended +" + countryCode + phone);
         return Result.success();
     }
 }

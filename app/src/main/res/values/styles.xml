@@ -8,7 +8,7 @@
     </style>
 
     <style name="ToggleTile" parent="Tile">
-        <item name="android:backgroundTint">@color/color_selector</item>
+        <item name="backgroundTint">@color/color_selector</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:textOn">@null</item>
         <item name="android:textOff">@null</item>
@@ -17,7 +17,8 @@
     </style>
 
     <style name="ActionTile" parent="Tile">
-        <item name="drawableTint">?colorControlNormal</item>
+        <item name="backgroundTint">?colorPrimary</item>
+        <item name="iconTint">?colorOnSecondary</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">0dp</item>
     </style>

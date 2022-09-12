@@ -7,43 +7,39 @@ import android.app.TimePickerDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.view.WindowCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
-import androidx.work.WorkQuery;
 
+import com.dm.bomber.BuildConfig;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
-import com.dm.bomber.databinding.DialogProxiesBinding;
-import com.dm.bomber.databinding.DialogSettingsBinding;
-import com.dm.bomber.ui.adapters.BomberWorkAdapter;
 import com.dm.bomber.ui.adapters.CountryCodeAdapter;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.dm.bomber.ui.dialog.SettingsDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.UUID;
 
 import jp.wasabeef.blurry.Blurry;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String TASK_ID = "task_id";
+
     private ActivityMainBinding mainBinding;
-    private DialogSettingsBinding settingsBinding;
 
     private MainViewModel model;
     private Repository repository;
@@ -56,39 +52,15 @@ public class MainActivity extends AppCompatActivity {
 
         repository = new MainRepository(this);
         model = new ViewModelProvider(this,
-                new MainModelFactory(repository, workManager)).get(MainViewModel.class);
+                (ViewModelProvider.Factory) new MainModelFactory(repository, workManager)).get(MainViewModel.class);
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
 
         super.onCreate(savedInstanceState);
 
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
-        settingsBinding = DialogSettingsBinding.inflate(getLayoutInflater());
-
-        DialogProxiesBinding proxyBinding = DialogProxiesBinding.inflate(getLayoutInflater());
-        proxyBinding.proxies.setText(repository.getRawProxy());
-
-        BottomSheetDialog proxyDialog = new BottomSheetDialog(this);
-        proxyDialog.setContentView(proxyBinding.getRoot());
-        proxyBinding.save.setOnClickListener(view -> {
-            try {
-                repository.parseProxy(proxyBinding.proxies.getText() == null ? "" : proxyBinding.proxies.getText().toString());
-                repository.setRawProxy(proxyBinding.proxies.getText().toString());
-
-                proxyDialog.cancel();
-            } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
-                Snackbar.make(proxyBinding.getRoot(), R.string.proxy_format_error, Snackbar.LENGTH_LONG).show();
-            }
-        });
-
-        TooltipCompat.setTooltipText(proxyBinding.save, getString(R.string.save));
-        TooltipCompat.setTooltipText(settingsBinding.donateTile, getString(R.string.donate));
-        TooltipCompat.setTooltipText(settingsBinding.proxyTile, getString(R.string.proxy));
-        TooltipCompat.setTooltipText(settingsBinding.sourceCodeTile, getString(R.string.source_code));
 
         setContentView(mainBinding.getRoot());
-
-        model.isProxyEnabled().observe(this, enabled -> settingsBinding.proxyTile.setChecked(enabled));
 
         model.getCurrentProgress().observe(this, progress -> mainBinding.progress.setProgress(progress));
         model.getMaxProgress().observe(this, maxProgress -> mainBinding.progress.setMax(maxProgress));
@@ -102,24 +74,6 @@ public class MainActivity extends AppCompatActivity {
                 mainBinding.attackScreen.setVisibility(View.GONE);
             }
         });
-
-        BomberWorkAdapter bomberWorkAdapter = new BomberWorkAdapter(this, workManager.getWorkInfosLiveData(
-                WorkQuery.Builder.fromStates(Arrays.asList(
-                        WorkInfo.State.RUNNING,
-                        WorkInfo.State.ENQUEUED
-                )).build()),
-                workInfo -> workManager.cancelWorkById(workInfo.getId()));
-
-        bomberWorkAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                settingsBinding.empty.setVisibility(bomberWorkAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
-                super.onChanged();
-            }
-        });
-
-        settingsBinding.tasks.setLayoutManager(new LinearLayoutManager(this));
-        settingsBinding.tasks.setAdapter(bomberWorkAdapter);
 
         CountryCodeAdapter countryCodeAdapter = new CountryCodeAdapter(this,
                 new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_kz, R.drawable.ic_all},
@@ -139,9 +93,6 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-
-        BottomSheetDialog settings = new BottomSheetDialog(this);
-        settings.setContentView(settingsBinding.getRoot());
 
         mainBinding.startAttack.setOnClickListener(view -> {
             InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -164,6 +115,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mainBinding.startAttack.setOnLongClickListener(view -> {
+            InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            input.hideSoftInputFromWindow(mainBinding.getRoot().getWindowToken(), 0);
+
             String phoneNumber = mainBinding.phoneNumber.getText().toString();
             String repeats = mainBinding.repeats.getText().toString();
 
@@ -190,9 +144,9 @@ public class MainActivity extends AppCompatActivity {
 
                     model.scheduleAttack(mainBinding.phoneCode.getSelectedItemPosition(), phoneNumber,
                             repeats.isEmpty() ? 1 : Integer.parseInt(repeats),
-                            date.getTimeInMillis() - currentDate.getTimeInMillis());
+                            date.getTimeInMillis(), currentDate.getTimeInMillis());
 
-                    settings.show();
+                    new SettingsDialog().show(getSupportFragmentManager(), null);
 
                 }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), true).show();
 
@@ -219,45 +173,15 @@ public class MainActivity extends AppCompatActivity {
                 .start());
 
         mainBinding.phoneNumber.setOnLongClickListener(view -> {
-            if (mainBinding.phoneNumber.getText().toString().isEmpty() && clipText != null)
-                if (!processText(clipText)) {
-                    mainBinding.phoneCode.setSelection(repository.getLastCountryCode());
-                    mainBinding.phoneNumber.setText(repository.getLastPhone());
-                }
+            if (mainBinding.phoneNumber.getText().toString().isEmpty() && clipText != null && !processText(clipText)) {
+                mainBinding.phoneCode.setSelection(repository.getLastCountryCode());
+                mainBinding.phoneNumber.setText(repository.getLastPhone());
+            }
 
             return false;
         });
 
-        mainBinding.settings.setOnClickListener(view -> settings.show());
-
-        settingsBinding.themeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
-        settingsBinding.themeTile.setOnClickListener(view -> {
-            settings.cancel();
-
-            setCurrentTheme(settingsBinding.themeTile.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-        });
-
-        settingsBinding.themeTile.setOnLongClickListener(view -> {
-            settings.cancel();
-
-            setCurrentTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-            return true;
-        });
-
-        settingsBinding.proxyTile.setOnCheckedChangeListener((button, checked) -> {
-            if (!button.isPressed())
-                return;
-
-            if (checked) {
-                proxyDialog.show();
-                settings.cancel();
-            }
-
-            model.setProxyEnabled(checked);
-        });
-
-        settingsBinding.sourceCodeTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dmitrijkotov634/android-bomber/"))));
-        settingsBinding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://telegra.ph/donate-01-19-2"))));
+        mainBinding.settings.setOnClickListener(view -> new SettingsDialog().show(getSupportFragmentManager(), null));
 
         View.OnClickListener telegram = (view) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/androidsmsbomber")));
 
@@ -265,8 +189,32 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.telegramIcon.setOnClickListener(telegram);
 
         Intent intent = getIntent();
-        if (intent != null && Intent.ACTION_DIAL.equals(intent.getAction()))
-            processText(intent.getData().getSchemeSpecificPart());
+        if (intent != null) {
+            if (Intent.ACTION_DIAL.equals(intent.getAction()))
+                processText(intent.getData().getSchemeSpecificPart());
+
+            if (intent.hasExtra(TASK_ID)) {
+                workManager.cancelWorkById(UUID.fromString(intent.getStringExtra(TASK_ID)));
+                new SettingsDialog().show(getSupportFragmentManager(), null);
+            }
+        }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://androidsmsbomber-default-rtdb.europe-west1.firebasedatabase.app");
+        database.getReference().child("updates").get().addOnSuccessListener(dataSnapshot -> {
+            Integer versionCode = dataSnapshot.child("versionCode").getValue(Integer.class);
+            if (versionCode != null && versionCode > BuildConfig.VERSION_CODE) {
+                String key = "description-" + Locale.getDefault().getLanguage();
+                if (!dataSnapshot.hasChild(key))
+                    key = "description";
+                CharSequence description = Html.fromHtml(dataSnapshot.child(key).getValue(String.class));
+                new MaterialAlertDialogBuilder(MainActivity.this)
+                        .setIcon(R.drawable.ic_baseline_update_24)
+                        .setTitle(R.string.update_available)
+                        .setMessage(description)
+                        .setPositiveButton(R.string.download, (dialog, which) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(dataSnapshot.child("uri").getValue(String.class)))))
+                        .show();
+            }
+        });
     }
 
     private boolean processText(String data) {
@@ -287,11 +235,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return false;
-    }
-
-    private void setCurrentTheme(int theme) {
-        AppCompatDelegate.setDefaultNightMode(theme);
-        repository.setTheme(theme);
     }
 
     @Override

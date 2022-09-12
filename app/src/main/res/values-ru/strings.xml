@@ -18,4 +18,8 @@
 
     <string name="channel_description">Прогресс атаки</string>
     <string name="attack">Атака</string>
+    <string name="stop">Стоп</string>
+
+    <string name="update_available">Доступно обновление</string>
+    <string name="download">Скачать</string>
 </resources>
