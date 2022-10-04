@@ -15,6 +15,7 @@
 
     <string name="save">Зберегти</string>
     <string name="proxy_format_error">Невірний формат проксі</string>
+    <string name="limit_reached">Достигнутий ліміт</string>
 
     <string name="channel_description">Прогрес атаки</string>
     <string name="attack">Атака</string>

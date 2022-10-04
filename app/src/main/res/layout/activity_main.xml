@@ -128,11 +128,10 @@
         android:layout_height="match_parent"
         tools:ignore="ContentDescription" />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
+    <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
-        app:indicatorSize="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/blur"
         app:layout_constraintStart_toStartOf="parent"
@@ -166,15 +165,77 @@
         app:layout_constraintTop_toTopOf="@+id/telegram_icon" />
 
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="app_title,phone_code,phone_number,frame,repeats,start_attack,bomb,settings" />
-
-    <androidx.constraintlayout.widget.Group
         android:id="@+id/attack_screen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="blur,progress" />
+        app:constraint_referenced_ids="blur,progress,attack,progress_text,close_attack,bomb1" />
+
+    <TextView
+        android:id="@+id/attack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/attack"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/progress"
+        app:layout_constraintEnd_toStartOf="@+id/blur"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/bomb1" />
+
+    <TextView
+        android:id="@+id/progress_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:typeface="monospace"
+        app:layout_constraintEnd_toEndOf="@+id/progress"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/phone_number"
+        app:layout_constraintStart_toStartOf="@+id/progress"
+        app:layout_constraintTop_toBottomOf="@+id/progress"
+        tools:text="50/100" />
+
+    <ImageView
+        android:id="@+id/close_attack"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_close_24" />
+
+    <TextView
+        android:id="@+id/services_count"
+        android:layout_width="26dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/toggle_tile"
+        android:gravity="center"
+        android:padding="4dp"
+        android:textColor="?android:colorBackground"
+        android:textSize="11sp"
+        android:translationX="4dp"
+        android:translationY="4dp"
+        android:typeface="monospace"
+        app:layout_constraintBottom_toBottomOf="@+id/bomb"
+        app:layout_constraintEnd_toEndOf="@+id/bomb"
+        tools:text="61" />
+
+    <ImageView
+        android:id="@+id/bomb1"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toTopOf="@+id/progress"
+        app:layout_constraintEnd_toStartOf="@+id/attack"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/blur"
+        app:layout_constraintTop_toTopOf="@+id/attack"
+        app:srcCompat="@drawable/logo"
+        app:tint="?colorControlNormal" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

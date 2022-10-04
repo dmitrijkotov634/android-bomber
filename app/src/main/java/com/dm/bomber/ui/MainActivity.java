@@ -2,6 +2,7 @@ package com.dm.bomber.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ClipData;
@@ -23,6 +24,7 @@ import androidx.work.WorkManager;
 import com.dm.bomber.BuildConfig;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
+import com.dm.bomber.services.ServicesRepository;
 import com.dm.bomber.ui.adapters.CountryCodeAdapter;
 import com.dm.bomber.ui.dialog.SettingsDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -37,15 +39,19 @@ import jp.wasabeef.blurry.Blurry;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TASK_ID = "task_id";
-
-    private ActivityMainBinding mainBinding;
+    private ActivityMainBinding binding;
 
     private MainViewModel model;
     private Repository repository;
 
     private String clipText;
 
+    private static final String[] countryCodes = {"7", "380", "375", "77", ""};
+    private static final int[] phoneLength = {10, 9, 9, 9, 0};
+
+    public static final String TASK_ID = "task_id";
+
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         WorkManager workManager = WorkManager.getInstance(this);
@@ -58,70 +64,43 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
 
-        setContentView(mainBinding.getRoot());
+        setContentView(binding.getRoot());
 
-        model.getCurrentProgress().observe(this, progress -> mainBinding.progress.setProgress(progress));
-        model.getMaxProgress().observe(this, maxProgress -> mainBinding.progress.setMax(maxProgress));
+        model.getProgress().observe(this, progress -> {
+            binding.progress.setProgress(progress.first);
+            binding.progress.setMax(progress.second);
+            binding.progressText.setText(progress.first + "/" + progress.second);
+        });
 
         model.getAttackStatus().observe(this, attackStatus -> {
             if (attackStatus) {
-                mainBinding.main.requestLayout();
-                mainBinding.main.getViewTreeObserver().addOnGlobalLayoutListener(new BlurListener());
+                binding.getRoot().requestLayout();
+                binding.getRoot().getViewTreeObserver().addOnGlobalLayoutListener(new BlurListener());
             } else {
-                mainBinding.main.setVisibility(View.VISIBLE);
-                mainBinding.attackScreen.setVisibility(View.GONE);
+                for (int i = 0; i < binding.getRoot().getChildCount(); i++)
+                    binding.getRoot().getChildAt(i).setVisibility(View.VISIBLE);
+                binding.attackScreen.setVisibility(View.GONE);
             }
         });
 
-        CountryCodeAdapter countryCodeAdapter = new CountryCodeAdapter(this,
-                new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_kz, R.drawable.ic_all},
-                MainViewModel.countryCodes);
+        InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
-        String[] hints = getResources().getStringArray(R.array.hints);
-        mainBinding.phoneNumber.setHint(hints[0]);
+        View.OnLongClickListener limitSchedule = view -> {
+            input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
 
-        mainBinding.phoneCode.setAdapter(countryCodeAdapter);
-        mainBinding.phoneCode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
-                mainBinding.phoneNumber.setHint(hints[index]);
-            }
+            Snackbar.make(view, R.string.limit_reached, Snackbar.LENGTH_LONG).show();
+            return true;
+        };
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
+        View.OnLongClickListener schedule = view -> {
+            input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
 
-        mainBinding.startAttack.setOnClickListener(view -> {
-            InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            input.hideSoftInputFromWindow(mainBinding.getRoot().getWindowToken(), 0);
+            String phoneNumber = binding.phoneNumber.getText().toString();
+            String repeats = binding.repeats.getText().toString();
 
-            String phoneNumber = mainBinding.phoneNumber.getText().toString();
-            String repeats = mainBinding.repeats.getText().toString();
-
-            int length = MainViewModel.phoneLength[mainBinding.phoneCode.getSelectedItemPosition()];
-            if (phoneNumber.length() != length && length != 0) {
-                Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
-                return;
-            }
-
-            repository.setLastCountryCode(mainBinding.phoneCode.getSelectedItemPosition());
-            repository.setLastPhone(phoneNumber);
-
-            model.startAttack(mainBinding.phoneCode.getSelectedItemPosition(), phoneNumber,
-                    repeats.isEmpty() ? 1 : Integer.parseInt(repeats));
-        });
-
-        mainBinding.startAttack.setOnLongClickListener(view -> {
-            InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            input.hideSoftInputFromWindow(mainBinding.getRoot().getWindowToken(), 0);
-
-            String phoneNumber = mainBinding.phoneNumber.getText().toString();
-            String repeats = mainBinding.repeats.getText().toString();
-
-            int length = MainViewModel.phoneLength[mainBinding.phoneCode.getSelectedItemPosition()];
+            int length = phoneLength[binding.phoneCode.getSelectedItemPosition()];
             if (phoneNumber.length() != length && length != 0) {
                 Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
                 return false;
@@ -142,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
 
-                    model.scheduleAttack(mainBinding.phoneCode.getSelectedItemPosition(), phoneNumber,
+                    model.scheduleAttack(countryCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
                             repeats.isEmpty() ? 1 : Integer.parseInt(repeats),
                             date.getTimeInMillis(), currentDate.getTimeInMillis());
 
@@ -153,9 +132,57 @@ public class MainActivity extends AppCompatActivity {
             }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
 
             return true;
+        };
+
+        model.getScheduledAttacks().observe(this, attacks -> binding.startAttack.setOnLongClickListener(attacks.size() > 2 ? limitSchedule : schedule));
+
+        CountryCodeAdapter countryCodeAdapter = new CountryCodeAdapter(this,
+                new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_by, R.drawable.ic_kz, R.drawable.ic_all},
+                countryCodes);
+
+        String[] hints = getResources().getStringArray(R.array.hints);
+        binding.phoneNumber.setHint(hints[0]);
+
+        binding.phoneCode.setAdapter(countryCodeAdapter);
+        binding.phoneCode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
+                binding.phoneNumber.setHint(hints[index]);
+                binding.servicesCount.setText(String.valueOf(new ServicesRepository().getServices(countryCodes[index]).size()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
         });
 
-        mainBinding.bomb.setOnClickListener(view -> view.animate()
+        binding.repeats.setOnClickListener(view -> {
+            if (binding.repeats.getText().toString().isEmpty())
+                binding.repeats.setText("1");
+        });
+
+        binding.startAttack.setOnClickListener(view -> {
+            input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
+
+            String phoneNumber = binding.phoneNumber.getText().toString();
+            String repeats = binding.repeats.getText().toString();
+
+            int length = phoneLength[binding.phoneCode.getSelectedItemPosition()];
+            if (phoneNumber.length() != length && length != 0) {
+                Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
+                return;
+            }
+
+            repository.setLastCountryCode(binding.phoneCode.getSelectedItemPosition());
+            repository.setLastPhone(phoneNumber);
+
+            model.startAttack(countryCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
+                    repeats.isEmpty() ? 1 : Integer.parseInt(repeats));
+        });
+
+        binding.closeAttack.setOnClickListener(view -> model.stopAttack());
+
+        binding.bomb.setOnClickListener(view -> view.animate()
                 .scaleX(1.1f)
                 .scaleY(1.1f)
                 .setDuration(100)
@@ -172,21 +199,21 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .start());
 
-        mainBinding.phoneNumber.setOnLongClickListener(view -> {
-            if (mainBinding.phoneNumber.getText().toString().isEmpty() && clipText != null && !processText(clipText)) {
-                mainBinding.phoneCode.setSelection(repository.getLastCountryCode());
-                mainBinding.phoneNumber.setText(repository.getLastPhone());
+        binding.phoneNumber.setOnLongClickListener(view -> {
+            if (binding.phoneNumber.getText().toString().isEmpty() && clipText != null && !processText(clipText)) {
+                binding.phoneCode.setSelection(repository.getLastCountryCode());
+                binding.phoneNumber.setText(repository.getLastPhone());
             }
 
             return false;
         });
 
-        mainBinding.settings.setOnClickListener(view -> new SettingsDialog().show(getSupportFragmentManager(), null));
+        binding.settings.setOnClickListener(view -> new SettingsDialog().show(getSupportFragmentManager(), null));
 
         View.OnClickListener telegram = (view) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/androidsmsbomber")));
 
-        mainBinding.telegramUrl.setOnClickListener(telegram);
-        mainBinding.telegramIcon.setOnClickListener(telegram);
+        binding.telegramUrl.setOnClickListener(telegram);
+        binding.telegramIcon.setOnClickListener(telegram);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -200,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://androidsmsbomber-default-rtdb.europe-west1.firebasedatabase.app");
-        database.getReference().child("updates").get().addOnSuccessListener(dataSnapshot -> {
+        database.getReference("updates").get().addOnSuccessListener(dataSnapshot -> {
             Integer versionCode = dataSnapshot.child("versionCode").getValue(Integer.class);
             if (versionCode != null && versionCode > BuildConfig.VERSION_CODE) {
                 String key = "description-" + Locale.getDefault().getLanguage();
@@ -218,16 +245,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean processText(String data) {
-        if (data.matches("(8|\\+(7|380))([0-9()\\-\\s])*")) {
+        if (data.matches("(8|\\+(7|380|375))([0-9()\\-\\s])*")) {
 
             if (data.startsWith("8"))
                 data = "+7" + data.substring(1);
 
             data = data.substring(1);
-            for (int i = 0; i < MainViewModel.countryCodes.length; i++) {
-                if (data.startsWith(MainViewModel.countryCodes[i])) {
-                    mainBinding.phoneCode.setSelection(i);
-                    mainBinding.phoneNumber.setText(data.substring(MainViewModel.countryCodes[i].length()).replaceAll("[^\\d.]", ""));
+            for (int i = 0; i < countryCodes.length; i++) {
+                if (data.startsWith(countryCodes[i])) {
+                    binding.phoneCode.setSelection(i);
+                    binding.phoneNumber.setText(data.substring(countryCodes[i].length()).replaceAll("[^\\d.]", ""));
 
                     return true;
                 }
@@ -260,19 +287,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onGlobalLayout() {
             try {
-                mainBinding.blur.setImageBitmap(Blurry.with(MainActivity.this)
+                binding.blur.setImageBitmap(Blurry.with(MainActivity.this)
                         .radius(20)
-                        .sampling(1)
-                        .capture(mainBinding.getRoot())
+                        .sampling(2)
+                        .capture(binding.getRoot())
                         .get());
             } catch (RuntimeException e) {
                 e.printStackTrace();
             }
 
-            mainBinding.main.setVisibility(View.GONE);
-            mainBinding.attackScreen.setVisibility(View.VISIBLE);
+            for (int i = 0; i < binding.getRoot().getChildCount(); i++)
+                binding.getRoot().getChildAt(i).setVisibility(View.GONE);
 
-            mainBinding.main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            binding.attackScreen.setVisibility(View.VISIBLE);
+
+            binding.getRoot().getViewTreeObserver().removeOnGlobalLayoutListener(this);
         }
     }
 
@@ -280,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         model.stopAttack();
 
-        if (mainBinding.attackScreen.getVisibility() != View.VISIBLE)
+        if (binding.attackScreen.getVisibility() != View.VISIBLE)
             finish();
     }
 }

@@ -15,6 +15,7 @@
 
     <string name="save">Сақтау</string>
     <string name="proxy_format_error">Прокси пішімі дұрыс емес</string>
+    <string name="limit_reached">Шектеуге жетті</string>
 
     <string name="channel_description">Шабуыл барысы</string>
     <string name="attack">Шабуыл</string>
