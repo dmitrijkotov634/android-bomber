@@ -68,6 +68,7 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
             String[] parts = tag.split(";");
 
             holder.binding.taskTitle.setText(parts[0]);
+
             if (parts.length == 2)
                 holder.binding.taskTime.setText(dateFormat.format(new Date(Long.parseLong(parts[1]))));
         }
