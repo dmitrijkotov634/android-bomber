@@ -12,6 +12,7 @@ import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkInfo;
 
+import com.dm.bomber.BuildVars;
 import com.dm.bomber.databinding.AttackWorkRowBinding;
 import com.dm.bomber.worker.AttackWorker;
 
@@ -62,12 +63,19 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
 
         for (String tag : workInfo.getTags()) {
-            if (tag.startsWith(context.getPackageName()))
+            if (tag.startsWith(AttackWorker.class.getCanonicalName()))
                 continue;
 
             String[] parts = tag.split(";");
 
             holder.binding.taskTitle.setText(parts[0]);
+
+            for (int i = 0; i < BuildVars.COUNTRY_CODES.length; i++) {
+                if (parts[0].substring(1).startsWith(BuildVars.COUNTRY_CODES[i])) {
+                    holder.binding.countryFlag.setImageResource(BuildVars.COUNTRY_FLAGS[i]);
+                    break;
+                }
+            }
 
             if (parts.length == 2)
                 holder.binding.taskTime.setText(dateFormat.format(new Date(Long.parseLong(parts[1]))));

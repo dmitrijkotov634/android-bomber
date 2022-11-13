@@ -23,4 +23,7 @@
 
     <string name="update_available">Прийшло оновлення</string>
     <string name="download">Завантажити</string>
+
+    <string name="enable_snowfall">Увімкнути снігопад</string>
+    <string name="disable_snowfall">Вимкнути снігопад</string>
 </resources>

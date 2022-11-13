@@ -25,6 +25,5 @@ public class BomberApplication extends Application implements Configuration.Prov
         return new Configuration.Builder()
                 .setMinimumLoggingLevel(Log.ERROR)
                 .build();
-
     }
 }

@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.InputFilter;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.work.WorkManager;
 
 import com.dm.bomber.BuildConfig;
+import com.dm.bomber.BuildVars;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
 import com.dm.bomber.services.ServicesRepository;
@@ -29,7 +31,6 @@ import com.dm.bomber.ui.adapters.CountryCodeAdapter;
 import com.dm.bomber.ui.dialog.SettingsDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -45,9 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private Repository repository;
 
     private String clipText;
-
-    private static final String[] countryCodes = {"7", "380", "375", "77", ""};
-    private static final int[] phoneLength = {10, 9, 9, 9, 0};
 
     public static final String TASK_ID = "task_id";
 
@@ -69,6 +67,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         model.getProgress().observe(this, progress -> {
+            binding.progress.setIndeterminate(progress.second == 0);
+
+            if (progress.second == 0) {
+                binding.progressText.setText(R.string.waiting);
+                return;
+            }
+
             binding.progress.setProgress(progress.first);
             binding.progress.setMax(progress.second);
             binding.progressText.setText(progress.first + "/" + progress.second);
@@ -83,6 +88,24 @@ public class MainActivity extends AppCompatActivity {
                     binding.getRoot().getChildAt(i).setVisibility(View.VISIBLE);
                 binding.attackScreen.setVisibility(View.GONE);
             }
+        });
+
+        model.getUpdates().observe(this, dataSnapshot -> {
+            if (dataSnapshot == null) return;
+            Integer versionCode = dataSnapshot.child("versionCode").getValue(Integer.class);
+            if (versionCode != null && versionCode > BuildConfig.VERSION_CODE) {
+                String key = "description-" + Locale.getDefault().getLanguage();
+                if (!dataSnapshot.hasChild(key))
+                    key = "description";
+                CharSequence description = Html.fromHtml(dataSnapshot.child(key).getValue(String.class));
+                new MaterialAlertDialogBuilder(MainActivity.this)
+                        .setIcon(R.drawable.ic_baseline_update_24)
+                        .setTitle(R.string.update_available)
+                        .setMessage(description)
+                        .setPositiveButton(R.string.download, (dialog, which) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(dataSnapshot.child("uri").getValue(String.class)))))
+                        .show();
+            }
+            model.cancelUpdates();
         });
 
         InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -100,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             String phoneNumber = binding.phoneNumber.getText().toString();
             String repeats = binding.repeats.getText().toString();
 
-            int length = phoneLength[binding.phoneCode.getSelectedItemPosition()];
+            int length = BuildVars.MAX_PHONE_LENGTH[binding.phoneCode.getSelectedItemPosition()];
             if (phoneNumber.length() != length && length != 0) {
                 Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
                 return false;
@@ -121,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
 
-                    model.scheduleAttack(countryCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
+                    model.scheduleAttack(BuildVars.COUNTRY_CODES[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
                             repeats.isEmpty() ? 1 : Integer.parseInt(repeats),
                             date.getTimeInMillis(), currentDate.getTimeInMillis());
 
@@ -134,11 +157,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
         };
 
-        model.getScheduledAttacks().observe(this, attacks -> binding.startAttack.setOnLongClickListener(attacks.size() > 2 ? limitSchedule : schedule));
+        model.getScheduledAttacks().observe(this, attacks -> binding.startAttack.setOnLongClickListener(attacks.size() >= BuildVars.SCHEDULED_ATTACKS_LIMIT ? limitSchedule : schedule));
 
-        CountryCodeAdapter countryCodeAdapter = new CountryCodeAdapter(this,
-                new int[]{R.drawable.ic_ru, R.drawable.ic_uk, R.drawable.ic_by, R.drawable.ic_kz, R.drawable.ic_all},
-                countryCodes);
+        model.isSnowfallEnabled().observe(this, enabled -> binding.snowfall.setVisibility(enabled ? View.VISIBLE : View.GONE));
+
+        CountryCodeAdapter countryCodeAdapter = new CountryCodeAdapter(this, BuildVars.COUNTRY_FLAGS, BuildVars.COUNTRY_CODES);
 
         String[] hints = getResources().getStringArray(R.array.hints);
         binding.phoneNumber.setHint(hints[0]);
@@ -148,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
                 binding.phoneNumber.setHint(hints[index]);
-                binding.servicesCount.setText(String.valueOf(new ServicesRepository().getServices(countryCodes[index]).size()));
+                binding.servicesCount.setText(String.valueOf(new ServicesRepository().getServices(BuildVars.COUNTRY_CODES[index]).size()));
             }
 
             @Override
@@ -161,13 +184,26 @@ public class MainActivity extends AppCompatActivity {
                 binding.repeats.setText("1");
         });
 
+        binding.repeats.setFilters(new InputFilter[]{(source, start, end, dest, dstart, dend) -> {
+            try {
+                String value = dest.subSequence(0, dstart)
+                        + source.subSequence(start, end).toString()
+                        + dest.subSequence(dend, dest.length());
+                int repeats = Integer.parseInt(value);
+                if (repeats <= BuildVars.MAX_REPEATS_COUNT && value.length() <= BuildVars.REPEATS_MAX_LENGTH)
+                    return null;
+            } catch (NumberFormatException ignore) {
+            }
+            return "";
+        }});
+
         binding.startAttack.setOnClickListener(view -> {
             input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
 
             String phoneNumber = binding.phoneNumber.getText().toString();
             String repeats = binding.repeats.getText().toString();
 
-            int length = phoneLength[binding.phoneCode.getSelectedItemPosition()];
+            int length = BuildVars.MAX_PHONE_LENGTH[binding.phoneCode.getSelectedItemPosition()];
             if (phoneNumber.length() != length && length != 0) {
                 Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
                 return;
@@ -176,11 +212,21 @@ public class MainActivity extends AppCompatActivity {
             repository.setLastCountryCode(binding.phoneCode.getSelectedItemPosition());
             repository.setLastPhone(phoneNumber);
 
-            model.startAttack(countryCodes[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
+            model.startAttack(BuildVars.COUNTRY_CODES[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
                     repeats.isEmpty() ? 1 : Integer.parseInt(repeats));
         });
 
         binding.closeAttack.setOnClickListener(view -> model.stopAttack());
+
+        binding.bomb.setOnLongClickListener(view -> {
+            Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.toast, Snackbar.LENGTH_SHORT);
+
+            boolean state = binding.snowfall.getVisibility() != View.VISIBLE;
+            snackbar.setAction(state ? R.string.enable_snowfall : R.string.disable_snowfall, v -> model.setSnowfallEnabled(state));
+
+            snackbar.show();
+            return false;
+        });
 
         binding.bomb.setOnClickListener(view -> view.animate()
                 .scaleX(1.1f)
@@ -210,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.settings.setOnClickListener(view -> new SettingsDialog().show(getSupportFragmentManager(), null));
 
-        View.OnClickListener telegram = (view) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/androidsmsbomber")));
+        View.OnClickListener telegram = (view) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(BuildVars.TELEGRAM_URL)));
 
         binding.telegramUrl.setOnClickListener(telegram);
         binding.telegramIcon.setOnClickListener(telegram);
@@ -225,23 +271,6 @@ public class MainActivity extends AppCompatActivity {
                 new SettingsDialog().show(getSupportFragmentManager(), null);
             }
         }
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://androidsmsbomber-default-rtdb.europe-west1.firebasedatabase.app");
-        database.getReference("updates").get().addOnSuccessListener(dataSnapshot -> {
-            Integer versionCode = dataSnapshot.child("versionCode").getValue(Integer.class);
-            if (versionCode != null && versionCode > BuildConfig.VERSION_CODE) {
-                String key = "description-" + Locale.getDefault().getLanguage();
-                if (!dataSnapshot.hasChild(key))
-                    key = "description";
-                CharSequence description = Html.fromHtml(dataSnapshot.child(key).getValue(String.class));
-                new MaterialAlertDialogBuilder(MainActivity.this)
-                        .setIcon(R.drawable.ic_baseline_update_24)
-                        .setTitle(R.string.update_available)
-                        .setMessage(description)
-                        .setPositiveButton(R.string.download, (dialog, which) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(dataSnapshot.child("uri").getValue(String.class)))))
-                        .show();
-            }
-        });
     }
 
     private boolean processText(String data) {
@@ -251,10 +280,10 @@ public class MainActivity extends AppCompatActivity {
                 data = "+7" + data.substring(1);
 
             data = data.substring(1);
-            for (int i = 0; i < countryCodes.length; i++) {
-                if (data.startsWith(countryCodes[i])) {
+            for (int i = 0; i < BuildVars.COUNTRY_CODES.length; i++) {
+                if (data.startsWith(BuildVars.COUNTRY_CODES[i])) {
                     binding.phoneCode.setSelection(i);
-                    binding.phoneNumber.setText(data.substring(countryCodes[i].length()).replaceAll("[^\\d.]", ""));
+                    binding.phoneNumber.setText(data.substring(BuildVars.COUNTRY_CODES[i].length()).replaceAll("[^\\d.]", ""));
 
                     return true;
                 }

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkManager;
 
+import com.dm.bomber.BuildVars;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.DialogSettingsBinding;
 import com.dm.bomber.ui.MainRepository;
@@ -90,8 +91,8 @@ public class SettingsDialog extends BottomSheetDialogFragment {
             model.setProxyEnabled(checked);
         });
 
-        binding.sourceCodeTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dmitrijkotov634/android-bomber/"))));
-        binding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://telegra.ph/donate-01-19-2"))));
+        binding.sourceCodeTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(BuildVars.SOURCECODE_URL))));
+        binding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(BuildVars.DONATE_URL))));
 
         TooltipCompat.setTooltipText(binding.donateTile, getString(R.string.donate));
         TooltipCompat.setTooltipText(binding.proxyTile, getString(R.string.proxy));

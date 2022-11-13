@@ -27,6 +27,10 @@
 
     <string name="telegram_link" translatable="false">t.me/androidsmsbomber</string>
 
+    <string name="toast" translatable="false">(⁠◕⁠ᴗ⁠◕⁠✿⁠)</string>
+    <string name="enable_snowfall">Enable snowfall</string>
+    <string name="disable_snowfall">Disable snowfall</string>
+
     <string-array name="hints" translatable="false">
         <item>912 345 67 89</item>
         <item>50 123 4567</item>

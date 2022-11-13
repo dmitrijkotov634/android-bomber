@@ -9,7 +9,7 @@
     android:padding="8dp">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/icon"
+        android:id="@+id/country_flag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
@@ -19,7 +19,7 @@
         tools:src="@drawable/ic_ru" />
 
     <TextView
-        android:id="@+id/code"
+        android:id="@+id/country_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"

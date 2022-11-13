@@ -13,7 +13,10 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import androidx.work.WorkQuery;
 
+import com.dm.bomber.BuildVars;
 import com.dm.bomber.worker.AttackWorker;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,9 +31,11 @@ public class MainViewModel extends ViewModel {
     private UUID currentAttackId;
 
     private final MutableLiveData<Boolean> proxyEnabled;
+    private final MutableLiveData<Boolean> snowfallEnabled;
 
     private final MutableLiveData<Pair<Integer, Integer>> progress = new MutableLiveData<>(new Pair<>(0, 0));
     private final MutableLiveData<Boolean> attackStatus = new MutableLiveData<>(false);
+    private final MutableLiveData<DataSnapshot> updates = new MutableLiveData<>();
 
     private final LiveData<List<WorkInfo>> scheduledAttacks;
 
@@ -39,6 +44,7 @@ public class MainViewModel extends ViewModel {
         this.workManager = workManager;
 
         proxyEnabled = new MutableLiveData<>(repository.isProxyEnabled());
+        snowfallEnabled = new MutableLiveData<>(repository.isSnowfallEnabled());
 
         workManager.getWorkInfosLiveData(
                 WorkQuery.Builder.fromStates(Arrays.asList(WorkInfo.State.RUNNING,
@@ -64,10 +70,16 @@ public class MainViewModel extends ViewModel {
                         WorkInfo.State.RUNNING,
                         WorkInfo.State.ENQUEUED
                 )).build());
+
+        checkUpdates();
     }
 
     public LiveData<List<WorkInfo>> getScheduledAttacks() {
         return scheduledAttacks;
+    }
+
+    public LiveData<DataSnapshot> getUpdates() {
+        return updates;
     }
 
     public void setProxyEnabled(boolean enabled) {
@@ -75,8 +87,18 @@ public class MainViewModel extends ViewModel {
         proxyEnabled.setValue(enabled);
     }
 
+    public void setSnowfallEnabled(boolean enabled) {
+        repository.setSnowfallEnabled(enabled);
+        snowfallEnabled.setValue(enabled);
+    }
+
     public LiveData<Boolean> isProxyEnabled() {
         return proxyEnabled;
+    }
+
+    public LiveData<Boolean> isSnowfallEnabled() {
+        return snowfallEnabled;
+
     }
 
     public LiveData<Pair<Integer, Integer>> getProgress() {
@@ -87,11 +109,20 @@ public class MainViewModel extends ViewModel {
         return attackStatus;
     }
 
+    public void checkUpdates() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance(BuildVars.DATABASE_URL);
+        database.getReference("updates").get().addOnSuccessListener(updates::setValue);
+    }
+
+    public void cancelUpdates() {
+        updates.setValue(null);
+    }
+
     public void scheduleAttack(String countryCode, String phoneNumber, int repeats, long date, long current) {
         Data inputData = new Data.Builder()
                 .putString(AttackWorker.KEY_COUNTRY_CODE, countryCode)
                 .putString(AttackWorker.KEY_PHONE, phoneNumber)
-                .putInt(AttackWorker.KEY_REPEATS, Math.min(repeats, 10))
+                .putInt(AttackWorker.KEY_REPEATS, Math.min(repeats, BuildVars.MAX_REPEATS_COUNT))
                 .putBoolean(AttackWorker.KEY_PROXY_ENABLED, repository.isProxyEnabled())
                 .build();
 
