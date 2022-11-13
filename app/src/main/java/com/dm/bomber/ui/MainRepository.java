@@ -23,6 +23,7 @@ public class MainRepository implements Repository {
     private static final String LAST_COUNTRY_CODE = "last_country_code";
     private static final String PROXY = "proxy";
     private static final String PROXY_ENABLED = "proxy_enabled";
+    private static final String SNOWFALL_ENABLED = "snowfall_enabled";
 
     public MainRepository(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -106,5 +107,15 @@ public class MainRepository implements Repository {
     @Override
     public boolean isProxyEnabled() {
         return preferences.getBoolean(PROXY_ENABLED, false);
+    }
+
+    @Override
+    public void setSnowfallEnabled(boolean enabled) {
+        preferences.edit().putBoolean(SNOWFALL_ENABLED, enabled).apply();
+    }
+
+    @Override
+    public boolean isSnowfallEnabled() {
+        return preferences.getBoolean(SNOWFALL_ENABLED, false);
     }
 }

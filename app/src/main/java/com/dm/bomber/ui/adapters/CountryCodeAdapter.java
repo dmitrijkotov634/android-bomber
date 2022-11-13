@@ -50,8 +50,8 @@ public class CountryCodeAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.binding.icon.setImageResource(flags[index]);
-        holder.binding.code.setText(String.format("+%s", countryCodes[index]));
+        holder.binding.countryFlag.setImageResource(flags[index]);
+        holder.binding.countryCode.setText(String.format("+%s", countryCodes[index]));
 
         return view;
     }

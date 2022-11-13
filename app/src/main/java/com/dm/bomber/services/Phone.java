@@ -12,12 +12,12 @@ public class Phone {
         this.phone = phone;
     }
 
-    public String getCountryCode() {
-        return countryCode;
-    }
-
     public String getPhone() {
         return phone;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
     }
 
     @NonNull

@@ -28,4 +28,8 @@ public interface Repository {
     void setProxyEnabled(boolean enabled);
 
     boolean isProxyEnabled();
+
+    void setSnowfallEnabled(boolean enabled);
+
+    boolean isSnowfallEnabled();
 }

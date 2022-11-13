@@ -17,8 +17,8 @@ android {
         applicationId "com.dm.bomber"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 36
-        versionName "1.17"
+        versionCode 38
+        versionName "1.18"
     }
 
     buildTypes {
@@ -34,6 +34,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    namespace 'com.dm.bomber'
 }
 
 dependencies {
@@ -50,8 +52,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 
-    implementation 'com.google.android.material:material:1.8.0-alpha01'
+    implementation 'com.google.android.material:material:1.8.0-alpha02'
 
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.5'
     implementation 'jp.wasabeef:blurry:4.0.1'
+    implementation 'com.github.jetradarmobile:android-snowfall:1.2.1'
 }

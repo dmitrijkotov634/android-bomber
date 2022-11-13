@@ -23,4 +23,7 @@
 
     <string name="update_available">Жаңарту қолжетімді</string>
     <string name="download">Жүктеп алу</string>
+
+    <string name="enable_snowfall">Қар жаууды қосыңыз</string>
+    <string name="disable_snowfall">Қар жаууын өшіріңіз</string>
 </resources>

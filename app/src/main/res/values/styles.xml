@@ -8,12 +8,12 @@
     </style>
 
     <style name="ToggleTile" parent="Tile">
-        <item name="backgroundTint">@color/color_selector</item>
+        <item name="backgroundTint">@color/tile_background_color</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:textOn">@null</item>
         <item name="android:textOff">@null</item>
         <item name="android:paddingTop">18dp</item>
-        <item name="drawableTint">@color/icon_color</item>
+        <item name="drawableTint">@color/tile_icon_color</item>
     </style>
 
     <style name="ActionTile" parent="Tile">

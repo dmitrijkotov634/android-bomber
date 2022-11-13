@@ -12,17 +12,31 @@
         android:paddingHorizontal="12dp"
         android:paddingVertical="8dp">
 
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/country_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/task_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/task_title"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.SmallComponent"
+            tools:src="@drawable/ic_ru" />
+
         <TextView
             android:id="@+id/task_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:typeface="monospace"
-            app:layout_constraintBottom_toBottomOf="@+id/task_progress"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/task_progress"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/country_flag"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="+79123456789" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/task_progress"
@@ -57,7 +71,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/task_progress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/task_progress"
-            app:srcCompat="@drawable/ic_baseline_delete_outline_24" />
+            app:srcCompat="@drawable/ic_baseline_delete_outline_24"
+            app:tint="?colorControlNormal" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
