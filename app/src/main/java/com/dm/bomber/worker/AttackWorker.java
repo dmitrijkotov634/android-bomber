@@ -25,10 +25,12 @@ import com.dm.bomber.services.Service;
 import com.dm.bomber.services.ServicesRepository;
 import com.dm.bomber.ui.MainActivity;
 import com.dm.bomber.ui.MainRepository;
+import com.dm.bomber.ui.MainViewModel;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -42,7 +44,6 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 
 public class AttackWorker extends Worker {
@@ -56,12 +57,9 @@ public class AttackWorker extends Worker {
     public static final String KEY_REPEATS = "repeats";
     public static final String KEY_PROXY_ENABLED = "proxy_enabled";
 
-    public static final String KEY_PROGRESS = "progress";
-    public static final String KEY_MAX_PROGRESS = "max_progress";
-
     private static final String CHANNEL_ID = "attack";
 
-    private static final int CHUNK_SIZE = 4;
+    private static final int CHUNK_SIZE = 3;
 
     private int progress = 0;
 
@@ -88,22 +86,22 @@ public class AttackWorker extends Worker {
     private static final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
             .callTimeout(7, TimeUnit.SECONDS)
             .addInterceptor(new UserAgentInterceptor(USER_AGENT))
+            .addInterceptor(new LoggingInterceptor())
             .addInterceptor(chain -> {
-                Request request = chain.request();
-                Log.v(TAG, "Sending request " + request.url());
-
-                Response response = chain.proceed(request);
-                Log.v(TAG, "Received response for " + response.request().url() + " with status code " + response.code());
-
-                return response;
+                try {
+                    return chain.proceed(chain.request());
+                } catch (Exception e) {
+                    throw new IOException(e.getMessage());
+                }
             });
+
 
     public AttackWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
 
         setProgressAsync(new Data.Builder()
-                .putInt(KEY_PROGRESS, 0)
-                .putInt(KEY_MAX_PROGRESS, 0)
+                .putInt(MainViewModel.KEY_PROGRESS, 0)
+                .putInt(MainViewModel.KEY_MAX_PROGRESS, 0)
                 .build());
     }
 
@@ -125,22 +123,26 @@ public class AttackWorker extends Worker {
         List<AuthableProxy> proxies = getInputData().getBoolean(KEY_PROXY_ENABLED, false) ?
                 new MainRepository(getApplicationContext()).getProxy() : new ArrayList<>();
 
-        String countryCode = getInputData().getString(KEY_COUNTRY_CODE);
-        String phone = getInputData().getString(KEY_PHONE);
+        Phone phone = new Phone(
+                getInputData().getString(KEY_COUNTRY_CODE),
+                getInputData().getString(KEY_PHONE));
 
         int repeats = getInputData().getInt(KEY_REPEATS, 1);
 
+        List<Service> usableServices = new ServicesRepository().getServices(phone);
+
         Bundle params = new Bundle();
+
         params.putInt("repeats", repeats);
-        params.putString("phone_number", countryCode + phone);
+        params.putString("phone_number", phone.toString());
+        params.putBoolean("proxy_enabled", getInputData().getBoolean(KEY_PROXY_ENABLED, false));
+        params.putInt("proxy_count", proxies.size());
+        params.putInt("services_count", usableServices.size());
+
         FirebaseAnalytics.getInstance(getApplicationContext())
                 .logEvent("attack", params);
 
-        assert countryCode != null;
-        assert phone != null;
-
-        List<Service> usableServices = new ServicesRepository().getServices(countryCode);
-        Log.i(TAG, "Starting attack on +" + countryCode + phone);
+        Log.i(TAG, "Starting attack on +" + phone);
 
         client = client.newBuilder()
                 .proxy(null)
@@ -213,7 +215,7 @@ public class AttackWorker extends Worker {
 
                         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                                 .setContentTitle(getApplicationContext().getString(R.string.attack))
-                                .setContentText("+" + countryCode + phone)
+                                .setContentText("+" + phone)
                                 .setProgress(usableServices.size() * repeats, progress, false)
                                 .setOngoing(true)
                                 .setSmallIcon(R.drawable.logo)
@@ -226,13 +228,13 @@ public class AttackWorker extends Worker {
                         notificationManager.notify(getId().hashCode(), notification);
 
                         setProgressAsync(new Data.Builder()
-                                .putInt(KEY_PROGRESS, progress++)
-                                .putInt(KEY_MAX_PROGRESS, usableServices.size() * repeats)
+                                .putInt(MainViewModel.KEY_PROGRESS, progress++)
+                                .putInt(MainViewModel.KEY_MAX_PROGRESS, usableServices.size() * repeats)
                                 .build());
 
                         tasks.countDown();
                     }
-                }, new Phone(countryCode, phone));
+                }, phone);
             }
         }
 
@@ -245,7 +247,7 @@ public class AttackWorker extends Worker {
 
         notificationManager.cancel(getId().hashCode());
 
-        Log.i(TAG, "Attack ended +" + countryCode + phone);
+        Log.i(TAG, "Attack ended +" + phone);
         return Result.success();
     }
 }

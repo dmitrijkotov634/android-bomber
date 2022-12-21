@@ -32,4 +32,8 @@ public interface Repository {
     void setSnowfallEnabled(boolean enabled);
 
     boolean isSnowfallEnabled();
+
+    void showHint();
+
+    boolean isShownHint();
 }

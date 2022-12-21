@@ -8,6 +8,7 @@
 
     <string name="time_is_incorrect">Time is incorrect</string>
     <string name="no_scheduled_attacks">No scheduled attacks</string>
+    <string name="scheduled_hint">Hold down the «Start attack» button to plan your attack</string>
 
     <string name="donate">Donate</string>
     <string name="proxy">Proxy</string>
@@ -24,12 +25,15 @@
 
     <string name="update_available">Update available</string>
     <string name="download">Download</string>
+    <string name="update">Update</string>
 
     <string name="telegram_link" translatable="false">t.me/androidsmsbomber</string>
 
-    <string name="toast" translatable="false">(⁠◕⁠ᴗ⁠◕⁠✿⁠)</string>
+    <string name="toast" translatable="false">¯⁠\\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯</string>
     <string name="enable_snowfall">Enable snowfall</string>
     <string name="disable_snowfall">Disable snowfall</string>
+
+    <string name="notification_permission">Please grant Notification permission from App Settings</string>
 
     <string-array name="hints" translatable="false">
         <item>912 345 67 89</item>
