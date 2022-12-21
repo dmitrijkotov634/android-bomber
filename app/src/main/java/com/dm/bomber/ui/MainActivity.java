@@ -1,5 +1,6 @@
 package com.dm.bomber.ui;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
@@ -9,6 +10,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.InputFilter;
@@ -16,7 +18,9 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,6 +30,7 @@ import com.dm.bomber.BuildConfig;
 import com.dm.bomber.BuildVars;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
+import com.dm.bomber.services.Phone;
 import com.dm.bomber.services.ServicesRepository;
 import com.dm.bomber.ui.adapters.CountryCodeAdapter;
 import com.dm.bomber.ui.dialog.SettingsDialog;
@@ -67,26 +72,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         model.getProgress().observe(this, progress -> {
-            binding.progress.setIndeterminate(progress.second == 0);
+            binding.taskIcon.setImageResource(progress.getIconResource());
+            binding.progressTitle.setText(progress.getTitleResource());
 
-            if (progress.second == 0) {
+            binding.progress.setIndeterminate(progress.getMaxProgress() == 0);
+
+            if (progress.getMaxProgress() == 0) {
                 binding.progressText.setText(R.string.waiting);
                 return;
             }
 
-            binding.progress.setProgress(progress.first);
-            binding.progress.setMax(progress.second);
-            binding.progressText.setText(progress.first + "/" + progress.second);
+            binding.progress.setProgress(progress.getCurrentProgress());
+            binding.progress.setMax(progress.getMaxProgress());
+            binding.progressText.setText(progress.getCurrentProgress() + "/" + progress.getMaxProgress());
         });
 
-        model.getAttackStatus().observe(this, attackStatus -> {
-            if (attackStatus) {
+        model.getWorkStatus().observe(this, workStatus -> {
+            if (workStatus) {
                 binding.getRoot().requestLayout();
                 binding.getRoot().getViewTreeObserver().addOnGlobalLayoutListener(new BlurListener());
             } else {
                 for (int i = 0; i < binding.getRoot().getChildCount(); i++)
                     binding.getRoot().getChildAt(i).setVisibility(View.VISIBLE);
-                binding.attackScreen.setVisibility(View.GONE);
+                binding.workScreen.setVisibility(View.GONE);
             }
         });
 
@@ -94,16 +102,24 @@ public class MainActivity extends AppCompatActivity {
             if (dataSnapshot == null) return;
             Integer versionCode = dataSnapshot.child("versionCode").getValue(Integer.class);
             if (versionCode != null && versionCode > BuildConfig.VERSION_CODE) {
-                String key = "description-" + Locale.getDefault().getLanguage();
-                if (!dataSnapshot.hasChild(key))
-                    key = "description";
-                CharSequence description = Html.fromHtml(dataSnapshot.child(key).getValue(String.class));
-                new MaterialAlertDialogBuilder(MainActivity.this)
-                        .setIcon(R.drawable.ic_baseline_update_24)
-                        .setTitle(R.string.update_available)
-                        .setMessage(description)
-                        .setPositiveButton(R.string.download, (dialog, which) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(dataSnapshot.child("uri").getValue(String.class)))))
-                        .show();
+                Snackbar.make(binding.getRoot(), R.string.update_available, Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.download, v -> {
+                            String key = "description-" + Locale.getDefault().getLanguage();
+                            if (!dataSnapshot.hasChild(key))
+                                key = "description";
+                            CharSequence description = Html.fromHtml(dataSnapshot.child(key).getValue(String.class));
+                            new MaterialAlertDialogBuilder(MainActivity.this)
+                                    .setIcon(R.drawable.ic_baseline_update_24)
+                                    .setTitle(R.string.update_available)
+                                    .setMessage(description)
+                                    .setPositiveButton(R.string.download, (dialog, which) -> {
+                                        if (Boolean.TRUE.equals(dataSnapshot.child("allowDirect").getValue(Boolean.class)) && !isTelegramInstalled())
+                                            model.downloadUpdate(dataSnapshot.child("directUrl").getValue(String.class));
+                                        else
+                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(dataSnapshot.child("telegramUrl").getValue(String.class))));
+                                    })
+                                    .show();
+                        }).show();
             }
             model.cancelUpdates();
         });
@@ -161,6 +177,13 @@ public class MainActivity extends AppCompatActivity {
 
         model.isSnowfallEnabled().observe(this, enabled -> binding.snowfall.setVisibility(enabled ? View.VISIBLE : View.GONE));
 
+        model.isShownHint().observe(this, shown -> {
+            if (!shown) {
+                Toast.makeText(this, R.string.scheduled_hint, Toast.LENGTH_LONG).show();
+                model.showHint();
+            }
+        });
+
         CountryCodeAdapter countryCodeAdapter = new CountryCodeAdapter(this, BuildVars.COUNTRY_FLAGS, BuildVars.COUNTRY_CODES);
 
         String[] hints = getResources().getStringArray(R.array.hints);
@@ -171,7 +194,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
                 binding.phoneNumber.setHint(hints[index]);
-                binding.servicesCount.setText(String.valueOf(new ServicesRepository().getServices(BuildVars.COUNTRY_CODES[index]).size()));
+                binding.servicesCount.setText(String.valueOf(
+                        new ServicesRepository().getServices(new Phone(BuildVars.COUNTRY_CODES[index], "")).size()));
             }
 
             @Override
@@ -192,7 +216,8 @@ public class MainActivity extends AppCompatActivity {
                 int repeats = Integer.parseInt(value);
                 if (repeats <= BuildVars.MAX_REPEATS_COUNT && value.length() <= BuildVars.REPEATS_MAX_LENGTH)
                     return null;
-            } catch (NumberFormatException ignore) {
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
             return "";
         }});
@@ -216,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
                     repeats.isEmpty() ? 1 : Integer.parseInt(repeats));
         });
 
-        binding.closeAttack.setOnClickListener(view -> model.stopAttack());
+        binding.closeAttack.setOnClickListener(view -> model.cancelCurrentWork());
 
         binding.bomb.setOnLongClickListener(view -> {
             Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.toast, Snackbar.LENGTH_SHORT);
@@ -261,6 +286,18 @@ public class MainActivity extends AppCompatActivity {
         binding.telegramUrl.setOnClickListener(telegram);
         binding.telegramIcon.setOnClickListener(telegram);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
+                if (!result) {
+                    Snackbar.make(
+                            binding.getRoot(),
+                            R.string.notification_permission,
+                            Snackbar.LENGTH_LONG
+                    ).show();
+                }
+            }).launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
+
         Intent intent = getIntent();
         if (intent != null) {
             if (Intent.ACTION_DIAL.equals(intent.getAction()))
@@ -273,8 +310,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isTelegramInstalled() {
+        return !getPackageManager().queryIntentActivities(
+                new Intent(Intent.ACTION_VIEW, Uri.parse("tg://")), 0).isEmpty();
+    }
+
     private boolean processText(String data) {
-        if (data.matches("(8|\\+(7|380|375))([0-9()\\-\\s])*")) {
+        if (data.matches("(8|\\+(7|380|375|77))([0-9()\\-\\s])*")) {
 
             if (data.startsWith("8"))
                 data = "+7" + data.substring(1);
@@ -328,7 +370,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < binding.getRoot().getChildCount(); i++)
                 binding.getRoot().getChildAt(i).setVisibility(View.GONE);
 
-            binding.attackScreen.setVisibility(View.VISIBLE);
+            binding.workScreen.setVisibility(View.VISIBLE);
 
             binding.getRoot().getViewTreeObserver().removeOnGlobalLayoutListener(this);
         }
@@ -336,9 +378,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        model.stopAttack();
+        model.cancelCurrentWork();
 
-        if (binding.attackScreen.getVisibility() != View.VISIBLE)
+        if (binding.workScreen.getVisibility() != View.VISIBLE)
             finish();
     }
 }

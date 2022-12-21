@@ -18,7 +18,7 @@ public class BuildVars {
 
     public static final int[] MAX_PHONE_LENGTH = {10, 9, 9, 9, 0};
 
-    public static final int SCHEDULED_ATTACKS_LIMIT = 4;
+    public static final int SCHEDULED_ATTACKS_LIMIT = 5;
     public static final int MAX_REPEATS_COUNT = 10;
     public static final int REPEATS_MAX_LENGTH = String.valueOf(MAX_REPEATS_COUNT).length();
 }

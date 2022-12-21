@@ -7,6 +7,7 @@
 
     <string name="time_is_incorrect">Дұрыс көрсетілмеген уақыт</string>
     <string name="no_scheduled_attacks">Жоспарланған шабуылдар жоқ</string>
+    <string name="scheduled_hint">Шабуылды жоспарлау үшін «Шабуылды бастау» түймесін басып тұрыңыз</string>
 
     <string name="donate">Қайырымдылық</string>
     <string name="proxy">Прокси</string>
@@ -23,7 +24,10 @@
 
     <string name="update_available">Жаңарту қолжетімді</string>
     <string name="download">Жүктеп алу</string>
+    <string name="update">Жаңарту</string>
 
     <string name="enable_snowfall">Қар жаууды қосыңыз</string>
     <string name="disable_snowfall">Қар жаууын өшіріңіз</string>
+
+    <string name="notification_permission">Қолданба параметрлерінен хабарландыру рұқсатын беріңіз</string>
 </resources>

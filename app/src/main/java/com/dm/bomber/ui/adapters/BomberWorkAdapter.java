@@ -14,6 +14,7 @@ import androidx.work.WorkInfo;
 
 import com.dm.bomber.BuildVars;
 import com.dm.bomber.databinding.AttackWorkRowBinding;
+import com.dm.bomber.ui.MainViewModel;
 import com.dm.bomber.worker.AttackWorker;
 
 import java.text.SimpleDateFormat;
@@ -56,8 +57,8 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
         holder.binding.taskTime.setVisibility(isRunning ? View.GONE : View.VISIBLE);
 
         if (isRunning) {
-            holder.binding.taskProgress.setMax(workInfo.getProgress().getInt(AttackWorker.KEY_MAX_PROGRESS, 0));
-            holder.binding.taskProgress.setProgress(workInfo.getProgress().getInt(AttackWorker.KEY_PROGRESS, 0));
+            holder.binding.taskProgress.setMax(workInfo.getProgress().getInt(MainViewModel.KEY_MAX_PROGRESS, 0));
+            holder.binding.taskProgress.setProgress(workInfo.getProgress().getInt(MainViewModel.KEY_PROGRESS, 0));
         }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());

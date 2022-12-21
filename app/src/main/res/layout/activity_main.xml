@@ -164,13 +164,13 @@
         app:layout_constraintTop_toTopOf="@+id/telegram_icon" />
 
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/attack_screen"
+        android:id="@+id/work_screen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="blur,progress,attack,progress_text,close_attack,task_icon" />
+        app:constraint_referenced_ids="blur,progress,progress_title,progress_text,close_attack,task_icon" />
 
     <TextView
-        android:id="@+id/attack"
+        android:id="@+id/progress_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
@@ -195,16 +195,17 @@
         app:layout_constraintTop_toBottomOf="@+id/progress"
         tools:text="50/100" />
 
-    <ImageView
+    <TextView
         android:id="@+id/close_attack"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:contentDescription="@null"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:text="@android:string/cancel"
+        android:textColor="?colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_close_24" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/services_count"
@@ -230,10 +231,10 @@
         android:layout_marginBottom="8dp"
         android:contentDescription="@null"
         app:layout_constraintBottom_toTopOf="@+id/progress"
-        app:layout_constraintEnd_toStartOf="@+id/attack"
+        app:layout_constraintEnd_toStartOf="@+id/progress_title"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/blur"
-        app:layout_constraintTop_toTopOf="@+id/attack"
+        app:layout_constraintTop_toTopOf="@+id/progress_title"
         app:srcCompat="@drawable/logo"
         app:tint="?colorControlNormal" />
 
@@ -245,10 +246,10 @@
         app:snowflakeAlphaMin="140"
         app:snowflakeAngleMax="5"
         app:snowflakeImage="@drawable/snowflake"
-        app:snowflakeSizeMax="22dp"
+        app:snowflakeSizeMax="15dp"
         app:snowflakeSizeMin="6dp"
-        app:snowflakeSpeedMax="10"
-        app:snowflakeSpeedMin="4"
+        app:snowflakeSpeedMax="5"
+        app:snowflakeSpeedMin="3"
         app:snowflakesNum="150" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
