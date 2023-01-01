@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.text.Html;
 import android.text.InputFilter;
 import android.view.View;
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TASK_ID = "task_id";
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "BatteryLife"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         WorkManager workManager = WorkManager.getInstance(this);
@@ -92,8 +94,11 @@ public class MainActivity extends AppCompatActivity {
                 binding.getRoot().requestLayout();
                 binding.getRoot().getViewTreeObserver().addOnGlobalLayoutListener(new BlurListener());
             } else {
-                for (int i = 0; i < binding.getRoot().getChildCount(); i++)
-                    binding.getRoot().getChildAt(i).setVisibility(View.VISIBLE);
+                for (int i = 0; i < binding.getRoot().getChildCount(); i++) {
+                    View view = binding.getRoot().getChildAt(i);
+                    if (view.getId() != R.id.snowfall)
+                        view.setVisibility(View.VISIBLE);
+                }
                 binding.workScreen.setVisibility(View.GONE);
             }
         });
@@ -286,6 +291,16 @@ public class MainActivity extends AppCompatActivity {
         binding.telegramUrl.setOnClickListener(telegram);
         binding.telegramIcon.setOnClickListener(telegram);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent();
+            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+            if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + getPackageName()));
+                startActivity(intent);
+            }
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
                 if (!result) {
@@ -367,8 +382,11 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            for (int i = 0; i < binding.getRoot().getChildCount(); i++)
-                binding.getRoot().getChildAt(i).setVisibility(View.GONE);
+            for (int i = 0; i < binding.getRoot().getChildCount(); i++) {
+                View view = binding.getRoot().getChildAt(i);
+                if (view.getId() != R.id.snowfall)
+                    view.setVisibility(View.GONE);
+            }
 
             binding.workScreen.setVisibility(View.VISIBLE);
 
