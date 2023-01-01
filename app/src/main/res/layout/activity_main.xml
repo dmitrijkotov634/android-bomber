@@ -129,7 +129,7 @@
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"
-        android:layout_width="125dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/blur"
