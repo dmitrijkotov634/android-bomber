@@ -11,7 +11,9 @@ import com.dm.bomber.worker.AuthableProxy;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import okhttp3.Credentials;
 
@@ -25,6 +27,10 @@ public class MainRepository implements Repository {
     private static final String PROXY_ENABLED = "proxy_enabled";
     private static final String SNOWFALL_ENABLED = "snowfall_enabled";
     private static final String HINT_SHOWN = "hint_shown";
+
+    private static final String DEFAULT_SERVICES_DISABLED = "default_services_disabled";
+    private static final String REMOTE_SERVICES = "remote_services";
+    private static final String REMOTE_SERVICES_URL = "remote_services_url";
 
     public MainRepository(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -128,5 +134,35 @@ public class MainRepository implements Repository {
     @Override
     public boolean isShownHint() {
         return preferences.getBoolean(HINT_SHOWN, false);
+    }
+
+    @Override
+    public void setDefaultDisabled(boolean disabled) {
+        preferences.edit().putBoolean(DEFAULT_SERVICES_DISABLED, disabled).apply();
+    }
+
+    @Override
+    public boolean isDefaultDisabled() {
+        return preferences.getBoolean(DEFAULT_SERVICES_DISABLED, false);
+    }
+
+    @Override
+    public void setRemoteServicesEnabled(boolean enabled) {
+        preferences.edit().putBoolean(REMOTE_SERVICES, enabled).apply();
+    }
+
+    @Override
+    public void setRemoteServicesUrls(Set<String> urls) {
+        preferences.edit().putStringSet(REMOTE_SERVICES_URL, urls).apply();
+    }
+
+    @Override
+    public Set<String> getRemoteServicesUrls() {
+        return preferences.getStringSet(REMOTE_SERVICES_URL, new HashSet<>());
+    }
+
+    @Override
+    public boolean isRemoteServicesEnabled() {
+        return preferences.getBoolean(REMOTE_SERVICES, false);
     }
 }

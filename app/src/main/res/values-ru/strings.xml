@@ -30,4 +30,11 @@
     <string name="disable_snowfall">Выключить снегопад</string>
 
     <string name="notification_permission">Предоставьте разрешение на уведомления в настройках приложения</string>
+
+    <string name="disable_default_services">Отключить стандартные сервисы для тестирования</string>
+    <string name="apply">Применить</string>
+    <string name="services_warning">Прежде чем включить дополнительные сервисы вам придется ознакомиться с источником. Будьте внимательны, в сервисах могут быть вредоносные веб-сайты, которые могут нарушить работу бомбера и привести к раскрытию конфиденциальных данных. Не присылайте сообщения об ошибках, если у вас включена эта опция</string>
+    <string name="third_party_services">Cервисы сторонних разработчиков</string>
+    <string name="enter_source">Введите ссылки на источники</string>
+    <string name="remote_services">Сторонние сервисы</string>
 </resources>

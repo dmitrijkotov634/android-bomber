@@ -3,6 +3,7 @@ package com.dm.bomber.ui;
 import com.dm.bomber.worker.AuthableProxy;
 
 import java.util.List;
+import java.util.Set;
 
 public interface Repository {
     void setTheme(int mode);
@@ -36,4 +37,16 @@ public interface Repository {
     void showHint();
 
     boolean isShownHint();
+
+    void setDefaultDisabled(boolean disabled);
+
+    boolean isDefaultDisabled();
+
+    void setRemoteServicesEnabled(boolean enabled);
+
+    void setRemoteServicesUrls(Set<String> urls);
+
+    Set<String> getRemoteServicesUrls();
+
+    boolean isRemoteServicesEnabled();
 }

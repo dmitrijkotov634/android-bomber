@@ -207,18 +207,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/repositoriesLoading"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:indeterminate="false"
+        android:padding="0dp"
+        android:translationX="8dp"
+        android:translationY="8dp"
+        app:indicatorColor="?colorPrimary"
+        app:indicatorSize="28dp"
+        app:layout_constraintBottom_toBottomOf="@+id/bomb"
+        app:layout_constraintEnd_toEndOf="@+id/services_count"
+        app:trackColor="?colorPrimaryContainer"
+        app:trackThickness="14dp" />
+
     <TextView
         android:id="@+id/services_count"
-        android:layout_width="26dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/toggle_tile"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:gravity="center"
         android:padding="4dp"
         android:textColor="?android:colorBackground"
-        android:textSize="11sp"
+        android:textSize="12sp"
         android:translationX="4dp"
         android:translationY="4dp"
-        android:typeface="monospace"
         app:layout_constraintBottom_toBottomOf="@+id/bomb"
         app:layout_constraintEnd_toEndOf="@+id/bomb"
         tools:text="61" />

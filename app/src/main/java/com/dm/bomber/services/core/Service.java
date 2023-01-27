@@ -1,4 +1,4 @@
-package com.dm.bomber.services;
+package com.dm.bomber.services.core;
 
 import java.util.Random;
 
@@ -6,7 +6,7 @@ import okhttp3.OkHttpClient;
 
 public abstract class Service {
 
-    protected int[] countryCodes;
+    private final int[] countryCodes;
 
     public Service(int... countryCodes) {
         this.countryCodes = countryCodes;
@@ -32,6 +32,10 @@ public abstract class Service {
 
     protected static String getEmail() {
         return getUserName() + "@" + new String[]{"gmail.com", "mail.ru", "yandex.ru"}[new Random().nextInt(3)];
+    }
+
+    public int[] getCountryCodes() {
+        return countryCodes;
     }
 
     protected static String format(String phone, String mask) {

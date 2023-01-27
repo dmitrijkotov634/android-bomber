@@ -30,4 +30,11 @@
     <string name="disable_snowfall">Қар жаууын өшіріңіз</string>
 
     <string name="notification_permission">Қолданба параметрлерінен хабарландыру рұқсатын беріңіз</string>
+
+    <string name="disable_default_services">Тестілеу үшін әдепкі қызметтерді өшіру</string>
+    <string name="apply">Қолдану</string>
+    <string name="services_warning">Қосымша қызметтерді қоспас бұрын, дереккөзді оқып шығу керек. Сақ болыңыз, қызметтерде бомбалаушының жұмысын бұзатын және құпия деректердің ашылуына әкелетін зиянды веб-сайттар болуы мүмкін. Бұл опция қосылған болса, қате туралы есептерді жібермеңіз</string>
+    <string name="third_party_services">Үшінші тарап қызметтері</string>
+    <string name="enter_source">Дереккөз сілтемелерін енгізіңіз</string>
+    <string name="remote_services">Қашықтағы қызметтер</string>
 </resources>

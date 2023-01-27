@@ -1,6 +1,5 @@
 package com.dm.bomber.ui.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkInfo;
 
@@ -25,20 +23,14 @@ import java.util.Locale;
 
 public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.ViewHolder> {
 
-    private List<WorkInfo> workInfos = new ArrayList<>();
+    private List<WorkInfo> workInfo = new ArrayList<>();
 
     private final Context context;
     private final Callback callback;
 
-    @SuppressLint("NotifyDataSetChanged")
-    public BomberWorkAdapter(LifecycleOwner owner, Context context, LiveData<List<WorkInfo>> data, Callback callback) {
+    public BomberWorkAdapter(LifecycleOwner owner, Context context, Callback callback) {
         this.context = context;
         this.callback = callback;
-
-        data.observe(owner, workInfosResult -> {
-            workInfos = workInfosResult;
-            notifyDataSetChanged();
-        });
     }
 
     @NonNull
@@ -50,7 +42,7 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        WorkInfo workInfo = workInfos.get(position);
+        WorkInfo workInfo = this.workInfo.get(position);
 
         boolean isRunning = workInfo.getState().equals(WorkInfo.State.RUNNING);
         holder.binding.taskProgress.setVisibility(isRunning ? View.VISIBLE : View.INVISIBLE);
@@ -64,7 +56,7 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
 
         for (String tag : workInfo.getTags()) {
-            if (tag.startsWith(AttackWorker.class.getCanonicalName()))
+            if (tag.startsWith(AttackWorker.class.getCanonicalName()) || tag.equals(MainViewModel.ATTACK))
                 continue;
 
             String[] parts = tag.split(";");
@@ -83,9 +75,13 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
         }
     }
 
+    public void setWorkInfo(List<WorkInfo> workInfo) {
+        this.workInfo = workInfo;
+    }
+
     @Override
     public int getItemCount() {
-        return workInfos.size();
+        return workInfo.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -101,7 +97,7 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
 
         @Override
         public void onClick(View view) {
-            callback.onTaskStopClicked(workInfos.get(getLayoutPosition()));
+            callback.onTaskStopClicked(workInfo.get(getLayoutPosition()));
         }
     }
 

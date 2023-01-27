@@ -29,11 +29,18 @@
 
     <string name="telegram_link" translatable="false">t.me/androidsmsbomber</string>
 
-    <string name="toast" translatable="false">¯⁠\\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯</string>
+    <string name="toast" translatable="false">✧⁠◝⁠(⁠⁰⁠▿⁠⁰⁠)⁠◜⁠✧</string>
     <string name="enable_snowfall">Enable snowfall</string>
     <string name="disable_snowfall">Disable snowfall</string>
 
     <string name="notification_permission">Please grant Notification permission from App Settings</string>
+
+    <string name="disable_default_services">Disable standard services for testing</string>
+    <string name="apply">Apply</string>
+    <string name="services_warning">Before you enable additional services, you will have to familiarize yourself with the source. Be careful, the services may contain malicious Web sites that could disrupt the bomber and expose sensitive data. Do not send error messages if you have this option enabled</string>
+    <string name="third_party_services">Third-party services</string>
+    <string name="enter_source">Enter the links to the sources</string>
+    <string name="remote_services">Remote Services</string>
 
     <string-array name="hints" translatable="false">
         <item>912 345 67 89</item>

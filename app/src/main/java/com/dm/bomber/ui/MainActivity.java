@@ -32,9 +32,8 @@ import com.dm.bomber.BuildConfig;
 import com.dm.bomber.BuildVars;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
-import com.dm.bomber.services.Phone;
-import com.dm.bomber.services.ServicesRepository;
 import com.dm.bomber.ui.adapters.CountryCodeAdapter;
+import com.dm.bomber.ui.dialog.RepositoriesDialog;
 import com.dm.bomber.ui.dialog.SettingsDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -189,6 +188,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        model.getServicesCount().observe(this, servicesCount -> binding.servicesCount.setText(String.valueOf(servicesCount)));
+
+        model.getRepositoriesProgress().observe(this, repositoriesLoadingProgress -> {
+            binding.repositoriesLoading.setMax(repositoriesLoadingProgress.getMaxProgress());
+            binding.repositoriesLoading.setProgress(repositoriesLoadingProgress.getCurrentProgress());
+        });
+
         CountryCodeAdapter countryCodeAdapter = new CountryCodeAdapter(this, BuildVars.COUNTRY_FLAGS, BuildVars.COUNTRY_CODES);
 
         String[] hints = getResources().getStringArray(R.array.hints);
@@ -199,8 +205,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
                 binding.phoneNumber.setHint(hints[index]);
-                binding.servicesCount.setText(String.valueOf(
-                        new ServicesRepository().getServices(new Phone(BuildVars.COUNTRY_CODES[index], "")).size()));
+
+                model.selectCountryCode(BuildVars.COUNTRY_CODES[index]);
             }
 
             @Override
@@ -285,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.settings.setOnClickListener(view -> new SettingsDialog().show(getSupportFragmentManager(), null));
+        binding.servicesCount.setOnClickListener(view -> new RepositoriesDialog().show(getSupportFragmentManager(), null));
 
         View.OnClickListener telegram = (view) -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(BuildVars.TELEGRAM_URL)));
 
@@ -331,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean processText(String data) {
-        if (data.matches("(8|\\+(7|380|375|77))([0-9()\\-\\s])*")) {
+        if (data.matches("(8|\\+(7|380|375|77))([\\d()\\-\\s])*")) {
 
             if (data.startsWith("8"))
                 data = "+7" + data.substring(1);

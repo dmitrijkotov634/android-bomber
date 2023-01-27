@@ -14,21 +14,30 @@ import androidx.work.WorkRequest;
 
 import com.dm.bomber.BuildVars;
 import com.dm.bomber.R;
+import com.dm.bomber.services.DefaultRepository;
+import com.dm.bomber.services.MainServices;
+import com.dm.bomber.services.core.ServicesRepository;
+import com.dm.bomber.services.remote.RemoteRepository;
 import com.dm.bomber.worker.AttackWorker;
 import com.dm.bomber.worker.DownloadWorker;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
+
 public class MainViewModel extends ViewModel {
 
     private final Repository repository;
     private final WorkManager workManager;
+
+    private final MainServices services = new MainServices();
 
     private UUID currentWordId;
 
@@ -36,19 +45,42 @@ public class MainViewModel extends ViewModel {
     private final MutableLiveData<Boolean> snowfallEnabled;
     private final MutableLiveData<Boolean> hintShown;
 
-    private final MutableLiveData<Progress> progress = new MutableLiveData<>(new Progress(
-            0, 0, R.drawable.logo, R.string.attack));
+    private final MutableLiveData<Progress> progress = new MutableLiveData<>(new Progress(R.drawable.logo, R.string.attack));
 
     private final MutableLiveData<Boolean> workStatus = new MutableLiveData<>(false);
     private final MutableLiveData<DataSnapshot> updates = new MutableLiveData<>();
+
+    private final MutableLiveData<Integer> servicesCount = new MutableLiveData<>(0);
+    private final MutableLiveData<RepositoriesLoadingProgress> repositoriesProgress
+            = new MutableLiveData<>(new RepositoriesLoadingProgress(0, 0));
+
+    private String lastCountryCode = BuildVars.COUNTRY_CODES[0];
 
     private final LiveData<List<WorkInfo>> scheduledAttacks;
 
     public static final String KEY_PROGRESS = "progress";
     public static final String KEY_MAX_PROGRESS = "max_progress";
 
-    private final String ATTACK = "attack";
-    private final String UPDATE = "update";
+    public final static String ATTACK = "attack";
+    public final static String UPDATE = "update";
+
+    public static class RepositoriesLoadingProgress {
+        private final int currentProgress;
+        private final int maxProgress;
+
+        public RepositoriesLoadingProgress(int currentProgress, int maxProgress) {
+            this.currentProgress = currentProgress;
+            this.maxProgress = maxProgress;
+        }
+
+        public int getCurrentProgress() {
+            return currentProgress;
+        }
+
+        public int getMaxProgress() {
+            return maxProgress;
+        }
+    }
 
     public static class Progress {
         private final int currentProgress;
@@ -63,6 +95,10 @@ public class MainViewModel extends ViewModel {
 
             this.iconResource = iconResource;
             this.titleResource = titleResource;
+        }
+
+        public Progress(int iconResource, int titleResource) {
+            this(0, 0, iconResource, titleResource);
         }
 
         public int getCurrentProgress() {
@@ -134,6 +170,13 @@ public class MainViewModel extends ViewModel {
                         .build());
 
         checkUpdates();
+
+        services.registerOnCollectAllListener((progress, maxProgress) -> {
+            repositoriesProgress.postValue(new RepositoriesLoadingProgress(progress, maxProgress));
+            selectCountryCode(lastCountryCode);
+        });
+
+        collectAll();
     }
 
     public LiveData<List<WorkInfo>> getScheduledAttacks() {
@@ -142,6 +185,33 @@ public class MainViewModel extends ViewModel {
 
     public LiveData<DataSnapshot> getUpdates() {
         return updates;
+    }
+
+    public LiveData<Integer> getServicesCount() {
+        return servicesCount;
+    }
+
+    public LiveData<RepositoriesLoadingProgress> getRepositoriesProgress() {
+        return repositoriesProgress;
+    }
+
+    public void collectAll() {
+        new Thread(() -> {
+            ArrayList<ServicesRepository> repositories = new ArrayList<>();
+
+            if (!repository.isDefaultDisabled()) repositories.add(new DefaultRepository());
+            if (repository.isRemoteServicesEnabled())
+                for (String url : repository.getRemoteServicesUrls())
+                    repositories.add(new RemoteRepository(new OkHttpClient(), url));
+
+            services.setRepositories(repositories);
+            services.collectAll();
+        }).start();
+    }
+
+    public void selectCountryCode(String countryCode) {
+        lastCountryCode = countryCode;
+        servicesCount.postValue(services.getServices(countryCode).size());
     }
 
     public void setProxyEnabled(boolean enabled) {
@@ -195,12 +265,7 @@ public class MainViewModel extends ViewModel {
                         .build())
                 .build();
 
-        progress.setValue(new Progress(
-                0,
-                0,
-                R.drawable.ic_baseline_download_24,
-                R.string.update));
-
+        progress.setValue(new Progress(R.drawable.ic_baseline_download_24, R.string.update));
         pushCurrentWork(workRequest);
 
         workManager.enqueue(workRequest);
@@ -229,12 +294,7 @@ public class MainViewModel extends ViewModel {
                 .build();
 
         if (current == 0) {
-            progress.setValue(new Progress(
-                    0,
-                    0,
-                    R.drawable.logo,
-                    R.string.attack));
-
+            progress.setValue(new Progress(R.drawable.logo, R.string.attack));
             pushCurrentWork(workRequest);
         }
 
