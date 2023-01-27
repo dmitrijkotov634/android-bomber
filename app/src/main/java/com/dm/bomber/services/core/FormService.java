@@ -1,31 +1,31 @@
-package com.dm.bomber.services;
+package com.dm.bomber.services.core;
 
-import okhttp3.MultipartBody;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public abstract class MultipartService extends Service {
+public abstract class FormService extends Service {
 
     protected String url;
     protected String method;
 
     protected Request.Builder request;
-    protected MultipartBody.Builder builder;
+    protected FormBody.Builder builder;
 
-    public MultipartService(String url, String method, int... countryCodes) {
+    public FormService(String url, String method, int... countryCodes) {
         super(countryCodes);
 
         this.url = url;
         this.method = method;
     }
 
-    public MultipartService(String url, int... countryCodes) {
+    public FormService(String url, int... countryCodes) {
         this(url, "POST", countryCodes);
     }
 
     public void run(OkHttpClient client, Callback callback, Phone phone) {
         request = new Request.Builder();
-        builder = new MultipartBody.Builder();
+        builder = new FormBody.Builder();
 
         buildBody(phone);
 

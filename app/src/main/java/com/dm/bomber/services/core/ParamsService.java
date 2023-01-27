@@ -1,4 +1,4 @@
-package com.dm.bomber.services;
+package com.dm.bomber.services.core;
 
 import java.util.Objects;
 

@@ -1,39 +1,39 @@
-package com.dm.bomber.services;
+package com.dm.bomber.services.core;
 
-import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 
-public abstract class JsonService extends Service {
+public abstract class MultipartService extends Service {
 
     protected String url;
     protected String method;
 
     protected Request.Builder request;
+    protected MultipartBody.Builder builder;
 
-    public JsonService(String url, String method, int... countryCodes) {
+    public MultipartService(String url, String method, int... countryCodes) {
         super(countryCodes);
 
         this.url = url;
         this.method = method;
     }
 
-    public JsonService(String url, int... countryCodes) {
+    public MultipartService(String url, int... countryCodes) {
         this(url, "POST", countryCodes);
     }
 
     public void run(OkHttpClient client, Callback callback, Phone phone) {
         request = new Request.Builder();
+        builder = new MultipartBody.Builder();
 
-        RequestBody body = RequestBody.create(
-                buildJson(phone), MediaType.parse("application/json"));
+        buildBody(phone);
 
         request.url(url);
-        request.method(method, body);
+        request.method(method, builder.build());
 
         client.newCall(request.build()).enqueue(callback);
     }
 
-    public abstract String buildJson(Phone phone);
+    public abstract void buildBody(Phone phone);
 }

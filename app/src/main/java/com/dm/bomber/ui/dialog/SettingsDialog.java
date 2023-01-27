@@ -1,5 +1,6 @@
 package com.dm.bomber.ui.dialog;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -37,6 +38,7 @@ public class SettingsDialog extends BottomSheetDialogFragment {
 
     @Nullable
     @Override
+    @SuppressLint("NotifyDataSetChanged")
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DialogSettingsBinding.inflate(getLayoutInflater());
 
@@ -47,12 +49,15 @@ public class SettingsDialog extends BottomSheetDialogFragment {
         WorkManager workManager = WorkManager.getInstance(requireContext());
 
         MainViewModel model = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-
         BomberWorkAdapter bomberWorkAdapter = new BomberWorkAdapter(
                 getViewLifecycleOwner(),
                 getActivity(),
-                model.getScheduledAttacks(),
                 workInfo -> workManager.cancelWorkById(workInfo.getId()));
+
+        model.getScheduledAttacks().observe(this, workInfoResult -> {
+            bomberWorkAdapter.setWorkInfo(workInfoResult);
+            bomberWorkAdapter.notifyDataSetChanged();
+        });
 
         bomberWorkAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override

