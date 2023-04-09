@@ -22,10 +22,6 @@ public class MainServices {
         onCollectedListeners.add(listener);
     }
 
-    public void unregisterOnCollectAllListener(OnCollectedListener listener) {
-        onCollectedListeners.remove(listener);
-    }
-
     public void setRepositories(List<ServicesRepository> repositories) {
         this.repositories = repositories;
     }

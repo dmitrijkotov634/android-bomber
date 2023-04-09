@@ -259,10 +259,10 @@
         app:snowflakeAlphaMin="140"
         app:snowflakeAngleMax="5"
         app:snowflakeImage="@drawable/snowflake"
-        app:snowflakeSizeMax="15dp"
+        app:snowflakeSizeMax="11dp"
         app:snowflakeSizeMin="6dp"
-        app:snowflakeSpeedMax="5"
-        app:snowflakeSpeedMin="3"
-        app:snowflakesNum="150" />
+        app:snowflakeSpeedMax="4"
+        app:snowflakeSpeedMin="2"
+        app:snowflakesNum="55" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

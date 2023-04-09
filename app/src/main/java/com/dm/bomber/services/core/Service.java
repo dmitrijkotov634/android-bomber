@@ -38,16 +38,5 @@ public abstract class Service {
         return countryCodes;
     }
 
-    protected static String format(String phone, String mask) {
-        StringBuilder formattedPhone = new StringBuilder();
-
-        int index = 0;
-        for (char symbol : mask.toCharArray())
-            if (index < phone.length())
-                formattedPhone.append(symbol == '*' ? phone.charAt(index++) : symbol);
-
-        return formattedPhone.toString();
-    }
-
     public abstract void run(OkHttpClient client, Callback callback, Phone phone);
 }

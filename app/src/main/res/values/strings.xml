@@ -7,7 +7,6 @@
     <string name="phone_error">Invalid number format</string>
 
     <string name="time_is_incorrect">Time is incorrect</string>
-    <string name="no_scheduled_attacks">No scheduled attacks</string>
     <string name="scheduled_hint">Hold down the <b>«Start attack»</b> button to plan your attack</string>
 
     <string name="donate">Donate</string>
@@ -19,6 +18,8 @@
     <string name="proxy_format_error">Invalid proxy format</string>
     <string name="limit_reached">Limit reached</string>
 
+    <string name="proxy_hint" translatable="false">ip:port login:password</string>
+
     <string name="channel_description">Attack progress</string>
     <string name="attack">Attack</string>
     <string name="stop">Stop</string>
@@ -29,7 +30,7 @@
 
     <string name="telegram_link" translatable="false">t.me/androidsmsbomber</string>
 
-    <string name="toast" translatable="false">✧⁠◝⁠(⁠⁰⁠▿⁠⁰⁠)⁠◜⁠✧</string>
+    <string name="toast" translatable="false">Dmitry Kotov ✧⁠◝⁠(⁠⁰⁠▿⁠⁰⁠)⁠◜⁠✧</string>
     <string name="enable_snowfall">Enable snowfall</string>
     <string name="disable_snowfall">Disable snowfall</string>
 
@@ -38,9 +39,9 @@
     <string name="disable_default_services">Disable standard services for testing</string>
     <string name="apply">Apply</string>
     <string name="services_warning">Before you enable additional services, you will have to familiarize yourself with the source. Be careful, the services may contain malicious Web sites that could disrupt the bomber and expose sensitive data. Do not send error messages if you have this option enabled</string>
-    <string name="third_party_services">Third-party services</string>
     <string name="enter_source">Enter the links to the sources</string>
     <string name="remote_services">Remote Services</string>
+    <string name="services">Services</string>
 
     <string-array name="hints" translatable="false">
         <item>912 345 67 89</item>

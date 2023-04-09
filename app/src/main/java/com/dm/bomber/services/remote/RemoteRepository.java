@@ -69,7 +69,7 @@ public class RemoteRepository implements ServicesRepository {
                                     Headers.Builder headersBuilder = new Headers.Builder();
                                     if (request.getHeaders() != null)
                                         for (Map.Entry<String, String> entry : request.getHeaders().entrySet())
-                                            headersBuilder.add(entry.getKey(), inject(entry.getValue(), phone));
+                                            headersBuilder.addUnsafeNonAscii(entry.getKey(), inject(entry.getValue(), phone));
 
                                     client.newCall(new Request.Builder()
                                                     .url(inject(request.getUrl(), phone))
@@ -85,7 +85,7 @@ public class RemoteRepository implements ServicesRepository {
                                     Matcher matcher = phonePattern.matcher(text);
                                     if (matcher.find())
                                         newString = newString.replace(matcher.group(),
-                                                format(phone.toString(), Objects.requireNonNull(matcher.group(1))));
+                                                Phone.format(phone.toString(), Objects.requireNonNull(matcher.group(1))));
 
                                     return newString
                                             .replaceAll("\\{full_phone\\}", phone.toString())

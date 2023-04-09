@@ -7,8 +7,8 @@ import okhttp3.RequestBody;
 
 public abstract class JsonService extends Service {
 
-    protected String url;
-    protected String method;
+    protected final String url;
+    protected final String method;
 
     protected Request.Builder request;
 

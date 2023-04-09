@@ -53,7 +53,7 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
             holder.binding.taskProgress.setProgress(workInfo.getProgress().getInt(MainViewModel.KEY_PROGRESS, 0));
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM HH:mm", Locale.getDefault());
 
         for (String tag : workInfo.getTags()) {
             if (tag.startsWith(AttackWorker.class.getCanonicalName()) || tag.equals(MainViewModel.ATTACK))

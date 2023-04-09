@@ -6,8 +6,8 @@ import okhttp3.Request;
 
 public abstract class FormService extends Service {
 
-    protected String url;
-    protected String method;
+    protected final String url;
+    protected final String method;
 
     protected Request.Builder request;
     protected FormBody.Builder builder;

@@ -1,9 +1,12 @@
 package com.dm.bomber.ui;
 
+import com.dm.bomber.services.core.ServicesRepository;
 import com.dm.bomber.worker.AuthableProxy;
 
 import java.util.List;
 import java.util.Set;
+
+import okhttp3.OkHttpClient;
 
 public interface Repository {
     void setTheme(int mode);
@@ -49,4 +52,6 @@ public interface Repository {
     Set<String> getRemoteServicesUrls();
 
     boolean isRemoteServicesEnabled();
+
+    List<ServicesRepository> getAllRepositories(OkHttpClient client);
 }

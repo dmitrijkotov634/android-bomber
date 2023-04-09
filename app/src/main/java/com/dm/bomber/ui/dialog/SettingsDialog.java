@@ -59,6 +59,8 @@ public class SettingsDialog extends BottomSheetDialogFragment {
             bomberWorkAdapter.notifyDataSetChanged();
         });
 
+        model.getServicesCount().observe(this, servicesCount -> binding.settingsServicesCount.setText(String.valueOf(servicesCount)));
+
         bomberWorkAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -66,8 +68,6 @@ public class SettingsDialog extends BottomSheetDialogFragment {
                 super.onChanged();
             }
         });
-
-        model.isProxyEnabled().observe(this, binding.proxyTile::setChecked);
 
         binding.tasks.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.tasks.setAdapter(bomberWorkAdapter);
@@ -84,20 +84,21 @@ public class SettingsDialog extends BottomSheetDialogFragment {
             return true;
         });
 
-        binding.proxyTile.setOnCheckedChangeListener((button, checked) -> {
-            if (!button.isPressed())
-                return;
+        binding.proxySwitch.setOnCheckedChangeListener(((button, checked) -> model.setProxyEnabled(checked)));
+        binding.proxyCard.setOnClickListener((view -> {
+            new ProxiesDialog().show(getParentFragmentManager(), null);
+            dismiss();
+        }));
 
-            if (checked) {
-                new ProxiesDialog().show(getParentFragmentManager(), null);
-                dismiss();
-            }
-
-            model.setProxyEnabled(checked);
+        model.isProxyEnabled().observe(getViewLifecycleOwner(), enabled -> {
+            binding.proxySwitch.setEnabled(!repository.getProxy().isEmpty());
+            binding.proxySwitch.setChecked(enabled);
         });
 
         binding.sourceCodeTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(BuildVars.SOURCECODE_URL))));
         binding.donateTile.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(BuildVars.DONATE_URL))));
+
+        binding.servicesCard.setOnClickListener(view -> new RepositoriesDialog().show(getParentFragmentManager(), null));
 
         TooltipCompat.setTooltipText(binding.donateTile, getString(R.string.donate));
         TooltipCompat.setTooltipText(binding.proxyTile, getString(R.string.proxy));

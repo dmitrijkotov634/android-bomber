@@ -12,6 +12,21 @@ public class Phone {
         this.phone = phone;
     }
 
+    public static String format(String phone, String mask) {
+        StringBuilder formattedPhone = new StringBuilder();
+
+        int index = 0;
+        for (char symbol : mask.toCharArray())
+            if (index < phone.length())
+                formattedPhone.append(symbol == '*' ? phone.charAt(index++) : symbol);
+
+        return formattedPhone.toString();
+    }
+
+    public String format(String mask) {
+        return format(phone, mask);
+    }
+
     public String getPhone() {
         return phone;
     }

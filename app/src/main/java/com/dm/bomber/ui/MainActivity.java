@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.WindowCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.work.WorkManager;
@@ -139,6 +140,16 @@ public class MainActivity extends AppCompatActivity {
 
         View.OnLongClickListener schedule = view -> {
             input.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Intent intent = new Intent();
+                PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+                if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
+                    intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    intent.setData(Uri.parse("package:" + getPackageName()));
+                    startActivity(intent);
+                }
+            }
 
             String phoneNumber = binding.phoneNumber.getText().toString();
             String repeats = binding.repeats.getText().toString();
@@ -282,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
                 .start());
 
         binding.phoneNumber.setOnLongClickListener(view -> {
-            if (binding.phoneNumber.getText().toString().isEmpty() && clipText != null && !processText(clipText)) {
+            if (binding.phoneNumber.getText().toString().isEmpty() && clipText != null && !processPhoneNumber(clipText)) {
                 binding.phoneCode.setSelection(repository.getLastCountryCode());
                 binding.phoneNumber.setText(repository.getLastPhone());
             }
@@ -297,16 +308,6 @@ public class MainActivity extends AppCompatActivity {
 
         binding.telegramUrl.setOnClickListener(telegram);
         binding.telegramIcon.setOnClickListener(telegram);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Intent intent = new Intent();
-            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-            if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
-                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.setData(Uri.parse("package:" + getPackageName()));
-                startActivity(intent);
-            }
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
@@ -323,10 +324,15 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             if (Intent.ACTION_DIAL.equals(intent.getAction()))
-                processText(intent.getData().getSchemeSpecificPart());
+                processPhoneNumber(intent.getData().getSchemeSpecificPart());
 
             if (intent.hasExtra(TASK_ID)) {
-                workManager.cancelWorkById(UUID.fromString(intent.getStringExtra(TASK_ID)));
+                UUID taskId = UUID.fromString(intent.getStringExtra(TASK_ID));
+
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+                notificationManager.cancel(taskId.hashCode());
+
+                workManager.cancelWorkById(taskId);
                 new SettingsDialog().show(getSupportFragmentManager(), null);
             }
         }
@@ -337,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
                 new Intent(Intent.ACTION_VIEW, Uri.parse("tg://")), 0).isEmpty();
     }
 
-    private boolean processText(String data) {
+    private boolean processPhoneNumber(String data) {
         if (data.matches("(8|\\+(7|380|375|77))([\\d()\\-\\s])*")) {
 
             if (data.startsWith("8"))

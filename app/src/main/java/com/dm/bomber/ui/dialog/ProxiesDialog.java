@@ -8,10 +8,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.TooltipCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.DialogProxiesBinding;
 import com.dm.bomber.ui.MainRepository;
+import com.dm.bomber.ui.MainViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -28,6 +30,7 @@ public class ProxiesDialog extends BottomSheetDialogFragment {
         ((BottomSheetDialog) Objects.requireNonNull(getDialog())).getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
 
         MainRepository repository = new MainRepository(requireContext());
+        MainViewModel model = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         binding.proxies.setText(repository.getRawProxy());
         binding.save.setOnClickListener(view -> {
@@ -35,6 +38,7 @@ public class ProxiesDialog extends BottomSheetDialogFragment {
                 repository.parseProxy(binding.proxies.getText() == null ? "" : binding.proxies.getText().toString());
                 repository.setRawProxy(binding.proxies.getText().toString());
 
+                model.setProxyEnabled(!repository.getProxy().isEmpty());
                 dismiss();
             } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
                 Snackbar.make(binding.getRoot(), R.string.proxy_format_error, Snackbar.LENGTH_LONG).show();

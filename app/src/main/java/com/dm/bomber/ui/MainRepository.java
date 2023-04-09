@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
+import com.dm.bomber.services.DefaultRepository;
+import com.dm.bomber.services.core.ServicesRepository;
+import com.dm.bomber.services.remote.RemoteRepository;
 import com.dm.bomber.worker.AuthableProxy;
 
 import java.net.InetSocketAddress;
@@ -16,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
 
 public class MainRepository implements Repository {
     private final SharedPreferences preferences;
@@ -164,5 +168,17 @@ public class MainRepository implements Repository {
     @Override
     public boolean isRemoteServicesEnabled() {
         return preferences.getBoolean(REMOTE_SERVICES, false);
+    }
+
+    @Override
+    public List<ServicesRepository> getAllRepositories(OkHttpClient client) {
+        ArrayList<ServicesRepository> repositories = new ArrayList<>();
+
+        if (!isDefaultDisabled()) repositories.add(new DefaultRepository());
+        if (isRemoteServicesEnabled())
+            for (String url : getRemoteServicesUrls())
+                repositories.add(new RemoteRepository(client, url));
+
+        return repositories;
     }
 }

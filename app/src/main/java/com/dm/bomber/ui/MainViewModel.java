@@ -14,16 +14,12 @@ import androidx.work.WorkRequest;
 
 import com.dm.bomber.BuildVars;
 import com.dm.bomber.R;
-import com.dm.bomber.services.DefaultRepository;
 import com.dm.bomber.services.MainServices;
-import com.dm.bomber.services.core.ServicesRepository;
-import com.dm.bomber.services.remote.RemoteRepository;
 import com.dm.bomber.worker.AttackWorker;
 import com.dm.bomber.worker.DownloadWorker;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -63,6 +59,8 @@ public class MainViewModel extends ViewModel {
 
     public final static String ATTACK = "attack";
     public final static String UPDATE = "update";
+
+    private OkHttpClient client;
 
     public static class RepositoriesLoadingProgress {
         private final int currentProgress;
@@ -132,8 +130,8 @@ public class MainViewModel extends ViewModel {
                                 WorkInfo.State.SUCCEEDED,
                                 WorkInfo.State.FAILED
                         ))
-                        .build()).observeForever(workInfos -> {
-            for (WorkInfo workInfo : workInfos)
+                        .build()).observeForever(workInfoList -> {
+            for (WorkInfo workInfo : workInfoList)
                 if (workInfo.getId().equals(currentWordId)) {
                     if (workInfo.getState().isFinished())
                         workStatus.setValue(false);
@@ -197,14 +195,8 @@ public class MainViewModel extends ViewModel {
 
     public void collectAll() {
         new Thread(() -> {
-            ArrayList<ServicesRepository> repositories = new ArrayList<>();
-
-            if (!repository.isDefaultDisabled()) repositories.add(new DefaultRepository());
-            if (repository.isRemoteServicesEnabled())
-                for (String url : repository.getRemoteServicesUrls())
-                    repositories.add(new RemoteRepository(new OkHttpClient(), url));
-
-            services.setRepositories(repositories);
+            if (repository.isRemoteServicesEnabled() && client == null) client = new OkHttpClient();
+            services.setRepositories(repository.getAllRepositories(client));
             services.collectAll();
         }).start();
     }

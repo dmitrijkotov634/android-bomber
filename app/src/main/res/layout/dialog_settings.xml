@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/tasks"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:layout_editor_absoluteX="8dp" />
 
     <ToggleButton
         android:id="@+id/theme_tile"
@@ -27,7 +28,8 @@
     <ToggleButton
         android:id="@+id/proxy_tile"
         style="@style/ToggleTile"
-        android:drawableTop="@drawable/ic_baseline_vpn_key_24" />
+        android:drawableTop="@drawable/ic_baseline_vpn_key_24"
+        android:visibility="gone" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/source_code_tile"
@@ -47,13 +49,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/empty" />
+        app:layout_constraintTop_toBottomOf="@+id/services_icon" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tasks"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/empty"
+        app:layout_constraintBottom_toTopOf="@+id/services_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,13 +68,108 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="20dp"
+        android:padding="24dp"
         android:text="@string/scheduled_hint"
-        app:layout_constraintBottom_toTopOf="@+id/flow"
+        app:layout_constraintBottom_toBottomOf="@+id/tasks"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tasks"
+        app:layout_constraintTop_toBottomOf="@+id/drag_handle"
         tools:visibility="gone" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/services_card"
+        style="@style/Widget.Material3.CardView.Filled"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:layout_marginEnd="4dp"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/services_icon"
+        app:layout_constraintEnd_toStartOf="@+id/proxy_card"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/services_icon" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/proxy_card"
+        style="@style/Widget.Material3.CardView.Filled"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="4dp"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/services_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/services_card"
+        app:layout_constraintTop_toTopOf="@+id/services_icon">
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <ImageView
+        android:id="@+id/proxy_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/services_icon"
+        app:layout_constraintStart_toStartOf="@+id/proxy_card"
+        app:layout_constraintTop_toTopOf="@+id/services_icon"
+        app:srcCompat="@drawable/ic_baseline_vpn_key_24" />
+
+    <ImageView
+        android:id="@+id/services_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="26dp"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toTopOf="@+id/flow"
+        app:layout_constraintEnd_toStartOf="@+id/services_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@+id/services_card"
+        app:layout_constraintTop_toBottomOf="@+id/tasks"
+        app:srcCompat="@drawable/ic_baseline_update_24" />
+
+    <TextView
+        android:id="@+id/services_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/services"
+        app:layout_constraintBottom_toBottomOf="@+id/services_icon"
+        app:layout_constraintStart_toEndOf="@+id/services_icon"
+        app:layout_constraintTop_toTopOf="@+id/services_icon" />
+
+    <TextView
+        android:id="@+id/settings_services_count"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/services_count"
+        android:gravity="center"
+        android:textColor="?colorOnPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/services_icon"
+        app:layout_constraintEnd_toEndOf="@+id/services_card"
+        app:layout_constraintTop_toTopOf="@+id/services_icon" />
+
+    <TextView
+        android:id="@+id/proxy_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/proxy"
+        app:layout_constraintBottom_toBottomOf="@+id/proxy_icon"
+        app:layout_constraintStart_toEndOf="@+id/proxy_icon"
+        app:layout_constraintTop_toTopOf="@+id/proxy_icon" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/proxy_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/proxy_card"
+        app:layout_constraintEnd_toEndOf="@+id/proxy_card"
+        app:layout_constraintTop_toTopOf="@+id/proxy_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

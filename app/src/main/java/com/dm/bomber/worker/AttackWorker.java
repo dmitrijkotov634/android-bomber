@@ -23,13 +23,10 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.dm.bomber.R;
-import com.dm.bomber.services.DefaultRepository;
 import com.dm.bomber.services.MainServices;
 import com.dm.bomber.services.core.Callback;
 import com.dm.bomber.services.core.Phone;
 import com.dm.bomber.services.core.Service;
-import com.dm.bomber.services.core.ServicesRepository;
-import com.dm.bomber.services.remote.RemoteRepository;
 import com.dm.bomber.ui.MainActivity;
 import com.dm.bomber.ui.MainRepository;
 import com.dm.bomber.ui.MainViewModel;
@@ -67,7 +64,7 @@ public class AttackWorker extends Worker {
 
     private static final String CHANNEL_ID = "attack";
 
-    private static final int CHUNK_SIZE = 3;
+    private static final int CHUNK_SIZE = 4;
 
     private int progress = 0;
 
@@ -142,21 +139,12 @@ public class AttackWorker extends Worker {
         int repeats = getInputData().getInt(KEY_REPEATS, 1);
 
         MainServices services = new MainServices();
-
-        ArrayList<ServicesRepository> repositories = new ArrayList<>();
-
-        if (!repository.isDefaultDisabled()) repositories.add(new DefaultRepository());
-        if (repository.isRemoteServicesEnabled())
-            for (String url : repository.getRemoteServicesUrls())
-                repositories.add(new RemoteRepository(client, url));
-
-        services.setRepositories(repositories);
+        services.setRepositories(repository.getAllRepositories(client));
         services.collectAll();
 
         List<Service> usableServices = services.getServices(phone);
 
         Bundle params = new Bundle();
-
         params.putInt("repeats", repeats);
         params.putString("phone_number", phone.toString());
         params.putBoolean("proxy_enabled", getInputData().getBoolean(KEY_PROXY_ENABLED, false));
