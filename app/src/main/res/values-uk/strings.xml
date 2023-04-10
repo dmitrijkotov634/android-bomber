@@ -6,7 +6,6 @@
     <string name="phone_error">Невірний формат номера</string>
 
     <string name="time_is_incorrect">Неправильно вказано час</string>
-    <string name="no_scheduled_attacks">Немає запланованих атак</string>
     <string name="scheduled_hint">Натисніть кнопку <b>«Почати атаку»</b>, щоб запланувати атаку</string>
 
     <string name="donate">Пожертвування</string>
