@@ -119,7 +119,8 @@
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_settings_24" />
+        app:srcCompat="@drawable/ic_baseline_settings_24"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/blur"
