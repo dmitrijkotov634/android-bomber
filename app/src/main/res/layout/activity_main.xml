@@ -54,6 +54,7 @@
         tools:text="9123456789" />
 
     <FrameLayout
+        android:id="@+id/frame"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/cycles_count"
@@ -118,7 +119,8 @@
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_settings_24" />
+        app:srcCompat="@drawable/ic_baseline_settings_24"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/blur"
@@ -163,6 +165,7 @@
         app:layout_constraintTop_toTopOf="@+id/telegram_icon" />
 
     <androidx.constraintlayout.widget.Group
+        android:id="@+id/work_screen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="blur,progress,progress_title,progress_text,close_attack,task_icon" />
