@@ -50,7 +50,8 @@ public class DownloadWorker extends Worker {
             FileOutputStream output = new FileOutputStream(filePath, false);
             byte[] dataBuffer = new byte[1024];
 
-            int readBytes, total = 0;
+            int readBytes;
+            int total = 0;
             int lastProgress = 0;
             while ((readBytes = input.read(dataBuffer)) != -1) {
                 total += readBytes;

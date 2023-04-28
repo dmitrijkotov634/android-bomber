@@ -1,8 +1,6 @@
 package com.dm.bomber;
 
 public class BuildVars {
-    public static final String DATABASE_URL = "https://androidsmsbomber-default-rtdb.europe-west1.firebasedatabase.app";
-
     public static final String TELEGRAM_URL = "https://t.me/androidsmsbomber";
     public static final String SOURCECODE_URL = "https://github.com/dmitrijkotov634/android-bomber/";
     public static final String DONATE_URL = "https://smsbomber.page.link/donate";

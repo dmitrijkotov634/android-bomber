@@ -37,10 +37,6 @@ public interface Repository {
 
     boolean isSnowfallEnabled();
 
-    void showHint();
-
-    boolean isShownHint();
-
     void setDefaultDisabled(boolean disabled);
 
     boolean isDefaultDisabled();

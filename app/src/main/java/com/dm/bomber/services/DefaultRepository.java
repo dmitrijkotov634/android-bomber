@@ -1708,7 +1708,7 @@ public class DefaultRepository implements ServicesRepository {
                         request.header("sec-ch-ua-mobile", "?0");
                         request.header("sec-ch-ua-platform", "\"Windows\"");
                         request.header("Sec-Fetch-Site", "same-site");
-                        request.header("Referer", "https://online.sberbank.ru/");
+                        request.header("Referer", "https://online.sberbank.ru");
                         request.header("Cookie", "f5avraaaaaaaaaaaaaaaa_session_=LMKFMKCFCKBBCDHGIDBNHFEIFEBIIGCKJNNOLHNDNDGPOAIPMNBMFDPHMKNGKLCPGCKDFLKHOKEMKLDNJGJAAEBFHJPHHJJDNMHIDFMAICPGDHENNNCDBCKOMIEHDHJL; ESAWEBJSESSIONID=PBC5YS:-1592978582; ESAUAPIJSESSIONID=PBC5YS:-1401443471; TS0135c014=0156c5c8603d42898e476b45b51aabb2a8f79520eb39fba20032e067b52aeec7ca69ebbd8e169e3274802a949082e444146ea45b28ce3e31994e88487c5b66404b08a8d711091f5821afd2f2c333998ed232338bd8; sbid_save_login=false; TS014759d1=0156c5c8600f8ab0efc50bbb13a458c79226cd158039fba20032e067b52aeec7ca69ebbd8e873067a3be306fcf1fc744b54d4fae7ea19aa19b71ab2d7c1a36faf61b452febc67f38094bdf208b5aef292d91cf61858a8abeb0a2798801e862233cdc7c50e433360f80eed46e6358c40efad04d37b5514d2adc9e428b8ab16be5a1a422bef8; _sv=SA1.8ed47a79-c4ce-4990-a3b9-702d969ab535.1670155776; _gcl_au=1.1.1368651913.1680710321; _ym_uid=165997501787354883; _ym_d=1680710321; _sa=SA1.415cad68-bd50-44ad-9873-3e21cca1b7e0.1680710321; tmr_lvid=fe45132553fe9d1cacfd3293ecfac8c2; tmr_lvidTS=1659975017497; _ym_isad=2; top100_id=t1.3122244.1104513110.1680710321533; adtech_uid=4cb771be-35b5-4398-bda2-a2e5bec91512:sberbank.ru; adrdel=1; adrcid=A2h_BfB_cAeLGOfEv5sJZFw; t2_sid_3122244=s1.362560733.1680710321535.1680710325559.1.11.11; JSESSIONID=node0elr4dl5la6p3opwxbogk0eyh11444053.node0; sb-sid=26aca1a7-e98d-4ce8-bb37-dbcec0970f2c; sb-id=gYEl6L3DkLtDBreaGke0twO_AAABh1IkW1O0fIbpW5dFW7L4ClXYigu3JP0qgdT-kxg3jxH0E-gpnTI2YWNhMWE3LWU5OGQtNGNlOC1iYjM3LWRiY2VjMDk3MGYyYw; sb-pid=gYFSXfnWV2pE4ISEQGXI82ccAAABh1IkW1N_DuqFUvibhqECoTB97tQmdGCXZcmJ-ADw9w9aiOYIIA; _sas=SA1.415cad68-bd50-44ad-9873-3e21cca1b7e0.1680710321.1680710329; UAPIJSESSIONID=node0o03mgi79yllsawxtnl4r6bl42517498.node0; sbrf.pers_sign=0; TS019e0e98=0156c5c860b7d7da03b7f51385dfd60554e906c61039fba20032e067b52aeec7ca69ebbd8e873067a3be306fcf1fc744b54d4fae7ea19aa19b71ab2d7c1a36faf61b452feb3440e06dc44ae286826814333a90a448c21074fa0c6a00cbcc07555a8192f2dc2740c50a7597ab671ba789c6aeb5f4bcbd66982f6eafeb75b46ddcfd2b3f6a9c; TS019a42f2=0156c5c860a908faaa555abcfe63a6befa9aa5458439fba20032e067b52aeec7ca69ebbd8e873067a3be306fcf1fc744b54d4fae7ea19aa19b71ab2d7c1a36faf61b452febc67f38094bdf208b5aef292d91cf61858a8abeb0a2798801e862233cdc7c50e4599951af491f02d3f381bc84a363ed3f776296a421fb2d06ab15559b314bc92e; TS019e0e98030=01e9874edf1cfda0bef4ced6a4d030508452c212d7ee41ebe13a58632b85bbea9ba07dc27259da1f260d5df6c39fd7a0e483ad940c; TS3bb85bd7027=08bd9624b8ab2000660a77af35bf89cf80ffc33769930767dc909391c1385ce25ef34e54dec1cef708bb4760f51130003f1023d9e81eb651e6a03b158cdb4d0514bd448afa45a2f9fd46dac25d2c3585e1c35c3256791b2661002600e2cd6b48");
                         request.header("Process-ID", "b356eea04fdf424a8a14337113d22631");
                         request.header("X-TS-AJAX-Request", "true");
@@ -1797,6 +1797,77 @@ public class DefaultRepository implements ServicesRepository {
                                 .add("TYPE", "AUTH")
                                 .add("FORM[AUTH_TYPE]", "PHONE")
                                 .add("FORM[PHONE]", phone.format("+7 (***) ***-**-**"));
+                    }
+                },
+
+                new JsonService("https://sushisell.goulash.tech/api/user/register", 7) {
+                    @Override
+                    public String buildJson(Phone phone) {
+                        request
+                                .header("uuid", "d87a7be3-a23e-720b-d51b-2f23a0d21ff6")
+                                .header("sitenew", "1")
+                                .header("x-api-key", "5349854");
+
+                        return "{\"phone\":\"" + phone.getPhone() + "\",\"password\":\"qwertyuiop\",\"password_repeat\":\"qwertyuiop\",\"verify_type\":\"call\"}";
+                    }
+                },
+
+                new FormService("https://yaposhka-kurgan.ru/user/ajax.php?do=sms_code", 7) {
+                    @Override
+                    public void buildBody(Phone phone) {
+                        request.header("Cookie", "__ddg1_=wJptxJVBMrU9lG19rHQD; PHPSESSID=94c8b47f3ae1f7799422b4a2cbf51b92; _ym_uid=1681491220765009924; _ym_d=1681491220; _ym_visorc=w; _ym_isad=2");
+
+                        builder.add("phone", phone.format("8(***)***-**-**"));
+                    }
+                },
+
+                new FormService("https://ninjapizza.ru/local/ajax/auth.php", 7) {
+                    @Override
+                    public void buildBody(Phone phone) {
+                        builder
+                                .add("action", "sendConfirmCode")
+                                .add("phone", phone.format("+7(***) ***-**-**"));
+
+                        request.header("Sec-Fetch-Dest", "empty");
+                        request.header("Sec-Fetch-Mode", "cors");
+                        request.header("sec-ch-ua", "\"Chromium\";v=\"102\", \"Opera GX\";v=\"88\", \";Not A Brand\";v=\"99\"");
+                        request.header("sec-ch-ua-mobile", "?0");
+                        request.header("sec-ch-ua-platform", "\"Windows\"");
+                        request.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36");
+
+                        request
+                                .header("Referer", "https://ninjapizza.ru/")
+                                .header("Cookie", "PHPSESSID=3f5c44a55d3c84848882848cdab3ad97; BITRIX_SM_SALE_UID=f56452f388c6da46e11626c0a6cfeaed; tmr_lvid=6b25f8b340361caef2cd67e9b109a79f; tmr_lvidTS=1681491423621; mgo_sb_migrations=1418474375998%3D1; mgo_sb_current=typ%3Dtypein%7C%2A%7Csrc%3D%28direct%29%7C%2A%7Cmdm%3D%28none%29%7C%2A%7Ccmp%3D%28none%29%7C%2A%7Ccnt%3D%28none%29%7C%2A%7Ctrm%3D%28none%29%7C%2A%7Cmango%3D%28none%29; mgo_sb_first=typ%3Dtypein%7C%2A%7Csrc%3D%28direct%29%7C%2A%7Cmdm%3D%28none%29%7C%2A%7Ccmp%3D%28none%29%7C%2A%7Ccnt%3D%28none%29%7C%2A%7Ctrm%3D%28none%29%7C%2A%7Cmango%3D%28none%29; mgo_sb_session=pgs%3D1%7C%2A%7Ccpg%3Dhttps%3A%2F%2Fninjapizza.ru%2F; mgo_uid=P6pVWSUkgdX0sMtBtjz3; mgo_cnt=1; mgo_sid=vjiprt473411001l5o23; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session={\"deviceGuid\":\"bb0643e8-bc08-4838-bf34-5b23a4221287\"}; isScrollRoistat=1; roistat_visit=2383899; roistat_first_visit=2383899; roistat_visit_cookie_expire=1209600; roistat_is_need_listen_requests=0; roistat_is_save_data_in_cookie=1; gdeslon.ru.__arc_domain=gdeslon.ru; gdeslon.ru.user_id=4a291964-49f2-48d8-b032-a6c1ac8bba17; popmechanic_sbjs_migrations=popmechanic_1418474375998=1|||1471519752600=1|||1471519752605=1; leadhunter_expire=1; ___dc=99f81639-c3b6-4e9c-8e58-63098c62bbe8; roistat_leadHunterScriptsShownCount={\"undefined\":1}; tmr_detect=0|1681491426317; _ym_uid=1681491429372068174; _ym_d=1681491429; _ym_isad=2; _ym_visorc=w; roistat_leadHunterCaught=1; roistat_cookies_to_resave=roistat_ab,roistat_ab_submit,roistat_visit,leadhunter_expire,roistat_leadHunterScriptsShownCount,roistat_leadHunterCaught")
+                                .header("X-Requested-With", "XMLHttpRequest");
+                    }
+                },
+
+                new JsonService("https://xn--90aamkcop0a.xn--p1ai/api/v5/user/start-authorization", 7) {
+                    @Override
+                    public String buildJson(Phone phone) {
+                        request.header("Cookie", "JSESSIONID=97F79F14935101AB3241D4742C29D515; org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE=ru; _ga=GA1.2.495684227.1681492282; _gid=GA1.2.1281782739.1681492282; _gat_my_tracker=1; _ym_uid=1644592791844501814; _ym_d=1681492282; _ym_visorc=w; v1_referrer_callibri=; v1_data=; _ym_isad=2; callibri_get_request=1681492294580");
+
+                        return phone.format("{\"phone\":\"+7 *** ***-**-**\"}");
+                    }
+                },
+
+                new FormService("https://sushifuji.ru/get_code_for_call_phone_authorization_site.php", 7) {
+                    @Override
+                    public void buildBody(Phone phone) {
+                        request.header("Cookie", "sushifuji=WUwDv1oiRaXbj,K,0Z2374kSXYs1kwhTYu8bVX7MHn9brJFu; order_delivery_type=pickup; deviceId=b34371ffdefbfc3891eab2d54b0223fc; _ga=GA1.2.167094567.1681493376; _gid=GA1.2.1452399728.1681493376; _gat_gtag_UA_26277425_1=1; tmr_lvid=be8a32b94c9b95c3acd6e87400b6921d; tmr_lvidTS=1681493376335; _ym_uid=1681493377773716892; _ym_d=1681493377; _ym_isad=2; _ym_visorc=w; city_id=2; city_url=perm; cart_products={}; tmr_detect=0|1681493380477");
+
+                        builder.add("phone", phone.toString());
+                    }
+                },
+
+                new FormService("https://sushifuji.ru/get_code_for_sms_authorization_site.php", 7) {
+                    @Override
+                    public void buildBody(Phone phone) {
+                        request.header("Cookie", "sushifuji=WUwDv1oiRaXbj,K,0Z2374kSXYs1kwhTYu8bVX7MHn9brJFu; order_delivery_type=pickup; deviceId=b34371ffdefbfc3891eab2d54b0223fc; _ga=GA1.2.167094567.1681493376; _gid=GA1.2.1452399728.1681493376; tmr_lvid=be8a32b94c9b95c3acd6e87400b6921d; tmr_lvidTS=1681493376335; _ym_uid=1681493377773716892; _ym_d=1681493377; _ym_isad=2; _ym_visorc=w; city_id=2; city_url=perm; cart_products={}; tmr_detect=0|1681493380477");
+
+                        builder
+                                .add("confirm_repeat", "true")
+                                .add("phone_sms", phone.toString());
                     }
                 }
         );

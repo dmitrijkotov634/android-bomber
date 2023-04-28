@@ -43,6 +43,8 @@
     <string name="remote_services">Remote Services</string>
     <string name="services">Services</string>
 
+    <string name="skip">Skip (%1$dsec)</string>
+
     <string-array name="hints" translatable="false">
         <item>912 345 67 89</item>
         <item>50 123 4567</item>

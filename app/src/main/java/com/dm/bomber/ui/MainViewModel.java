@@ -17,8 +17,9 @@ import com.dm.bomber.R;
 import com.dm.bomber.services.MainServices;
 import com.dm.bomber.worker.AttackWorker;
 import com.dm.bomber.worker.DownloadWorker;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,16 +40,22 @@ public class MainViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> proxyEnabled;
     private final MutableLiveData<Boolean> snowfallEnabled;
-    private final MutableLiveData<Boolean> hintShown;
 
     private final MutableLiveData<Progress> progress = new MutableLiveData<>(new Progress(R.drawable.logo, R.string.attack));
 
     private final MutableLiveData<Boolean> workStatus = new MutableLiveData<>(false);
-    private final MutableLiveData<DataSnapshot> updates = new MutableLiveData<>();
+    private final MutableLiveData<DocumentSnapshot> updates = new MutableLiveData<>();
+    private final MutableLiveData<DocumentSnapshot> advertising = new MutableLiveData<>();
 
     private final MutableLiveData<Integer> servicesCount = new MutableLiveData<>(0);
     private final MutableLiveData<RepositoriesLoadingProgress> repositoriesProgress
             = new MutableLiveData<>(new RepositoriesLoadingProgress(0, 0));
+
+    private final MutableLiveData<Integer> advertisingCounter = new MutableLiveData<>(5);
+    private final MutableLiveData<Boolean> advertisingAvailable = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> advertisingTrigger = new MutableLiveData<>(false);
+
+    private Thread counter;
 
     private String lastCountryCode = BuildVars.COUNTRY_CODES[0];
 
@@ -122,7 +129,6 @@ public class MainViewModel extends ViewModel {
 
         proxyEnabled = new MutableLiveData<>(repository.isProxyEnabled());
         snowfallEnabled = new MutableLiveData<>(repository.isSnowfallEnabled());
-        hintShown = new MutableLiveData<>(repository.isShownHint());
 
         workManager.getWorkInfosLiveData(
                 WorkQuery.Builder.fromStates(Arrays.asList(WorkInfo.State.RUNNING,
@@ -167,22 +173,59 @@ public class MainViewModel extends ViewModel {
                         .addTags(Collections.singletonList(ATTACK))
                         .build());
 
-        checkUpdates();
-
         services.registerOnCollectAllListener((progress, maxProgress) -> {
             repositoriesProgress.postValue(new RepositoriesLoadingProgress(progress, maxProgress));
             selectCountryCode(lastCountryCode);
         });
 
         collectAll();
+
+        loadUpdates();
+        loadAdvertising();
     }
 
     public LiveData<List<WorkInfo>> getScheduledAttacks() {
         return scheduledAttacks;
     }
 
-    public LiveData<DataSnapshot> getUpdates() {
+    public LiveData<DocumentSnapshot> getUpdates() {
         return updates;
+    }
+
+    public LiveData<DocumentSnapshot> getAdvertising() {
+        return advertising;
+    }
+
+    public LiveData<Integer> getAdvertisingCounter() {
+        return advertisingCounter;
+    }
+
+    public LiveData<Boolean> getAdvertisingAvailable() {
+        return advertisingAvailable;
+    }
+
+    public void startCounting() {
+        DocumentSnapshot snapshot = advertising.getValue();
+
+        if (counter != null && counter.isAlive())
+            return;
+
+        counter = new Thread(() -> {
+            assert snapshot != null;
+            Integer value = snapshot.get("seconds", Integer.class);
+
+            for (int current = value == null ? 10 : value; current > -1; current--) {
+                advertisingCounter.postValue(current);
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        counter.start();
     }
 
     public LiveData<Integer> getServicesCount() {
@@ -216,9 +259,12 @@ public class MainViewModel extends ViewModel {
         snowfallEnabled.setValue(enabled);
     }
 
-    public void showHint() {
-        repository.showHint();
-        hintShown.setValue(true);
+    public void setAdvertisingTrigger(boolean state) {
+        advertisingTrigger.setValue(state);
+    }
+
+    public LiveData<Boolean> getAdvertisingTrigger() {
+        return advertisingTrigger;
     }
 
     public LiveData<Boolean> isProxyEnabled() {
@@ -229,10 +275,6 @@ public class MainViewModel extends ViewModel {
         return snowfallEnabled;
     }
 
-    public LiveData<Boolean> isShownHint() {
-        return hintShown;
-    }
-
     public LiveData<Progress> getProgress() {
         return progress;
     }
@@ -241,9 +283,26 @@ public class MainViewModel extends ViewModel {
         return workStatus;
     }
 
-    public void checkUpdates() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance(BuildVars.DATABASE_URL);
-        database.getReference("updates2").get().addOnSuccessListener(updates::setValue);
+    public void loadAdvertising() {
+        getDatabaseMain()
+                .document("advertising")
+                .get()
+                .addOnSuccessListener(value -> {
+                    advertisingAvailable.setValue(value.get("active", Boolean.class));
+                    advertising.setValue(value);
+                });
+    }
+
+    public void loadUpdates() {
+        getDatabaseMain()
+                .document("updates")
+                .get()
+                .addOnSuccessListener(updates::setValue);
+    }
+
+    private CollectionReference getDatabaseMain() {
+        return FirebaseFirestore.getInstance().
+                collection("main");
     }
 
     public void downloadUpdate(String url) {

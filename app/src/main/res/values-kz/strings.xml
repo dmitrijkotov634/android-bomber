@@ -36,4 +36,6 @@
     <string name="enter_source">Дереккөз сілтемелерін енгізіңіз</string>
     <string name="remote_services">Қашықтағы қызметтер</string>
     <string name="services">Қызметтер</string>
+
+    <string name="skip">Өткізіп жіберу (%1$dс)</string>
 </resources>

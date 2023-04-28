@@ -36,4 +36,6 @@
     <string name="enter_source">Введіть посилання на джерела</string>
     <string name="remote_services">Сторонні сервіси</string>
     <string name="services">Сервіси</string>
+
+    <string name="skip">Пропустити (%1$dс)</string>
 </resources>

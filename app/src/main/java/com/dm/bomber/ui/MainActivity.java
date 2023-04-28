@@ -20,12 +20,12 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.WindowCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.work.WorkManager;
 
@@ -34,6 +34,7 @@ import com.dm.bomber.BuildVars;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.ActivityMainBinding;
 import com.dm.bomber.ui.adapters.CountryCodeAdapter;
+import com.dm.bomber.ui.dialog.AdvertisingDialog;
 import com.dm.bomber.ui.dialog.RepositoriesDialog;
 import com.dm.bomber.ui.dialog.SettingsDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -55,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
     private String clipText;
 
     public static final String TASK_ID = "task_id";
+
+    private static final String VERSION_CODE_KEY = "versionCode";
+    private static final String ALLOW_DIRECT_KEY = "allowDirect";
+    private static final String ONLY_DIRECT_KEY = "onlyDirect";
+    private static final String DIRECT_URL_KEY = "directUrl";
+    private static final String TELEGRAM_URL_KEY = "telegramUrl";
+
+    private boolean advertisingAvailable = false;
 
     @SuppressLint({"SetTextI18n", "BatteryLife"})
     @Override
@@ -105,29 +114,37 @@ public class MainActivity extends AppCompatActivity {
 
         model.getUpdates().observe(this, dataSnapshot -> {
             if (dataSnapshot == null) return;
-            Integer versionCode = dataSnapshot.child("versionCode").getValue(Integer.class);
+            Integer versionCode = dataSnapshot.get(VERSION_CODE_KEY, Integer.class);
+
             if (versionCode != null && versionCode > BuildConfig.VERSION_CODE) {
                 Snackbar.make(binding.getRoot(), R.string.update_available, Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.download, v -> {
                             String key = "description-" + Locale.getDefault().getLanguage();
-                            if (!dataSnapshot.hasChild(key))
+
+                            if (!dataSnapshot.contains(key))
                                 key = "description";
-                            CharSequence description = Html.fromHtml(dataSnapshot.child(key).getValue(String.class));
+
+                            CharSequence description = Html.fromHtml(dataSnapshot.getString(key));
+
                             new MaterialAlertDialogBuilder(MainActivity.this)
                                     .setIcon(R.drawable.ic_baseline_update_24)
                                     .setTitle(R.string.update_available)
                                     .setMessage(description)
                                     .setPositiveButton(R.string.download, (dialog, which) -> {
-                                        if (Boolean.TRUE.equals(dataSnapshot.child("allowDirect").getValue(Boolean.class)) && !isTelegramInstalled())
-                                            model.downloadUpdate(dataSnapshot.child("directUrl").getValue(String.class));
+                                        if (Boolean.TRUE.equals(dataSnapshot.getBoolean(ONLY_DIRECT_KEY)) ||
+                                                (Boolean.TRUE.equals(dataSnapshot.getBoolean(ALLOW_DIRECT_KEY)) && !isTelegramInstalled()))
+                                            model.downloadUpdate(dataSnapshot.getString(DIRECT_URL_KEY));
                                         else
-                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(dataSnapshot.child("telegramUrl").getValue(String.class))));
+                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(dataSnapshot.getString(TELEGRAM_URL_KEY))));
                                     })
                                     .show();
                         }).show();
             }
+
             model.cancelUpdates();
         });
+
+        model.getAdvertisingAvailable().observe(this, available -> advertisingAvailable = available);
 
         InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
@@ -192,13 +209,6 @@ public class MainActivity extends AppCompatActivity {
 
         model.isSnowfallEnabled().observe(this, enabled -> binding.snowfall.setVisibility(enabled ? View.VISIBLE : View.GONE));
 
-        model.isShownHint().observe(this, shown -> {
-            if (!shown) {
-                Toast.makeText(this, R.string.scheduled_hint, Toast.LENGTH_LONG).show();
-                model.showHint();
-            }
-        });
-
         model.getServicesCount().observe(this, servicesCount -> binding.servicesCount.setText(String.valueOf(servicesCount)));
 
         model.getRepositoriesProgress().observe(this, repositoriesLoadingProgress -> {
@@ -256,11 +266,28 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            repository.setLastCountryCode(binding.phoneCode.getSelectedItemPosition());
-            repository.setLastPhone(phoneNumber);
+            Observer<Boolean> observer = new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean trigger) {
+                    if (!trigger) return;
 
-            model.startAttack(BuildVars.COUNTRY_CODES[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
-                    repeats.isEmpty() ? 1 : Integer.parseInt(repeats));
+                    repository.setLastCountryCode(binding.phoneCode.getSelectedItemPosition());
+                    repository.setLastPhone(phoneNumber);
+
+                    model.startAttack(BuildVars.COUNTRY_CODES[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
+                            repeats.isEmpty() ? 1 : Integer.parseInt(repeats));
+
+                    model.getAdvertisingTrigger().removeObserver(this);
+                }
+            };
+
+            if (advertisingAvailable) {
+                new AdvertisingDialog().show(getSupportFragmentManager(), null);
+                model.setAdvertisingTrigger(false);
+                model.getAdvertisingTrigger().observeForever(observer);
+            } else {
+                observer.onChanged(true);
+            }
         });
 
         binding.closeAttack.setOnClickListener(view -> model.cancelCurrentWork());

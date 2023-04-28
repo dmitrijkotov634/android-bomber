@@ -30,7 +30,6 @@ public class MainRepository implements Repository {
     private static final String PROXY = "proxy";
     private static final String PROXY_ENABLED = "proxy_enabled";
     private static final String SNOWFALL_ENABLED = "snowfall_enabled";
-    private static final String HINT_SHOWN = "hint_shown";
 
     private static final String DEFAULT_SERVICES_DISABLED = "default_services_disabled";
     private static final String REMOTE_SERVICES = "remote_services";
@@ -128,16 +127,6 @@ public class MainRepository implements Repository {
     @Override
     public boolean isSnowfallEnabled() {
         return preferences.getBoolean(SNOWFALL_ENABLED, false);
-    }
-
-    @Override
-    public void showHint() {
-        preferences.edit().putBoolean(HINT_SHOWN, true).apply();
-    }
-
-    @Override
-    public boolean isShownHint() {
-        return preferences.getBoolean(HINT_SHOWN, false);
     }
 
     @Override
