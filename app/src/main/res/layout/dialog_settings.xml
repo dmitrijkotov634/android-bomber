@@ -77,12 +77,12 @@
         app:layout_constraintTop_toBottomOf="@+id/drag_handle"
         tools:visibility="gone" />
 
-    <com.google.android.material.card.MaterialCardView
+    <View
         android:id="@+id/services_card"
-        style="@style/Widget.Material3.CardView.Filled"
         android:layout_width="0dp"
         android:layout_height="54dp"
         android:layout_marginEnd="4dp"
+        android:background="@drawable/card_background"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/services_icon"
         app:layout_constraintEnd_toStartOf="@+id/proxy_card"
@@ -90,12 +90,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/services_icon" />
 
-    <com.google.android.material.card.MaterialCardView
+    <View
         android:id="@+id/proxy_card"
-        style="@style/Widget.Material3.CardView.Filled"
         android:layout_width="0dp"
         android:layout_height="54dp"
         android:layout_marginStart="4dp"
+        android:background="@drawable/card_background"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/services_icon"
         app:layout_constraintEnd_toEndOf="parent"
@@ -103,13 +103,14 @@
         app:layout_constraintStart_toEndOf="@+id/services_card"
         app:layout_constraintTop_toTopOf="@+id/services_icon">
 
-    </com.google.android.material.card.MaterialCardView>
+    </View>
 
     <ImageView
         android:id="@+id/proxy_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
+        android:contentDescription="@string/proxy"
         app:layout_constraintBottom_toBottomOf="@+id/services_icon"
         app:layout_constraintStart_toStartOf="@+id/proxy_card"
         app:layout_constraintTop_toTopOf="@+id/services_icon"
@@ -122,7 +123,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="26dp"
-        android:contentDescription="@null"
+        android:contentDescription="@string/services"
         app:layout_constraintBottom_toTopOf="@+id/flow"
         app:layout_constraintEnd_toStartOf="@+id/services_title"
         app:layout_constraintHorizontal_bias="0.5"
@@ -149,6 +150,7 @@
         android:background="@drawable/services_count"
         android:gravity="center"
         android:textColor="?colorOnPrimary"
+        android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/services_icon"
         app:layout_constraintEnd_toEndOf="@+id/services_card"
         app:layout_constraintTop_toTopOf="@+id/services_icon" />

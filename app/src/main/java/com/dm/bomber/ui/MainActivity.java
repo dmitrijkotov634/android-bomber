@@ -139,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
                                     })
                                     .show();
                         }).show();
+
+                binding.startAttack.setEnabled(false);
             }
 
             model.cancelUpdates();
@@ -171,36 +173,39 @@ public class MainActivity extends AppCompatActivity {
             String phoneNumber = binding.phoneNumber.getText().toString();
             String repeats = binding.repeats.getText().toString();
 
-            int length = BuildVars.MAX_PHONE_LENGTH[binding.phoneCode.getSelectedItemPosition()];
-            if (phoneNumber.length() != length && length != 0) {
-                Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
-                return false;
-            }
-
             final Calendar currentDate = Calendar.getInstance();
             final Calendar date = Calendar.getInstance();
 
-            new DatePickerDialog(MainActivity.this, (datePicker, year, monthOfYear, dayOfMonth) -> {
-                date.set(year, monthOfYear, dayOfMonth);
+            if (checkPhoneNumberLength(phoneNumber, getCurrentPhoneCodeMaxPhoneLength()))
+                new DatePickerDialog(MainActivity.this, (datePicker, year, monthOfYear, dayOfMonth) -> {
+                    date.set(year, monthOfYear, dayOfMonth);
 
-                new TimePickerDialog(MainActivity.this, (timePicker, hourOfDay, minute) -> {
-                    date.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                    date.set(Calendar.MINUTE, minute);
+                    new TimePickerDialog(MainActivity.this, (timePicker, hourOfDay, minute) -> {
+                        date.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        date.set(Calendar.MINUTE, minute);
 
-                    if (date.getTimeInMillis() < currentDate.getTimeInMillis()) {
-                        Snackbar.make(view, R.string.time_is_incorrect, Snackbar.LENGTH_LONG).show();
-                        return;
-                    }
+                        if (date.getTimeInMillis() < currentDate.getTimeInMillis()) {
+                            Snackbar.make(view, R.string.time_is_incorrect, Snackbar.LENGTH_LONG).show();
+                            return;
+                        }
 
-                    model.scheduleAttack(BuildVars.COUNTRY_CODES[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
-                            repeats.isEmpty() ? 1 : Integer.parseInt(repeats),
-                            date.getTimeInMillis(), currentDate.getTimeInMillis());
+                        showAdvertisingWithCallback(new Observer<Boolean>() {
+                            @Override
+                            public void onChanged(Boolean trigger) {
+                                if (!trigger) return;
 
-                    new SettingsDialog().show(getSupportFragmentManager(), null);
+                                model.scheduleAttack(BuildVars.COUNTRY_CODES[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
+                                        repeats.isEmpty() ? 1 : Integer.parseInt(repeats),
+                                        date.getTimeInMillis(), currentDate.getTimeInMillis());
 
-                }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), true).show();
+                                new SettingsDialog().show(getSupportFragmentManager(), null);
+                                model.getAdvertisingTrigger().removeObserver(this);
+                            }
+                        });
 
-            }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
+                    }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), true).show();
+
+                }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
 
             return true;
         };
@@ -260,34 +265,21 @@ public class MainActivity extends AppCompatActivity {
             String phoneNumber = binding.phoneNumber.getText().toString();
             String repeats = binding.repeats.getText().toString();
 
-            int length = BuildVars.MAX_PHONE_LENGTH[binding.phoneCode.getSelectedItemPosition()];
-            if (phoneNumber.length() != length && length != 0) {
-                Snackbar.make(view, R.string.phone_error, Snackbar.LENGTH_LONG).show();
-                return;
-            }
+            if (checkPhoneNumberLength(phoneNumber, getCurrentPhoneCodeMaxPhoneLength()))
+                showAdvertisingWithCallback(new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean trigger) {
+                        if (!trigger) return;
 
-            Observer<Boolean> observer = new Observer<Boolean>() {
-                @Override
-                public void onChanged(Boolean trigger) {
-                    if (!trigger) return;
+                        repository.setLastCountryCode(binding.phoneCode.getSelectedItemPosition());
+                        repository.setLastPhone(phoneNumber);
 
-                    repository.setLastCountryCode(binding.phoneCode.getSelectedItemPosition());
-                    repository.setLastPhone(phoneNumber);
+                        model.startAttack(BuildVars.COUNTRY_CODES[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
+                                repeats.isEmpty() ? 1 : Integer.parseInt(repeats));
 
-                    model.startAttack(BuildVars.COUNTRY_CODES[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
-                            repeats.isEmpty() ? 1 : Integer.parseInt(repeats));
-
-                    model.getAdvertisingTrigger().removeObserver(this);
-                }
-            };
-
-            if (advertisingAvailable) {
-                new AdvertisingDialog().show(getSupportFragmentManager(), null);
-                model.setAdvertisingTrigger(false);
-                model.getAdvertisingTrigger().observeForever(observer);
-            } else {
-                observer.onChanged(true);
-            }
+                        model.getAdvertisingTrigger().removeObserver(this);
+                    }
+                });
         });
 
         binding.closeAttack.setOnClickListener(view -> model.cancelCurrentWork());
@@ -356,11 +348,11 @@ public class MainActivity extends AppCompatActivity {
             if (intent.hasExtra(TASK_ID)) {
                 UUID taskId = UUID.fromString(intent.getStringExtra(TASK_ID));
 
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-                notificationManager.cancel(taskId.hashCode());
-
                 workManager.cancelWorkById(taskId);
                 new SettingsDialog().show(getSupportFragmentManager(), null);
+
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+                notificationManager.cancel(taskId.hashCode());
             }
         }
     }
@@ -388,6 +380,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    private void showAdvertisingWithCallback(Observer<Boolean> observer) {
+        if (advertisingAvailable) {
+            new AdvertisingDialog().show(getSupportFragmentManager(), null);
+            model.setAdvertisingTrigger(false);
+            model.getAdvertisingTrigger().observeForever(observer);
+        } else {
+            observer.onChanged(true);
+        }
     }
 
     @Override
@@ -432,6 +434,19 @@ public class MainActivity extends AppCompatActivity {
 
             binding.getRoot().getViewTreeObserver().removeOnGlobalLayoutListener(this);
         }
+    }
+
+    public boolean checkPhoneNumberLength(String phoneNumber, int length) {
+        if ((phoneNumber.length() != length && length != BuildVars.PHONE_ANY_LENGTH) || (length == BuildVars.PHONE_ANY_LENGTH && phoneNumber.length() < 5)) {
+            Snackbar.make(binding.getRoot(), R.string.phone_error, Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    public int getCurrentPhoneCodeMaxPhoneLength() {
+        return BuildVars.MAX_PHONE_LENGTH[binding.phoneCode.getSelectedItemPosition()];
     }
 
     @Override

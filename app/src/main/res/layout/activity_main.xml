@@ -229,12 +229,12 @@
         android:gravity="center"
         android:padding="4dp"
         android:textColor="?android:colorBackground"
-        android:textSize="12sp"
+        android:textSize="11sp"
         android:translationX="4dp"
         android:translationY="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/bomb"
         app:layout_constraintEnd_toEndOf="@+id/bomb"
-        tools:text="61" />
+        tools:text="610" />
 
     <ImageView
         android:id="@+id/task_icon"
@@ -255,14 +255,14 @@
         android:id="@+id/snowfall"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:snowflakeAlphaMax="255"
-        app:snowflakeAlphaMin="140"
+        app:snowflakeAlphaMax="140"
+        app:snowflakeAlphaMin="70"
         app:snowflakeAngleMax="5"
         app:snowflakeImage="@drawable/snowflake"
-        app:snowflakeSizeMax="11dp"
-        app:snowflakeSizeMin="6dp"
-        app:snowflakeSpeedMax="4"
-        app:snowflakeSpeedMin="2"
-        app:snowflakesNum="55" />
+        app:snowflakeSizeMax="22dp"
+        app:snowflakeSizeMin="15dp"
+        app:snowflakeSpeedMax="3"
+        app:snowflakeSpeedMin="1"
+        app:snowflakesNum="50" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

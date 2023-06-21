@@ -14,7 +14,9 @@ public class BuildVars {
             R.drawable.ic_kz,
             R.drawable.ic_all};
 
-    public static final int[] MAX_PHONE_LENGTH = {10, 9, 9, 9, 0};
+    public static final int PHONE_ANY_LENGTH = 0;
+
+    public static final int[] MAX_PHONE_LENGTH = {10, 9, 9, 9, PHONE_ANY_LENGTH};
 
     public static final int SCHEDULED_ATTACKS_LIMIT = 10;
     public static final int MAX_REPEATS_COUNT = 10;

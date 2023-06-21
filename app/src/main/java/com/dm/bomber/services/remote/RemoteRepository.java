@@ -1,5 +1,6 @@
 package com.dm.bomber.services.remote;
 
+import com.dm.bomber.services.DefaultFormatting;
 import com.dm.bomber.services.core.Callback;
 import com.dm.bomber.services.core.Phone;
 import com.dm.bomber.services.core.Service;
@@ -11,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import okhttp3.FormBody;
 import okhttp3.Headers;
@@ -31,8 +30,6 @@ public class RemoteRepository implements ServicesRepository {
         this.client = client;
         this.url = url;
     }
-
-    private final static Pattern phonePattern = Pattern.compile("\\{formatted_phone\\:(.*)\\}");
 
     @Override
     public List<Service> collect() {
@@ -57,39 +54,26 @@ public class RemoteRepository implements ServicesRepository {
                                 public void run(OkHttpClient client, Callback callback, Phone phone) {
                                     RequestBody body = null;
                                     if (request.getJson() != null) {
-                                        body = RequestBody.create(inject(new Gson().toJson(request.getJson()), phone),
+                                        body = RequestBody.create(DefaultFormatting.format(new Gson().toJson(request.getJson()), phone),
                                                 MediaType.parse("application/json"));
                                     } else if (request.getData() != null) {
                                         FormBody.Builder formBody = new FormBody.Builder();
                                         for (Map.Entry<String, String> entry : request.getData().entrySet())
-                                            formBody.add(entry.getKey(), inject(entry.getValue(), phone));
+                                            formBody.add(entry.getKey(), DefaultFormatting.format(entry.getValue(), phone));
                                         body = formBody.build();
                                     }
 
                                     Headers.Builder headersBuilder = new Headers.Builder();
                                     if (request.getHeaders() != null)
                                         for (Map.Entry<String, String> entry : request.getHeaders().entrySet())
-                                            headersBuilder.addUnsafeNonAscii(entry.getKey(), inject(entry.getValue(), phone));
+                                            headersBuilder.addUnsafeNonAscii(entry.getKey(), DefaultFormatting.format(entry.getValue(), phone));
 
                                     client.newCall(new Request.Builder()
-                                                    .url(inject(request.getUrl(), phone))
+                                                    .url(DefaultFormatting.format(request.getUrl(), phone))
                                                     .headers(headersBuilder.build())
                                                     .method(request.getMethod(), body)
                                                     .build())
                                             .enqueue(callback);
-                                }
-
-                                private String inject(String text, Phone phone) {
-                                    String newString = text;
-
-                                    Matcher matcher = phonePattern.matcher(text);
-                                    if (matcher.find())
-                                        newString = newString.replace(matcher.group(),
-                                                Phone.format(phone.toString(), Objects.requireNonNull(matcher.group(1))));
-
-                                    return newString
-                                            .replaceAll("\\{full_phone\\}", phone.toString())
-                                            .replaceAll("\\{phone\\}", phone.getPhone());
                                 }
                             }
                     );

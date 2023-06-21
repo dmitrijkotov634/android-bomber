@@ -90,6 +90,7 @@ public class MainRepository implements Repository {
             return new ArrayList<>();
 
         List<AuthableProxy> proxies = new ArrayList<>();
+
         for (String proxy : proxyStrings.split("\n")) {
             String credential = null;
 
@@ -103,8 +104,12 @@ public class MainRepository implements Repository {
             }
 
             String[] proxyData = proxy.split(":", 2);
+
             proxies.add(new AuthableProxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyData[0], Integer.parseInt(proxyData[1])), credential));
         }
+
+        if (proxyStrings.startsWith("\n"))
+            throw new IllegalArgumentException();
 
         return proxies;
     }

