@@ -23,7 +23,7 @@ public class BomberApplication extends Application implements Configuration.Prov
     @Override
     public Configuration getWorkManagerConfiguration() {
         return new Configuration.Builder()
-                .setMinimumLoggingLevel(Log.ERROR)
+                .setMinimumLoggingLevel(Log.INFO)
                 .build();
     }
 }

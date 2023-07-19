@@ -67,7 +67,7 @@ public class MainViewModel extends ViewModel {
     public final static String ATTACK = "attack";
     public final static String UPDATE = "update";
 
-    private OkHttpClient client;
+    private final OkHttpClient client = new OkHttpClient();
 
     public static class RepositoriesLoadingProgress {
         private final int currentProgress;
@@ -238,7 +238,6 @@ public class MainViewModel extends ViewModel {
 
     public void collectAll() {
         new Thread(() -> {
-            if (repository.isRemoteServicesEnabled() && client == null) client = new OkHttpClient();
             services.setRepositories(repository.getAllRepositories(client));
             services.collectAll();
         }).start();
@@ -339,6 +338,7 @@ public class MainViewModel extends ViewModel {
                             .putString(AttackWorker.KEY_PHONE, phoneNumber)
                             .putInt(AttackWorker.KEY_REPEATS, Math.min(repeats, BuildVars.MAX_REPEATS_COUNT))
                             .putBoolean(AttackWorker.KEY_PROXY_ENABLED, repository.isProxyEnabled())
+                            .putInt(AttackWorker.KEY_CHUNK_SIZE, repository.getAttackSpeed().getChunkSize())
                             .putBoolean(AttackWorker.KEY_FAKE_SERVICES, !notWhitelist)
                             .build();
 

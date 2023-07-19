@@ -30,6 +30,7 @@ public class ArgumentTokenizer {
                             currArg.append(c);
                         }
                         break;
+
                     case DOUBLE_QUOTE_STATE:
                         if (c == '"') {
                             state = NORMAL_TOKEN_STATE;
@@ -44,6 +45,7 @@ public class ArgumentTokenizer {
                             currArg.append(c);
                         }
                         break;
+
                     case NO_TOKEN_STATE:
                     case NORMAL_TOKEN_STATE:
                         switch (c) {
@@ -68,6 +70,7 @@ public class ArgumentTokenizer {
                                 }
                         }
                         break;
+
                     default:
                         throw new IllegalStateException("ArgumentTokenizer state " + state + " is invalid!");
                 }

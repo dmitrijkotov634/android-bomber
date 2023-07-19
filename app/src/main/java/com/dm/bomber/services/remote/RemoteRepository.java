@@ -53,6 +53,7 @@ public class RemoteRepository implements ServicesRepository {
                                 @Override
                                 public void run(OkHttpClient client, Callback callback, Phone phone) {
                                     RequestBody body = null;
+
                                     if (request.getJson() != null) {
                                         body = RequestBody.create(DefaultFormatting.format(new Gson().toJson(request.getJson()), phone),
                                                 MediaType.parse("application/json"));

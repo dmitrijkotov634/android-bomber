@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkInfo;
 
@@ -28,7 +27,7 @@ public class BomberWorkAdapter extends RecyclerView.Adapter<BomberWorkAdapter.Vi
     private final Context context;
     private final Callback callback;
 
-    public BomberWorkAdapter(LifecycleOwner owner, Context context, Callback callback) {
+    public BomberWorkAdapter(Context context, Callback callback) {
         this.context = context;
         this.callback = callback;
     }

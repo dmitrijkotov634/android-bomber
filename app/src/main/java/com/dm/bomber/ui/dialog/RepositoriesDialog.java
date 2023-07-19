@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.dm.bomber.BuildVars;
 import com.dm.bomber.R;
 import com.dm.bomber.databinding.DialogRepositoriesBinding;
 import com.dm.bomber.databinding.TextInputRowBinding;
@@ -37,7 +38,28 @@ public class RepositoriesDialog extends BottomSheetDialogFragment {
         ((BottomSheetDialog) Objects.requireNonNull(getDialog())).getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
 
         binding.remoteServices.setChecked(repository.isRemoteServicesEnabled());
-        binding.defaultDisabled.setChecked(repository.isDefaultDisabled());
+
+        switch (repository.getAttackSpeed()) {
+            case FAST:
+                binding.speed.check(R.id.fast);
+                break;
+            case DEFAULT:
+                binding.speed.check(R.id.defaults);
+                break;
+            case SLOW:
+                binding.speed.check(R.id.slow);
+                break;
+        }
+
+        binding.speed.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (!isChecked) return;
+            if (checkedId == R.id.slow)
+                repository.setAttackSpeed(BuildVars.AttackSpeed.SLOW);
+            else if (checkedId == R.id.defaults)
+                repository.setAttackSpeed(BuildVars.AttackSpeed.DEFAULT);
+            else if (checkedId == R.id.fast)
+                repository.setAttackSpeed(BuildVars.AttackSpeed.FAST);
+        });
 
         binding.remoteServices.setOnCheckedChangeListener((compoundButton, enabled) -> {
             TextInputRowBinding textInputRowBinding = TextInputRowBinding.inflate(getLayoutInflater());
@@ -65,8 +87,6 @@ public class RepositoriesDialog extends BottomSheetDialogFragment {
 
             repository.setRemoteServicesEnabled(enabled);
         });
-
-        binding.defaultDisabled.setOnCheckedChangeListener((compoundButton, b) -> repository.setDefaultDisabled(b));
 
         binding.apply.setOnClickListener(view -> {
             model.collectAll();

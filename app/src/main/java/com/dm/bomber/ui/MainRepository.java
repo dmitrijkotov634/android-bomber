@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
+import com.dm.bomber.BuildVars;
 import com.dm.bomber.services.DefaultRepository;
 import com.dm.bomber.services.core.ServicesRepository;
 import com.dm.bomber.services.remote.RemoteRepository;
@@ -30,8 +31,7 @@ public class MainRepository implements Repository {
     private static final String PROXY = "proxy";
     private static final String PROXY_ENABLED = "proxy_enabled";
     private static final String SNOWFALL_ENABLED = "snowfall_enabled";
-
-    private static final String DEFAULT_SERVICES_DISABLED = "default_services_disabled";
+    private static final String ATTACK_SPEED = "attack_speed";
     private static final String REMOTE_SERVICES = "remote_services";
     private static final String REMOTE_SERVICES_URL = "remote_services_url";
 
@@ -135,16 +135,6 @@ public class MainRepository implements Repository {
     }
 
     @Override
-    public void setDefaultDisabled(boolean disabled) {
-        preferences.edit().putBoolean(DEFAULT_SERVICES_DISABLED, disabled).apply();
-    }
-
-    @Override
-    public boolean isDefaultDisabled() {
-        return preferences.getBoolean(DEFAULT_SERVICES_DISABLED, false);
-    }
-
-    @Override
     public void setRemoteServicesEnabled(boolean enabled) {
         preferences.edit().putBoolean(REMOTE_SERVICES, enabled).apply();
     }
@@ -168,11 +158,22 @@ public class MainRepository implements Repository {
     public List<ServicesRepository> getAllRepositories(OkHttpClient client) {
         ArrayList<ServicesRepository> repositories = new ArrayList<>();
 
-        if (!isDefaultDisabled()) repositories.add(new DefaultRepository());
+        repositories.add(new DefaultRepository());
+
         if (isRemoteServicesEnabled())
             for (String url : getRemoteServicesUrls())
                 repositories.add(new RemoteRepository(client, url));
 
         return repositories;
+    }
+
+    @Override
+    public void setAttackSpeed(BuildVars.AttackSpeed attackSpeed) {
+        preferences.edit().putInt(ATTACK_SPEED, attackSpeed.ordinal()).apply();
+    }
+
+    @Override
+    public BuildVars.AttackSpeed getAttackSpeed() {
+        return BuildVars.AttackSpeed.values()[preferences.getInt(ATTACK_SPEED, BuildVars.AttackSpeed.DEFAULT.ordinal())];
     }
 }

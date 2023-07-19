@@ -50,7 +50,6 @@ public class SettingsDialog extends BottomSheetDialogFragment {
 
         MainViewModel model = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         BomberWorkAdapter bomberWorkAdapter = new BomberWorkAdapter(
-                getViewLifecycleOwner(),
                 getActivity(),
                 workInfo -> workManager.cancelWorkById(workInfo.getId()));
 

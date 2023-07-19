@@ -189,20 +189,13 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
 
-                        showAdvertisingWithCallback(new Observer<Boolean>() {
-                            @Override
-                            public void onChanged(Boolean trigger) {
-                                if (!trigger) return;
+                        showAdvertisingWithCallback(() -> {
+                            model.scheduleAttack(BuildVars.COUNTRY_CODES[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
+                                    repeats.isEmpty() ? 1 : Integer.parseInt(repeats),
+                                    date.getTimeInMillis(), currentDate.getTimeInMillis());
 
-                                model.scheduleAttack(BuildVars.COUNTRY_CODES[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
-                                        repeats.isEmpty() ? 1 : Integer.parseInt(repeats),
-                                        date.getTimeInMillis(), currentDate.getTimeInMillis());
-
-                                new SettingsDialog().show(getSupportFragmentManager(), null);
-                                model.getAdvertisingTrigger().removeObserver(this);
-                            }
+                            new SettingsDialog().show(getSupportFragmentManager(), null);
                         });
-
                     }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), true).show();
 
                 }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
@@ -266,19 +259,12 @@ public class MainActivity extends AppCompatActivity {
             String repeats = binding.repeats.getText().toString();
 
             if (checkPhoneNumberLength(phoneNumber, getCurrentPhoneCodeMaxPhoneLength()))
-                showAdvertisingWithCallback(new Observer<Boolean>() {
-                    @Override
-                    public void onChanged(Boolean trigger) {
-                        if (!trigger) return;
+                showAdvertisingWithCallback(() -> {
+                    repository.setLastCountryCode(binding.phoneCode.getSelectedItemPosition());
+                    repository.setLastPhone(phoneNumber);
 
-                        repository.setLastCountryCode(binding.phoneCode.getSelectedItemPosition());
-                        repository.setLastPhone(phoneNumber);
-
-                        model.startAttack(BuildVars.COUNTRY_CODES[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
-                                repeats.isEmpty() ? 1 : Integer.parseInt(repeats));
-
-                        model.getAdvertisingTrigger().removeObserver(this);
-                    }
+                    model.startAttack(BuildVars.COUNTRY_CODES[binding.phoneCode.getSelectedItemPosition()], phoneNumber,
+                            repeats.isEmpty() ? 1 : Integer.parseInt(repeats));
                 });
         });
 
@@ -382,14 +368,22 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void showAdvertisingWithCallback(Observer<Boolean> observer) {
-        if (advertisingAvailable) {
-            new AdvertisingDialog().show(getSupportFragmentManager(), null);
-            model.setAdvertisingTrigger(false);
-            model.getAdvertisingTrigger().observeForever(observer);
-        } else {
-            observer.onChanged(true);
+    private void showAdvertisingWithCallback(Runnable runnable) {
+        if (!advertisingAvailable) {
+            runnable.run();
+            return;
         }
+
+        new AdvertisingDialog().show(getSupportFragmentManager(), null);
+        model.setAdvertisingTrigger(false);
+        model.getAdvertisingTrigger().observeForever(new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean trigger) {
+                if (!trigger) return;
+                runnable.run();
+                model.getAdvertisingTrigger().removeObserver(this);
+            }
+        });
     }
 
     @Override

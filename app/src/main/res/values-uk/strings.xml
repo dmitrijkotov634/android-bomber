@@ -37,5 +37,10 @@
     <string name="remote_services">Сторонні сервіси</string>
     <string name="services">Сервіси</string>
 
+    <string name="speed"><b>Регулювання швидкості атаки</b>, чим вище швидкість, тим менше часу знадобиться для атаки</string>
+    <string name="slow">Повільно</string>
+    <string name="defaults">За умовчанням</string>
+    <string name="fast">Швидко</string>
+
     <string name="skip">Пропустити (%1$dс)</string>
 </resources>

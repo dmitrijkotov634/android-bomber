@@ -37,5 +37,10 @@
     <string name="remote_services">Қашықтағы қызметтер</string>
     <string name="services">Қызметтер</string>
 
+    <string name="speed"><b>Шабуыл жылдамдығын реттеу</b>, жылдамдық неғұрлым жоғары болса, шабуылға соғұрлым аз уақыт кетеді</string>
+    <string name="slow">Баяу</string>
+    <string name="defaults">По умолчанию</string>
+    <string name="fast">Жылдам</string>
+
     <string name="skip">Өткізіп жіберу (%1$dс)</string>
 </resources>

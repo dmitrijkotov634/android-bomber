@@ -62,10 +62,9 @@ public class AttackWorker extends Worker {
     public static final String KEY_REPEATS = "repeats";
     public static final String KEY_PROXY_ENABLED = "proxy_enabled";
     public static final String KEY_FAKE_SERVICES = "fake_services";
+    public static final String KEY_CHUNK_SIZE = "chunk_size";
 
     private static final String CHANNEL_ID = "attack";
-
-    private static final int CHUNK_SIZE = 15;
 
     private int progress = 0;
 
@@ -138,6 +137,7 @@ public class AttackWorker extends Worker {
                 getInputData().getString(KEY_PHONE));
 
         int repeats = getInputData().getInt(KEY_REPEATS, 1);
+        int chunkSize = getInputData().getInt(KEY_CHUNK_SIZE, 10);
 
         MainServices services = new MainServices();
         services.setRepositories(repository.getAllRepositories(client));
@@ -162,6 +162,7 @@ public class AttackWorker extends Worker {
         params.putInt("proxy_count", proxies.size());
         params.putInt("services_count", usableServices.size());
         params.putBoolean(KEY_FAKE_SERVICES, fakeServices);
+        params.putInt(KEY_CHUNK_SIZE, chunkSize);
 
         FirebaseAnalytics.getInstance(getApplicationContext())
                 .logEvent("attack", params);
@@ -205,7 +206,7 @@ public class AttackWorker extends Worker {
             for (int index = 0; index < usableServices.size(); index++) {
                 Service service = usableServices.get(index);
 
-                if (index % CHUNK_SIZE == 0) {
+                if (index % chunkSize == 0) {
                     if (tasks != null)
                         try {
                             tasks.await();
@@ -214,7 +215,7 @@ public class AttackWorker extends Worker {
                         }
 
                     tasks = new CountDownLatch(
-                            Math.min(usableServices.size() - index, CHUNK_SIZE));
+                            Math.min(usableServices.size() - index, chunkSize));
                 }
 
                 if (isStopped()) {

@@ -21,4 +21,20 @@ public class BuildVars {
     public static final int SCHEDULED_ATTACKS_LIMIT = 10;
     public static final int MAX_REPEATS_COUNT = 10;
     public static final int REPEATS_MAX_LENGTH = String.valueOf(MAX_REPEATS_COUNT).length();
+
+    public enum AttackSpeed {
+        SLOW(1),
+        DEFAULT(10),
+        FAST(25);
+
+        private final int chunkSize;
+
+        AttackSpeed(int chunkSize) {
+            this.chunkSize = chunkSize;
+        }
+
+        public int getChunkSize() {
+            return chunkSize;
+        }
+    }
 }

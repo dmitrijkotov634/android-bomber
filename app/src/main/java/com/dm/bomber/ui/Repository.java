@@ -1,5 +1,6 @@
 package com.dm.bomber.ui;
 
+import com.dm.bomber.BuildVars;
 import com.dm.bomber.services.core.ServicesRepository;
 import com.dm.bomber.worker.AuthableProxy;
 
@@ -37,10 +38,6 @@ public interface Repository {
 
     boolean isSnowfallEnabled();
 
-    void setDefaultDisabled(boolean disabled);
-
-    boolean isDefaultDisabled();
-
     void setRemoteServicesEnabled(boolean enabled);
 
     void setRemoteServicesUrls(Set<String> urls);
@@ -50,4 +47,8 @@ public interface Repository {
     boolean isRemoteServicesEnabled();
 
     List<ServicesRepository> getAllRepositories(OkHttpClient client);
+
+    void setAttackSpeed(BuildVars.AttackSpeed attackSpeed);
+
+    BuildVars.AttackSpeed getAttackSpeed();
 }
