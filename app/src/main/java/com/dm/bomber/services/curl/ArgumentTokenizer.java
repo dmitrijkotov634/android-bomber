@@ -23,15 +23,14 @@ public class ArgumentTokenizer {
                 currArg.append(c);
             } else {
                 switch (state) {
-                    case SINGLE_QUOTE_STATE:
+                    case SINGLE_QUOTE_STATE -> {
                         if (c == '\'') {
                             state = NORMAL_TOKEN_STATE;
                         } else {
                             currArg.append(c);
                         }
-                        break;
-
-                    case DOUBLE_QUOTE_STATE:
+                    }
+                    case DOUBLE_QUOTE_STATE -> {
                         if (c == '"') {
                             state = NORMAL_TOKEN_STATE;
                         } else if (c == '\\') {
@@ -44,22 +43,16 @@ public class ArgumentTokenizer {
                         } else {
                             currArg.append(c);
                         }
-                        break;
-
-                    case NO_TOKEN_STATE:
-                    case NORMAL_TOKEN_STATE:
+                    }
+                    case NO_TOKEN_STATE, NORMAL_TOKEN_STATE -> {
                         switch (c) {
-                            case '\\':
+                            case '\\' -> {
                                 escaped = true;
                                 state = NORMAL_TOKEN_STATE;
-                                break;
-                            case '\'':
-                                state = SINGLE_QUOTE_STATE;
-                                break;
-                            case '"':
-                                state = DOUBLE_QUOTE_STATE;
-                                break;
-                            default:
+                            }
+                            case '\'' -> state = SINGLE_QUOTE_STATE;
+                            case '"' -> state = DOUBLE_QUOTE_STATE;
+                            default -> {
                                 if (!Character.isWhitespace(c)) {
                                     currArg.append(c);
                                     state = NORMAL_TOKEN_STATE;
@@ -68,11 +61,10 @@ public class ArgumentTokenizer {
                                     currArg = new StringBuilder();
                                     state = NO_TOKEN_STATE;
                                 }
+                            }
                         }
-                        break;
-
-                    default:
-                        throw new IllegalStateException("ArgumentTokenizer state " + state + " is invalid!");
+                    }
+                    default -> throw new IllegalStateException("ArgumentTokenizer state " + state + " is invalid!");
                 }
             }
         }

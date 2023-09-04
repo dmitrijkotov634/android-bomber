@@ -14,7 +14,6 @@
     <string name="source_code">Source code</string>
     <string name="waiting">Waiting</string>
 
-    <string name="save">Save</string>
     <string name="proxy_format_error">Invalid proxy format</string>
     <string name="limit_reached">Limit reached</string>
 
@@ -36,11 +35,11 @@
 
     <string name="notification_permission">Please grant Notification permission from App Settings</string>
 
-    <string name="disable_default_services">Disable standard services for testing</string>
     <string name="apply">Apply</string>
     <string name="services_warning">Before you enable additional services, you will have to familiarize yourself with the source. Be careful, the services may contain malicious Web sites that could disrupt the bomber and expose sensitive data. Do not send error messages if you have this option enabled</string>
     <string name="enter_source">Enter the links to the sources</string>
     <string name="remote_services">Remote Services</string>
+    <string name="call_centers">Call centers and subsequent spam</string>
     <string name="services">Services</string>
 
     <string name="speed"><b>Attack speed adjustment</b>, the higher the speed, the less time it takes to attack</string>
